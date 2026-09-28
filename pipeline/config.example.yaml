@@ -1,0 +1,98 @@
+# Configuración del pipeline para la Tarea 2 de FIS2421.
+# Copia este archivo como config.yaml y ajusta rutas, objeto y estrellas estándar.
+# Las rutas relativas se interpretan desde la carpeta donde está este archivo.
+
+objeto:
+  nombre: "NGC 6618"            # cambia por tu objeto
+  ra: "18:20:26"                # hh:mm:ss (o grados)
+  dec: "-16:10:36"              # dd:mm:ss (o grados)
+
+sitio:
+  nombre: "Observatorio El Sauce (OMA)"
+  latitud: -30.4725             # grados (sur negativo); verifica con el manual del MAS500
+  longitud: -70.7631            # grados (oeste negativo)
+  altitud: 1600                 # metros
+  utc_offset_h: -3              # hora local = UTC - 3 (horario de verano de Chile)
+
+instrumento:
+  telescopio: "MAS500 (Ritchey-Chrétien, 0.5 m, f/13)"
+  camara: "Moravian C4-16000EC (4096 x 4096)"
+  diametro_m: 0.5
+  escala_arcsec_px: 0.36
+  ganancia_e_adu: 1.0           # revisa el header (EGAIN / GAIN) o el manual
+  saturacion_adu: 60000         # límite de linealidad; la saturación dura es 65535
+  bpm: null                     # ej. "datos/BPM.fit" (1 = píxel bueno, 0 = malo)
+  seeing_estimado_arcsec: 3.0   # valor inicial para detectar estrellas; el pipeline lo mide
+
+filtros: [V, B]                 # el primero es la referencia de alineamiento
+
+# Coeficientes de extinción atmosférica (mag / masa de aire).
+# Valores típicos de Cerro Tololo; con más estándares a distintas masas de aire se pueden medir.
+extincion:
+  B: 0.25
+  V: 0.15
+
+# Parámetros de detección. Lo que pongas aquí reemplaza a los valores por
+# defecto de instrastro/detection.py (DEFAULT_CONFIGS).
+deteccion:
+  agresiva:
+    n_sigma: 3.0
+    contrast: 0.0005
+  extendida:
+    n_sigma: 1.5
+    contrast: 0.2
+
+# Calibración astrométrica: header | archivo | astrometry_net
+#  - header: WCS aproximado desde OBJCTRA/OBJCTDEC y la escala de placa.
+#  - archivo: sube resultados/<noche>/stack_V.fits a nova.astrometry.net,
+#             descarga el wcs.fits y pon su ruta en noches[].wcs.
+#  - astrometry_net: automático (pip install astroquery + API key de nova.astrometry.net).
+astrometria:
+  modo: header
+  api_key: null
+
+salida: resultados
+
+noches:
+  - nombre: noche1
+    fecha: "2026-10-08"         # fecha local del inicio de la noche (para la curva de visibilidad)
+    bias: "datos/noche1/Bias_*.fit"
+    darks: "datos/noche1/Dark_*.fit"
+    flats:
+      B: "datos/noche1/FLAT_B_*.fit"
+      V: "datos/noche1/FLAT_V_*.fit"
+    ciencia:
+      B: "datos/noche1/*_B_30.000secs_*.fit"
+      V: "datos/noche1/*_V_30.000secs_*.fit"
+    excluir: []                 # ej. ["*00000529*"] para una imagen con satélite
+    wcs: {}                     # modo "archivo": {V: "datos/noche1/wcs.fits"}
+    estandares:
+      - nombre: "HIP 116375"
+        ra: "23:36:18"
+        dec: "-34:56:37"
+        # Magnitudes Johnson (B, V) o Tycho (BT, VT); las Tycho se convierten solas.
+        magnitudes: {BT: 8.453, VT: 7.191}
+        archivos:
+          B: "datos/noche1/HIP_116375/*_B_*.fit"
+          V: "datos/noche1/HIP_116375/*_V_*.fit"
+      - nombre: "HIP 117678"
+        ra: "23:53:17"
+        dec: "-32:58:44"
+        magnitudes: {BT: 8.290, VT: 7.160}
+        archivos:
+          B: "datos/noche1/HIP_117678/*_B_*.fit"
+          V: "datos/noche1/HIP_117678/*_V_*.fit"
+
+  - nombre: noche2
+    fecha: "2026-10-15"
+    bias: "datos/noche2/Bias_*.fit"
+    darks: "datos/noche2/Dark_*.fit"
+    flats:
+      B: "datos/noche2/FLAT_B_*.fit"
+      V: "datos/noche2/FLAT_V_*.fit"
+    ciencia:
+      B: "datos/noche2/*_B_*.fit"
+      V: "datos/noche2/*_V_*.fit"
+    excluir: []
+    wcs: {}
+    estandares: []              # sin estándares: se usa el ZP promedio de las otras noches

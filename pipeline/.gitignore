@@ -1,0 +1,12 @@
+# Datos y resultados (los FITS pesan cientos de MB: no se suben al repositorio)
+datos/
+resultados/
+demo/
+*.fit
+*.fits
+*.fts
+config.yaml
+
+__pycache__/
+.pytest_cache/
+.ipynb_checkpoints/
