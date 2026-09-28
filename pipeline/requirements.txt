@@ -1,0 +1,9 @@
+numpy>=1.24
+scipy>=1.10
+astropy>=5.3
+photutils>=1.9
+scikit-image>=0.21   # la usa photutils para separar fuentes (deblending)
+matplotlib>=3.7
+pyyaml>=6.0
+pytest>=7.0          # solo para correr las pruebas
+# astroquery>=0.4.7  # opcional: modo de astrometría "astrometry_net"
