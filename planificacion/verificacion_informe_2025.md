@@ -28,15 +28,31 @@ Astrométrica y Fotométrica de NGC 6618" (2025), hecha el 7/10/2026.
 | Hora | `DATE-OBS` en **UTC** ("UTC of start exp.") | `DATE-OBS` |
 | Software | TheSkyX 10.5.0 | `SWCREATE` |
 
+### Confirmado en la ficha de Moravian
+
+Fuente: [C4 Series CMOS Cameras](https://www.gxccd.com/art?id=607&lang=409), consultada el 7/10/2026.
+
+| Dato | Valor |
+|---|---|
+| Sensor | Gpixel GSENSE4040, 4096 × 4096 px de 9 µm (~37 × 37 mm). Coincide con el header |
+| Versión | Dos versiones: FSI y BSI. La ganancia de 0,85 e⁻/ADU del header corresponde a la **FSI** (la BSI tiene 0,37) |
+| Modo de lectura | **16-bit HDR**: combina los canales de 12 bits de baja y alta ganancia; la ganancia no se puede elegir |
+| Capacidad de pozo (FSI, HDR) | 56 600 e⁻, unos 66 600 ADU: el ADC (65 535) satura antes que el pozo |
+| Ruido de lectura (FSI, HDR) | 3,9 e⁻ RMS |
+| Otros modos (FSI) | 12 bits alta ganancia: 0,85 e⁻/ADU, 3,9 e⁻, 3540 e⁻ · 12 bits baja ganancia: 19,5 e⁻/ADU, 34,5 e⁻, 80 000 e⁻ |
+| Obturador | Electrónico tipo *rolling shutter*: cada fila empieza 21 µs después que la anterior (84,5 ms entre la primera y la última); todas se exponen el mismo tiempo. El obturador mecánico solo se usa para darks y bias |
+| Exposición mínima | 21 µs |
+| Descarga | 0,25 s (USB 3) o 1,6 s (USB 2) en modo HDR |
+| Enfriamiento | Regulado hasta 33 °C bajo el ambiente (versión EC) o 28 °C (estándar), con precisión de 0,1 °C |
+| Binning | Por software (el de hardware, 2 × 2, da peor calidad) |
+| Píxeles defectuosos | Sensor grado 1: hasta 300 píxeles defectuosos |
+
 ### Sin confirmar
 
-No se pudo acceder a la página de Moravian (gxccd.com), que está bloqueada desde el entorno
-donde se hizo esta revisión. Quedan sin confirmar el ruido de lectura, la capacidad de pozo, la
-corriente oscura y la eficiencia cuántica. El modelo del sensor (GSENSE4040) también es un dato
-de memoria no verificado. Para verificarlos hay dos caminos:
-
-- revisar la ficha de la C4-16000EC en el sitio de Moravian;
-- medirlos con los bias y darks de 2025 (`paso_calibracion` del pipeline → `calibracion.json`).
+La ficha no publica la **eficiencia cuántica** ni la **corriente oscura** del C4-16000. Siguen
+como supuestos en `tiempos_exposicion.py`:
+- la corriente oscura se puede medir con los darks de 2025 (`paso_calibracion` → `calibracion.json`);
+- la eficiencia cuántica queda incluida en el zeropoint, que se mide con las estándares.
 
 ## 2. Escala de placa: tres valores distintos
 
