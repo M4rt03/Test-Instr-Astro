@@ -22,8 +22,8 @@ import math
 INSTRUMENTO = {
     "escala": 0.317,          # arcsec/px medida (medir_escala.py: 0.3168; astrometry.net 2025: 0.3163)
     "ganancia": 0.85,         # e-/ADU (header GAIN de los datos 2025)
-    "ruido": 3.9,             # e- RMS, modo 16-bit HDR del GSENSE4040 FSI (ficha de Moravian)
-    "oscuridad": 0.0332,      # e-/s/px medida con los darks de 2025 (0.039 ADU/s × 0.85, sensor a -14 °C)
+    "ruido": 3.56,            # e- RMS medido en los bias de 2025 (ficha de Moravian: 3.9)
+    "oscuridad": 0.033,       # e-/s/px: cota conservadora; en 2025 no se detectó (dark - bias = -0.039 ADU/s)
     "saturacion": 40000,      # ADU sobre el bias; el ADC llega a 65535 (pozo: 56600 e- = 66600 ADU)
     "lectura_s": 5,           # s entre exposiciones: descarga 0.25 s (USB 3) + guardado en TheSkyX (supuesto)
     # Zeropoints sobre la atmósfera: magnitud que da 1 e-/s. Medidos con las estándares
@@ -39,8 +39,9 @@ CIELO = {
     "8/10 sin Luna": {"B": 22.7, "V": 21.8},
     "15/10 Luna 25 %": {"B": 22.1, "V": 21.6},
 }
-SEEING_SN = 4.0      # arcsec, para la S/N (informe 2025: 3.9-4.4")
-SEEING_SAT = 2.5     # arcsec, para la saturación (caso con buen seeing = pico más alto)
+SEEING = 2.5         # arcsec, mediana medida en las estándares de 2025 (1.9-3.2")
+SEEING_SAT = 2.0     # arcsec, para la saturación (mejor seeing observado = pico más alto)
+DIAM_SN = 4.0        # arcsec, diámetro del círculo donde se calcula la S/N de objetos extendidos
 
 # ----------------------------------------------------------------------------
 # Objetos (candidatos_2026.md): V, B, tamaño (arcmin), altura de trabajo (°)
@@ -101,9 +102,9 @@ def snr(señal, cielo_px, npix, t, n, inst):
 
 
 def mu_limite(filt, x, mu_cielo, t, n, inst, objetivo=3.0):
-    """Brillo superficial con S/N = objetivo en un elemento de seeing del apilado."""
+    """Brillo superficial con S/N = objetivo en un círculo de DIAM_SN del apilado."""
     zp = zp_efectivo(filt, x, inst)
-    area = math.pi / 4 * SEEING_SN ** 2
+    area = math.pi / 4 * DIAM_SN ** 2
     npix = area / inst["escala"] ** 2
     cielo_px = tasa(mu_cielo, zp) * inst["escala"] ** 2
     lo, hi = 15.0, 32.0
@@ -126,7 +127,7 @@ def tabla_objetos(inst, noche):
         for filt, m, t, n in (("B", b, tb, nb), ("V", v, tv, nv)):
             zp = zp_efectivo(filt, x, inst)
             mu = m + 2.5 * math.log10(area_obj)            # brillo superficial medio
-            area_res = math.pi / 4 * SEEING_SN ** 2
+            area_res = math.pi / 4 * DIAM_SN ** 2
             npix = area_res / inst["escala"] ** 2
             cielo_px = tasa(CIELO[noche][filt], zp) * inst["escala"] ** 2
             fila[filt] = {
@@ -156,7 +157,7 @@ def tabla_estandares(inst, x=1.05):
             # tiempo redondeado hacia abajo a 0.5 s, con ~60 % del límite y mínimo 1 s
             t = max(1.0, math.floor(0.6 * t_sat * 2) / 2)
             señal = tasa(m, zp) * t
-            npix = math.pi * (1.5 * SEEING_SN / inst["escala"]) ** 2   # apertura r = 1.5 FWHM
+            npix = math.pi * (1.5 * SEEING / inst["escala"]) ** 2      # apertura r = 1.5 FWHM
             ruido = math.sqrt(señal + npix * (inst["ruido"] ** 2 + tasa(CIELO["15/10 Luna 25 %"][filt], zp)
                                                * inst["escala"] ** 2 * t))
             fila[filt] = {"t_sat": t_sat, "t": t, "pico": pico * t, "snr": señal / ruido}
@@ -181,7 +182,7 @@ def imprimir(inst):
               f"{f8['B']['snr_borde']:.0f} | {f8['B']['mu_lim']:.1f} | "
               f"{f8['B']['mu_sat']:.1f} · {f8['V']['mu_sat']:.1f} | V < {f8['V']['m_sat']:.1f} |")
 
-    print("\n## Estrellas estándar (X = 1.05, seeing 2.5\" para la saturación)\n")
+    print(f"\n## Estrellas estándar (X = 1.05, seeing {SEEING_SAT}\" para la saturación)\n")
     print("| Estrella | B | V | t satura B | t satura V | t_exp B | t_exp V | pico B (ADU) | pico V (ADU) | S/N B | S/N V |")
     print("|---|---|---|---|---|---|---|---|---|---|---|")
     for (nombre, v, b), f in zip(ESTANDARES, tabla_estandares(inst)):
@@ -206,10 +207,10 @@ def main():
     p.add_argument("--ruido", type=float, help="ruido de lectura [e-]")
     p.add_argument("--oscuridad", type=float, help="corriente oscura [e-/s/px]")
     p.add_argument("--escala", type=float, help="escala de placa [arcsec/px]")
-    p.add_argument("--seeing", type=float, help="seeing para la S/N [arcsec]")
+    p.add_argument("--seeing", type=float, help="seeing típico [arcsec], define la apertura de las estándares")
     args = p.parse_args()
 
-    global SEEING_SN
+    global SEEING
     inst = dict(INSTRUMENTO, zp_e=dict(INSTRUMENTO["zp_e"]))
     if args.zp_b is not None:
         inst["zp_e"]["B"] = args.zp_b
@@ -219,7 +220,7 @@ def main():
         if getattr(args, clave) is not None:
             inst[clave] = getattr(args, clave)
     if args.seeing is not None:
-        SEEING_SN = args.seeing
+        SEEING = args.seeing
     imprimir(inst)
 
 
