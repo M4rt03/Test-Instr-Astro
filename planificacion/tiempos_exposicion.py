@@ -23,13 +23,14 @@ INSTRUMENTO = {
     "escala": 0.317,          # arcsec/px medida (medir_escala.py: 0.3168; astrometry.net 2025: 0.3163)
     "ganancia": 0.85,         # e-/ADU (header GAIN de los datos 2025)
     "ruido": 3.9,             # e- RMS, modo 16-bit HDR del GSENSE4040 FSI (ficha de Moravian)
-    "oscuridad": 0.05,        # e-/s/px (supuesto: Moravian no lo publica; medir con los darks)
+    "oscuridad": 0.0332,      # e-/s/px medida con los darks de 2025 (0.039 ADU/s × 0.85, sensor a -14 °C)
     "saturacion": 40000,      # ADU sobre el bias; el ADC llega a 65535 (pozo: 56600 e- = 66600 ADU)
     "lectura_s": 5,           # s entre exposiciones: descarga 0.25 s (USB 3) + guardado en TheSkyX (supuesto)
-    # Zeropoints sobre la atmósfera: magnitud que da 1 e-/s. Estimados con
-    # área efectiva 1570 cm2 (0.5 m con obstrucción ~45 %), flujo de Vega en B y V
-    # (Bessell 1998) y eficiencia total 0.30 (B) y 0.48 (V).
-    "zp_e": {"B": 21.98, "V": 22.05},
+    # Zeropoints sobre la atmósfera: magnitud que da 1 e-/s. Medidos con las estándares
+    # de 2025 (pipeline, zeropoints.ecsv: ZP_ADU - 0.18). La estimación teórica previa
+    # (área 1570 cm2, Vega de Bessell 1998, eficiencia 0.30 en B y 0.48 en V) daba
+    # 21.98 y 22.05: el sistema real es ~25 % menos eficiente.
+    "zp_e": {"B": 21.665, "V": 21.761},
 }
 EXTINCION = {"B": 0.25, "V": 0.15}          # mag por masa de aire
 # Brillo del cielo en el cenit (mag/arcsec2). Sin Luna: valores típicos de
