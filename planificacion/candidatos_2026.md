@@ -1,182 +1,172 @@
-# Candidatos para la Tarea 2 (2026): objetos y estrellas estándar
+# FIS2421 – Tarea 2: candidatos a observar
 
-Listas para elegir el objeto de cada grupo y las estrellas estándar comunes
-para las noches de observación del **jueves 8 y el jueves 15 de octubre de 2026**
-con el telescopio MAS500 (campo de 24,6′ × 24,6′, filtros B y V).
+**Sitio:** Cerro Tololo (lat −30.169°, lon −70.806°, 2207 m)
+**Noches:** jueves 8 y jueves 15 de octubre de 2026
+**Ventana útil:** 21:00 → 01:00 (extendida a 02:00), hora de Chile CLST = UTC−3
+**Criterio de visibilidad:** horas sobre 30° de altura (masa de aire < 2) dentro de la ventana, en ambas noches
+**Cálculo:** astropy (script `visibilidad_tarea2.py`), contrastado con Staralt
 
-## Criterios del enunciado
+---
 
-- El objeto debe ser una **nebulosa o galaxia**, con magnitud aparente entre **~6 y 10**
-  en la banda correspondiente.
-- Debe ser **visible ambas noches antes de la 01:00** desde Cerro Tololo.
-- Las estándares deben tener magnitud **entre 6 y 8 en cada banda** (B y V).
-- Criterio adicional: **distancia a la Luna la noche del 15/10** (creciente al 26 %).
+## 1. Condiciones de cada noche
 
-## Cómo se calculó
-
-- **Sitio:** Cerro Tololo (−30,169°, −70,807°, 2200 m). La hora local es UTC−3.
-- **Ventana útil:** desde el fin del crepúsculo náutico (Sol a −12°) hasta la 01:00.
-  - 8/10: puesta del Sol 19:49, fin del crepúsculo náutico 20:42 y astronómico 21:11.
-  - 15/10: puesta del Sol 19:54, fin del crepúsculo náutico 20:47 y astronómico 21:17.
-- **"h > 30°"** son las horas de esa ventana con altura mayor a 30° (masa de aire < 2).
-- **"Alt. máx"** es la altura máxima dentro de la ventana, no la de culminación.
-- **Fuentes:**
-  - Objetos: [OpenNGC](https://github.com/mattiaverga/OpenNGC) y RC3 (VizieR VII/155).
-  - Estrellas: Hipparcos (VizieR I/239), con magnitudes y tipos espectrales de SIMBAD.
-- **Verificación de las estrellas:** son estrellas simples en SIMBAD, sin bandera de
-  variabilidad (`VarFlag`) ni solución de componentes (`MultFlag`) en Hipparcos.
-- **Verificación de las curvas (5/10/2026):** se recalcularon en forma independiente las
-  alturas, minuto a minuto, con las fórmulas de Meeus (*Astronomical Algorithms*) para el
-  Sol y la Luna, incluyendo la paralaje lunar. Coinciden con el cálculo original con
-  astropy dentro de 0,1 h y 2°. Para la figura del informe, usar Staralt (ver al final)
-  o `paso_bitacora` del pipeline. Staralt (catserver.ing.iac.es) y JPL Horizons no fueron
-  accesibles desde el entorno donde se hizo la verificación.
-- **Verificación en SIMBAD y RC3 (5/10/2026):**
-  - Las 8 estándares coinciden con SIMBAD en coordenadas (< 1″), B, V y tipo espectral, y
-    SIMBAD las clasifica como estrellas simples (`*`), no como variables ni dobles.
-  - Las coordenadas de la versión anterior diferían de SIMBAD en hasta 12″ (los segundos
-    se habían truncado). Ahora todas las coordenadas son las de SIMBAD.
-  - Las magnitudes se corrigieron donde hacía falta (ver "Origen de las magnitudes").
-
-## Condiciones de las noches
-
-| Noche | Luna | Consecuencia |
+| | 8/10 | 15/10 |
 |---|---|---|
-| Jue 8/10/2026 | Casi nueva (3 % iluminada), bajo el horizonte toda la noche | Cielo oscuro toda la ventana |
-| Jue 15/10/2026 | Creciente (26 %), en AR 17h31m, Dec −28° (límite Ofiuco–Sagitario). Está a 48° de altura a las 20:47 y se pone a las 00:51 | Los objetos de AR 18h–20h quedan cerca de la Luna. Después de las 00:51 el cielo queda oscuro |
+| Fin crepúsculo astronómico | 21:12 | 21:18 |
+| Inicio crepúsculo matutino | 05:52 | 05:42 |
+| Iluminación lunar (21:00) | 3 % (casi nueva) | 25 % (creciente) |
+| Posición de la Luna | bajo el horizonte toda la noche | AR 17h26m, Dec −27.7° (Sagitario) |
+| Altura de la Luna a las 21:00 | −36° | +45° |
+| Puesta de la Luna | — | 00:52 |
 
-**Distancias a la Luna el 15/10 a las 20:47** (la Luna avanza ~0,5°/h hacia el este):
+- **8/10:** la Luna no impone restricciones.
+- **15/10:** la Luna está alta al comienzo de la noche y se pone a las 00:52. Se descartaron los candidatos a menos de unos 35° de ella, que en la práctica son los de AR entre 17h y 20h. La banda B es la más afectada por la luz lunar.
+- **Staralt** usa "Mean Solar Zone Time" (UTC−4). Su marca de las **24 h corresponde a la 01:00 hora de Chile**.
 
-- **< 20°, descartados:** M8 y M20 (9°) y M17 (17°).
-- **30°–40°, aceptables:**
-  - estándares HIP 97210 (30°) y HIP 98926 (35°);
-  - objetos NGC 6818 y NGC 6822 (34°) y NGC 6744 (39°).
+---
 
-  La Luna está al 26 %, así que el fondo de cielo sube pero sigue siendo usable. Si es
-  posible, conviene observarlos al final de su ventana o elegir otra opción.
-- **> 50°, sin problema:** todo lo demás.
+## 2. Objetos de ciencia (10 seleccionados)
 
-## 1. Objetos candidatos (10)
+Coordenadas J2000 y magnitudes integradas de OpenNGC. "h>30°" son las horas sobre 30° entre las 21:00 y la 01:00. Un valor de 4,0 significa que el objeto está sobre 30° durante toda esa ventana.
 
-| # | Objeto | Tipo | AR (J2000) | Dec (J2000) | B | V | Tamaño | Alt. máx | h > 30° 8/10 · 15/10 | Dist. Luna 15/10 | Notas |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **NGC 253** (galaxia del Escultor) | galaxia espiral | 00:47:33.1 | −25:17:19.7 | 8,0 | 7,2 | 27′ × 5′ | 85° | 4,2 · 4,2 | 94° | Brillante y con mucha estructura (polvo, brotes de formación estelar). Estándar cercana: HIP 4442 |
-| 2 | **NGC 7293** (nebulosa de la Hélice) | nebulosa planetaria | 22:29:38.5 | −20:50:13.7 | 7,5 | 7,3 | 16′ | 81° | 4,3 · 4,2 | 68° | Cabe completa en el campo. Brillo superficial bajo: requiere exposiciones largas |
-| 3 | **NGC 55** | galaxia de canto | 00:14:53.6 | −39:11:47.9 | 8,6 | 7,9 | 30′ × 3′ | 81° | 4,3 · 4,2 | 81° | Más larga que el lado del campo: cabe orientada en la diagonal |
-| 4 | **NGC 300** | galaxia espiral | 00:54:53.4 | −37:41:03.2 | 8,7 | 8,1 | 19′ × 13′ | 83° | 4,3 · 4,2 | 88° | Brillo superficial bajo |
-| 5 | **NGC 7793** | galaxia espiral | 23:57:49.8 | −32:35:27.7 | 9,6 | 9,1 | 10′ × 6′ | 88° | 4,3 · 4,2 | 81° | Pasa casi por el cenit; tamaño cómodo para el campo |
-| 6 | **NGC 7009** (nebulosa de Saturno) | nebulosa planetaria | 21:04:10.8 | −11:21:48.6 | 8,3 | 8,0 | 0,7′ | 71° | 4,3 · 4,2 | 53° | Pequeña y de alto brillo superficial; el campo tiene muchas estrellas para medir el seeing |
-| 7 | **NGC 246** (nebulosa de la Calavera) | nebulosa planetaria | 00:47:03.3 | −11:52:19.0 | 8,0 | 10,9 | 4′ | 72° | 3,8 · 4,2 | 101° | V en el límite del rango; comparte estándar con NGC 253 |
-| 8 | **NGC 247** | galaxia espiral | 00:47:08.6 | −20:45:37.4 | 9,7 | 9,1 | 21′ × 7′ | 80° | 4,1 · 4,2 | 96° | A 4,5° de NGC 253 y a 5° de HIP 4442. Brillo superficial bajo (SIMBAD la clasifica como LSB). Reemplaza a M17 (ver abajo) |
-| 9 | **NGC 6744** | galaxia espiral | 19:09:46.1 | −63:51:26.9 | 9,1 | 8,3 | 16′ × 10′ | 55° | 4,3 · 4,0 | 39° | Circumpolar; mejor al comienzo de la noche. El 15/10 la Luna está a 39° |
-| 10 | **NGC 6818** (Little Gem) | nebulosa planetaria | 19:43:57.8 | −14:09:13.4 | 9,9 | 9,3 | 0,8′ | 73° | 3,8 · 3,3 | 34° | Observar temprano (baja de 30° a las 00:30 el 8/10 y a las 00:02 el 15/10). Su alto brillo superficial tolera la Luna |
+| # | Objeto | Tipo | V | B | Tamaño | h>30° 8/10 | h>30° 15/10 | Alt. máx. | Dist. Luna 15/10 |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | NGC 7293 (Helix) | Nebulosa planetaria | 7.3 | 7.5 | 16.3′ | 4.0 | 4.0 | 81° | 67° |
+| 2 | NGC 7009 (Saturno) | Nebulosa planetaria | 8.0 | 8.3 | 0.7′ | 4.0 | 4.0 | 71° | 52° |
+| 3 | NGC 300 | Galaxia Scd | 8.7 | 8.8 | 19.4′ × 13.1′ | 4.0 | 4.0 | 83° | 88° |
+| 4 | NGC 7793 | Galaxia Sd | 9.3 | 9.7 | 10.4′ × 6.0′ | 4.0 | 4.0 | 88° | 80° |
+| 5 | NGC 247 | Galaxia SABd | 9.2 | 9.7 | 19.7′ × 5.5′ | 4.0 | 4.0 | 80° | 95° |
+| 6 | NGC 1097 | Galaxia SBb (Seyfert) | 9.8 | 10.1 | 10.6′ × 6.4′ | 2.4 | 2.9 | 73–79° | 110° |
+| 7 | NGC 1291 | Galaxia S0/a | 8.7 | 9.4 | 11.2′ × 9.9′ | 2.2 | 2.6 | 65–70° | 105° |
+| 8 | NGC 1316 (Fornax A) | Galaxia S0 peculiar | 8.5 | 9.4 | 13.5′ × 7.7′ | **2.0** | 2.4 | 65–70° | 108° |
+| 9 | NGC 1313 | Galaxia SBd | 9.5 | 9.7 | 11.1′ × 9.1′ | 2.7 | 3.2 | 50–52° | 83° |
+| 10 | NGC 6744 | Galaxia SABbc | 9.3 | 9.1 | 15.7′ × 9.8′ | 4.0 | 3.8 | 54° | **40°** |
 
-**Reemplazos posibles:**
-- NGC 1097 (galaxia; B 10,2, V 9,5; 9′ × 6′). Sale tarde: supera 30° desde las 22:38 (8/10) y las
-  22:10 (15/10), y está a 110° de la Luna.
-- NGC 6822 (galaxia de Barnard; B 9,3; 15′). No hay una V confiable en los catálogos consultados. Tiene brillo superficial muy bajo y
-  está a 34° de la Luna el 15/10: solo si se acepta un fondo más alto esa noche.
+Para los objetos 6 a 9, la altura máxima indicada se alcanza a las 02:00, porque siguen subiendo al cierre de la ventana.
 
-**No recomendados por la Luna del 15/10:**
-- **NGC 6618 (M17, objeto del informe de 2025):** queda a 17° de la Luna. Además solo está
-  sobre 30° hasta las 23:11 (8/10) y las 22:44 (15/10), es decir 2,5 y 2,0 h.
-- **M8 (Laguna) y M20 (Trífida):** quedan a 9° de la Luna, y M8 es más grande que el campo.
-
-### Origen de las magnitudes
-
-- **NGC 253 y NGC 7793:** RC3, con V = B_T − (B−V)_T. OpenNGC da V = 11,1 para NGC 253, que es un error.
-- **NGC 247 y NGC 1097:** RC3. SIMBAD da casi lo mismo: B 9,61 y V 9,10 para NGC 247; B 9,97 y V 9,48 para NGC 1097.
-- **NGC 55, NGC 300 y la V de NGC 6744 y NGC 6818:** SIMBAD.
-- **B de NGC 6744:** RC3 da 9,14 y SIMBAD 9,28.
-- **NGC 7793:** SIMBAD da B 9,74 y V 9,28, unas 0,15 mag más débil que RC3.
-- **NGC 6822:** B de RC3. SIMBAD da V 8,1 junto con B 18,0, un dato claramente erróneo, así que su V no es confiable.
-- **Nebulosas planetarias:** magnitudes **integradas** de OpenNGC. SIMBAD les asigna la
-  magnitud de la estrella central (B ≈ 11,5–13,5), que **no** es la de la nebulosa. Hay que
-  aclarar en el informe cuál se usa.
-
-## 2. Estrellas estándar candidatas (8)
-
-Son enanas de tipo A0–A9 cerca del cenit (δ ≈ −22° a −31°), repartidas en ascensión recta
-para que siempre haya una alta a cualquier hora de la ventana.
-
-| # | Estrella | HD | AR (J2000) | Dec (J2000) | V | B | B−V | Tipo | Alt. máx | h > 30° 8/10 · 15/10 | Dist. Luna 15/10 | Sirve para |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **HIP 97210** | 186417 | 19:45:24.3 | −30:54:10.8 | 6,81 | 6,93 | 0,12 | A1V | 85° | 4,3 · 3,8 | 30° | Comienzo de noche el 8/10: NGC 6744, NGC 6818 |
-| 2 | **HIP 98926** | 190285 | 20:05:12.0 | −26:48:47.8 | 7,22 | 7,31 | 0,09 | A1V | 87° | 4,3 · 4,0 | 35° | Comienzo de noche el 8/10 |
-| 3 | **HIP 105318** | 202941 | 21:19:51.4 | −27:12:32.9 | 7,05 | 7,05 | 0,00 | A0V | 87° | 4,3 · 4,2 | 51° | Estándar temprana del 15/10; NGC 7009 |
-| 4 | **HIP 107766** | 207480 | 21:49:53.9 | −27:24:14.2 | 7,11 | 7,17 | 0,06 | A1V | 87° | 4,3 · 4,2 | 57° | Estándar temprana del 15/10; NGC 7009, NGC 7293 |
-| 5 | **HIP 110861** | 212852 | 22:27:39.3 | −26:25:07.7 | 7,20 | 7,41 | 0,21 | A9V | 86° | 4,3 · 4,2 | 65° | NGC 7293 (a 6°) |
-| 6 | **HIP 116750** | 222332 | 23:39:41.6 | −22:32:00.2 | 7,29 | 7,41 | 0,12 | A0V | 82° | 4,3 · 4,2 | 82° | NGC 7793, NGC 55 |
-| 7 | **HIP 4442** | 5524 | 00:56:49.1 | −25:21:48.1 | 7,24 | 7,33 | 0,09 | A2/3V | 85° | 4,1 · 4,2 | 96° | NGC 253 (a 2°), NGC 247, NGC 246, NGC 300 |
-| 8 | **HIP 6897** | 9063 | 01:28:47.9 | −24:47:52.5 | 7,04 | 7,27 | 0,23 | A8V | 81° | 3,5 · 4,0 | 102° | Final de la noche |
-
-Las magnitudes B y V son las de SIMBAD. Las 8 cumplen 6 ≤ B, V ≤ 8.
-
-**Descartadas en la verificación:**
-- **HIP 112362 y HIP 6393:** Hipparcos las marca como posibles variables (`VarFlag = 1`).
-- **HIP 4496 y HIP 6507:** Hipparcos las resuelve como dobles (`MultFlag = C`).
-- **HIP 116375 y HIP 117678** (las del informe de 2025): son gigantes K con B ≈ 8,1, fuera del
-  rango 6–8 en B.
-
-## Recomendaciones para el plan de observación
-
-- **Estándar temprana y estándar tardía:** así se observan a masas de aire distintas y se
-  puede **medir** el coeficiente de extinción k. Si no, el pipeline usa el valor típico de
-  Cerro Tololo (`extincion` en `config.yaml`).
-  - Como el enunciado pide el mismo plan ambas noches, la opción más simple es
-    **HIP 105318 o HIP 107766** al comienzo (a ≥ 51° de la Luna el 15/10) y
-    **HIP 4442 o HIP 6897** al final.
-  - HIP 97210 y HIP 98926 sirven el 8/10, pero el 15/10 quedan a 30°–35° de la Luna.
-    Son estrellas brillantes y con exposiciones cortas el efecto es pequeño, pero conviene
-    evitarlas.
-- **Tiempos de exposición de las estándares:** con V ≈ 7, conviene partir las pruebas en 1–3 s
-  y revisar que el pico de la estrella quede bajo ~60 000 ADU. El pipeline excluye del
-  zeropoint las mediciones saturadas.
-- **Verificación en SIMBAD:** antes de fijar el plan, conviene revisar la ficha de cada
-  estrella elegida (https://simbad.cds.unistra.fr) por si hay información nueva.
-
-## Curvas de visibilidad con Staralt
-
-En [Staralt](http://catserver.ing.iac.es/staralt/):
-
-1. Elegir el modo **Staralt**, la fecha **8 de octubre de 2026** (después **15 de octubre**) y
-   el observatorio **Cerro Tololo Observatory (Chile)**. Staralt usa la fecha del inicio de la noche.
-2. Pegar la lista de coordenadas siguiente (formato `nombre hh mm ss ±dd mm ss`).
-3. Dejar marcada la opción que muestra la Luna. La leyenda indica la distancia a la Luna de cada objeto.
+### Coordenadas (formato Staralt)
 
 ```
-NGC253   00 47 33 -25 17 20
 NGC7293  22 29 38 -20 50 14
-NGC55    00 14 54 -39 11 48
+NGC7009  21 04 10 -11 21 47
 NGC300   00 54 53 -37 41 03
-NGC7793  23 57 50 -32 35 28
-NGC7009  21 04 11 -11 21 49
-NGC246   00 47 03 -11 52 19
-NGC247   00 47 09 -20 45 37
+NGC7793  23 57 49 -32 35 27
+NGC247   00 47 08 -20 45 37
+NGC1097  02 46 19 -30 16 29
+NGC1291  03 17 18 -41 06 29
+NGC1316  03 22 41 -37 12 29
+NGC1313  03 18 16 -66 29 53
 NGC6744  19 09 46 -63 51 27
-NGC6818  19 43 58 -14 09 13
-HIP97210  19 45 24 -30 54 11
-HIP98926  20 05 12 -26 48 48
-HIP105318 21 19 51 -27 12 33
-HIP107766 21 49 54 -27 24 14
-HIP110861 22 27 39 -26 25 08
-HIP116750 23 39 42 -22 32 00
-HIP4442   00 56 49 -25 21 48
-HIP6897   01 28 48 -24 47 52
 ```
 
-Valores esperados para comparar con las figuras de Staralt (altura en grados):
+### Observaciones
 
-| Objeto | 20:30 | 21:30 | 22:30 | 23:30 | 00:30 | 01:00 |
-|---|---|---|---|---|---|---|
-| NGC 253 (8/10 · 15/10) | 26 · 32 | 39 · 45 | 52 · 58 | 65 · 71 | 78 · 83 | 83 · 85 |
-| NGC 7293 | 54 · 60 | 67 · 72 | 78 · 80 | 79 · 75 | 68 · 63 | 62 · 56 |
-| NGC 55 | 37 · 42 | 49 · 54 | 60 · 66 | 72 · 76 | 80 · 81 | 81 · 78 |
-| NGC 300 | 29 · 34 | 41 · 46 | 53 · 58 | 64 · 70 | 76 · 80 | 81 · 83 |
-| NGC 7793 | 39 · 45 | 51 · 57 | 64 · 70 | 77 · 82 | 88 · 84 | 83 · 78 |
-| NGC 7009 | 65 · 69 | 71 · 71 | 68 · 64 | 58 · 53 | 46 · 40 | 40 · 34 |
-| NGC 246 | 21 · 27 | 34 · 40 | 46 · 52 | 58 · 63 | 68 · 71 | 71 · 71 |
-| NGC 247 | 25 · 30 | 37 · 43 | 50 · 56 | 63 · 69 | 75 · 79 | 79 · 80 |
-| NGC 6744 | 56 · 54 | 52 · 50 | 48 · 45 | 41 · 39 | 35 · 32 | 32 · 29 |
-| NGC 6818 | 74 · 72 | 67 · 62 | 56 · 50 | 43 · 37 | 30 · 24 | 24 · 18 |
-| Luna (solo 15/10) | 51 | 39 | 27 | 15 | 4 | −2 (se pone 00:51) |
+- **NGC 1316:** está justo en el límite de 2 h el 8/10. Si la ventana se extiende hasta las 02:00, tiene 2,9 h.
+- **NGC 6744:** está a 40° de la Luna el 15/10. Conviene observarla al comienzo de la noche, porque además va bajando (alt. 54° a las 21:00).
+- **NGC 300, NGC 247 y Helix:** caben en el campo de 24,6′, pero ocupan gran parte de él. Queda poco cielo libre para estimar el fondo, y son objetos de bajo brillo superficial.
+- **NGC 1097, 1291, 1316 y 1313:** salen tarde, así que conviene dejarlos para los últimos bloques del plan.
+
+### Reservas
+
+| Objeto | Tipo | V | B | Tamaño | h>30° 8/10 | h>30° 15/10 | Dist. Luna 15/10 | Comentario |
+|---|---|---|---|---|---|---|---|---|
+| NGC 613 | Galaxia SBbc | 10.4 | 10.7 | 5.5′ | 3.6 | 4.0 | 99° | Algo débil, bien posicionada |
+| NGC 1068 (M77) | Galaxia Sb (Seyfert) | 9.3 | 9.7 | 6.1′ | 1.4 | 1.8 | 131° | Cumple solo si la ventana llega a las 02:00 (2,4 / 2,8 h) |
+| NGC 1365 | Galaxia SBb | 10.1 | 10.4 | 12.0′ | 1.8 | 2.2 | 110° | Cumple solo si la ventana llega a las 02:00 (2,7 / 3,2 h) |
+
+```
+NGC613   01 34 18 -29 25 06
+NGC1068  02 42 40 -00 00 47
+NGC1365  03 33 36 -36 08 25
+```
+
+### Descartados
+
+| Objeto | Motivo |
+|---|---|
+| NGC 253 | 26.8′, no cabe en el campo de 24,6′ |
+| NGC 55 | 29.9′, no cabe en el campo |
+| NGC 6822 | 33° de la Luna el 15/10, bajo brillo superficial |
+| NGC 6818 | 33° de la Luna el 15/10 |
+| NGC 6302 | 10° de la Luna el 15/10, menos de 2 h sobre 30° |
+| NGC 628 (M74) | Altura máxima de solo 44° |
+| NGC 1360 | 1,5 h sobre 30° antes de la 01:00 el 8/10 |
+| NGC 246 | V = 10.9, fuera del rango de magnitud |
+
+---
+
+## 3. Estrellas estándar (8 seleccionadas)
+
+**Criterios:**
+- Enanas de tipo A0–A9 V.
+- V y B entre 6 y 8, con B = V + (B−V) de Hipparcos.
+- Dec entre −22° y −37°, cerca del cenit de Tololo (−30.2°).
+- Repartidas en AR para cubrir toda la noche.
+
+**Verificación de variabilidad y multiplicidad:** se revisaron Hipparcos (I/239), WDS (B/wds), VSX (B/vsx) y SIMBAD. Todas las seleccionadas cumplen:
+- Aparecen como constantes (HvarType = C) o sin variabilidad detectada en Hipparcos.
+- No tienen solución doble (MultFlag vacío) ni entrada en el catálogo de dobles CCDM.
+- No aparecen en WDS ni en VSX.
+- SIMBAD las clasifica como estrellas normales (sin tipo de variable ni binaria).
+
+| # | Estrella | HIP | AR (J2000) | Dec (J2000) | Tipo | V | B | Culmina 8/10 | Culmina 15/10 | Alt. máx. | Dist. Luna 15/10 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | HD 195500 | 101367 | 20:32:42 | −28:35:44 | A1V | 7.32 | 7.38 | 21:08 | 20:40 | 88° | 39° |
+| 2 | HD 202941 | 105318 | 21:19:51 | −27:12:33 | A0V | 7.07 | 7.07 | 21:54 | 21:26 | 87° | 50° |
+| 3 | HD 210300 | 109412 | 22:10:00 | −28:17:33 | A5V | 6.44 | 6.59 | 22:44 | 22:16 | 88° | 60° |
+| 4 | HD 215863 | 112631 | 22:48:41 | −34:46:23 | A2V | 7.69 | 7.84 | 23:22 | 22:56 | 86° | 66° |
+| 5 | HD 220881 | 115796 | 23:27:33 | −27:16:41 | A9V | 7.45 | 7.74 | 00:02 | 23:34 | 87° | 76° |
+| 6 | HD 562 | 810 | 00:10:00 | −25:52:29 | A2V | 7.66 | 7.80 | 00:44 | 00:16 | 86° | 86° |
+| 7 | HD 8130 | 6257 | 01:20:16 | −36:14:34 | A0V | 7.45 | 7.50 | 01:54 | 01:26 | 84° | 93° |
+| 8 | HD 12206 | 9285 | 01:59:20 | −26:25:56 | A0V | 6.79 | 6.81 | 02:34 | 02:06 | 86° | 105° |
+
+Todas pasan más de 3 h sobre 30° dentro de la ventana en ambas noches.
+
+### Coordenadas (formato Staralt)
+
+```
+HD195500  20 32 42 -28 35 44
+HD202941  21 19 51 -27 12 33
+HD210300  22 10 00 -28 17 33
+HD215863  22 48 41 -34 46 23
+HD220881  23 27 33 -27 16 41
+HD562     00 10 00 -25 52 29
+HD8130    01 20 16 -36 14 34
+HD12206   01 59 20 -26 25 56
+```
+
+### Estrellas de reserva (también cumplen todos los criterios)
+
+```
+HD207480  21 49 54 -27 24 14
+HD212643  22 26 11 -23 40 57
+HD223884  23 53 21 -24 13 45
+HD225200  00 04 20 -29 16 08
+HD7323    01 12 55 -35 44 45
+```
+
+### Estrellas descartadas
+
+| Estrella | Motivo |
+|---|---|
+| HD 222332 (HIP 116750) | Variable en VSX (ASAS J233942-2232.0) |
+| HD 6619 (AW Scl) | Variable y binaria espectroscópica |
+| HD 7908 (HIP 6108) | Estrella Am (F0VmA3), no es una enana A normal |
+| HD 196385, HD 210739, HD 204394 | Compañeras en WDS |
+| HD 185404, HD 189830, HD 193281, HD 195206, HD 8487, HD 16087, HD 220455, HD 184439, HD 188113 | Solución doble en Hipparcos / entrada en CCDM |
+| HD 182985, HD 186417 | A 26–30° de la Luna el 15/10 |
+
+---
+
+## 4. Verificación con Staralt
+
+Se corrió Staralt (Cerro Tololo, opción "Moon distance") para:
+- los 10 objetos el 8/10 y el 15/10;
+- las 8 estrellas el 15/10, que es la noche con Luna.
+
+Los resultados coinciden con astropy: iluminación lunar de 2 % y 26 %, Luna en AR 17h43m, Dec −27°51′, y alturas y distancias a la Luna con diferencias de 1–2°.
+
+Para obtener las curvas de visibilidad del informe:
+1. Abrir <http://catserver.ing.iac.es/staralt/>.
+2. Elegir la fecha, el observatorio "Cerro Tololo Observatory (Chile)" y "Moon distance".
+3. Pegar las listas de coordenadas de arriba.
