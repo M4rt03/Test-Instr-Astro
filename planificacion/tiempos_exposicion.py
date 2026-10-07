@@ -20,9 +20,9 @@ import math
 # Instrumento y sitio
 # ----------------------------------------------------------------------------
 INSTRUMENTO = {
-    "escala": 0.316,          # arcsec/px (astrometry.net, informe 2025: CD = 8.785e-5 °/px)
+    "escala": 0.317,          # arcsec/px medida (medir_escala.py: 0.3168; astrometry.net 2025: 0.3163)
     "ganancia": 0.85,         # e-/ADU (header GAIN de los datos 2025)
-    "ruido": 3.7,             # e- por lectura (hoja de datos del sensor GSENSE4040; medir en bias)
+    "ruido": 3.7,             # e- por lectura (supuesto, sin verificar con la ficha; medir en bias)
     "oscuridad": 0.05,        # e-/s/px (supuesto; medir con los darks)
     "saturacion": 40000,      # ADU sobre el bias: límite conservador de linealidad (máx. 65535)
     "lectura_s": 5,           # s entre exposiciones (descarga + guardado)

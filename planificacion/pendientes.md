@@ -7,18 +7,24 @@ y de lo que hay que considerar en el informe.
 
 ### Instrumento (preguntar al ayudante o medir con los datos de 2025)
 
-- [ ] **Escala de placa y campo.** El header dice 0,36″/px (campo de 24,6′), pero astrometry.net
-  dio 0,316″/px en 2025 (campo de ~21,6′). Resolver una imagen en
-  [nova.astrometry.net](https://nova.astrometry.net) y comparar.
-  - Si el campo es 21,6′, NGC 247 (19,7′), NGC 300 (19,4′) y la Hélice (16,3′) quedan muy
-    justas y casi sin cielo libre para el fondo.
+- [x] **Escala de placa y campo.** Resuelto: 0,317″/px y un campo de 21,6′ × 21,6′, medidos con
+  estrellas de Gaia ([`medir_escala.py`](medir_escala.py)) y coincidentes con astrometry.net en 2025.
+  Ver [`verificacion_informe_2025.md`](verificacion_informe_2025.md).
+  - NGC 247 (19,7′), NGC 300 (19,4′) y la Hélice (16,3′) caben, pero dejan muy poco cielo libre
+    para el fondo. NGC 253 (26,8′) y NGC 55 (29,9′) no caben.
+  - Confirmar con el ayudante que la configuración óptica sigue siendo la misma de 2023 y 2025.
 - [ ] **Ruido de lectura y corriente oscura.** Se supusieron 3,7 e⁻ y 0,05 e⁻/s/px. Medirlos
   corriendo `paso_calibracion` en el notebook del pipeline con los bias y darks de 2025
   (`calibracion.json`).
 - [ ] **Zeropoint.** Se estimó en teoría (±0,5 mag). Medirlo con `paso_estandares` y las
   estándares de 2025 (`zeropoints.ecsv`). Luego recalcular:
   `python tiempos_exposicion.py --zp-b … --zp-v … --ruido … --oscuridad …`.
-- [ ] **Ganancia.** Confirmar que sigue siendo 0,85 e⁻/ADU (header `GAIN`).
+- [ ] **Ganancia.** Confirmar que sigue siendo 0,85 e⁻/ADU (header `GAIN` en 2023 y 2025).
+- [ ] **Temperatura del sensor.** En 2025 el sensor quedó a −14 °C sin llegar a la consigna
+  (−16 °C); en 2023 trabajó a −25 °C. La corriente oscura depende de la temperatura: tomar los
+  darks a la misma temperatura que la ciencia.
+- [ ] **Hora en los FITS.** `DATE-OBS` está en UTC (hora local = UTC − 3). El informe de 2025
+  confundió ambas.
 - [ ] **Nivel de bias y saturación.** El nivel del bias se suma a la señal: el límite útil es
   ~65 535 ADU menos el bias. Se usó un límite conservador de 40 000 ADU sobre el bias.
 - [ ] **Guiado.** Preguntar si la montura guía (cámara ZWO ASI174). Las exposiciones de
@@ -79,8 +85,8 @@ y de lo que hay que considerar en el informe.
 ## 3. Después, para el análisis y el informe
 
 - [ ] **Pipeline.** Copiar `config.example.yaml` como `config.yaml` y completarlo:
-  - escala de placa medida;
-  - ganancia;
+  - escala de placa (0,317″/px, ya en `config.example.yaml`);
+  - ganancia (0,85 e⁻/ADU);
   - objeto y coordenadas;
   - estándares con sus magnitudes B y V;
   - rutas de los archivos de las dos noches.
