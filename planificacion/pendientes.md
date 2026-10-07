@@ -1,49 +1,84 @@
 # Pendientes: qué confirmar, revisar y tener en cuenta
 
 Lista de lo que falta confirmar antes y durante las noches del 8 y 15 de octubre de 2026,
-y de lo que hay que considerar en el informe.
+y de lo que hay que considerar en el informe. Actualizada el 7/10/2026.
+
+## Resumen
+
+**Ya resuelto:**
+- escala de placa (0,317″/px) y campo (21,6′ × 21,6′);
+- datos de la cámara: ganancia, ruido de lectura, capacidad de pozo, obturador y descarga;
+- hora de los FITS (UTC);
+- encuadre de cada objeto en el campo.
+
+**Falta medir con los datos de 2025:** la corriente oscura, el zeropoint y el nivel de bias.
+
+**Falta preguntar al ayudante:** si hay guiado, el modo de lectura, las calibraciones, el
+horario y si la óptica sigue igual.
+
+**Falta acordar con los otros grupos:** el objeto de cada grupo, las estándares y la tabla del plan.
 
 ## 1. Antes de la observación
 
-### Instrumento (preguntar al ayudante o medir con los datos de 2025)
+### Instrumento
 
-- [x] **Escala de placa y campo.** Resuelto: 0,317″/px y un campo de 21,6′ × 21,6′, medidos con
-  estrellas de Gaia ([`medir_escala.py`](medir_escala.py)) y coincidentes con astrometry.net en 2025.
-  Ver [`verificacion_informe_2025.md`](verificacion_informe_2025.md).
-  - NGC 247 (19,7′), NGC 300 (19,4′) y la Hélice (16,3′) caben, pero dejan muy poco cielo libre
-    para el fondo. NGC 253 (26,8′) y NGC 55 (29,9′) no caben.
-  - Confirmar con el ayudante que la configuración óptica sigue siendo la misma de 2023 y 2025.
-- [x] **Ruido de lectura y capacidad de pozo.** Confirmados en la ficha de Moravian para el
-  modo 16-bit HDR (ganancia 0,85 e⁻/ADU): 3,9 e⁻ y 56 600 e⁻. Se pueden verificar con los
-  bias de 2025.
-- [ ] **Corriente oscura.** Moravian no la publica; se supuso 0,05 e⁻/s/px. Medirla corriendo
-  `paso_calibracion` en el notebook del pipeline con los bias y darks de 2025 (`calibracion.json`).
-- [ ] **Zeropoint.** Se estimó en teoría (±0,5 mag). Medirlo con `paso_estandares` y las
-  estándares de 2025 (`zeropoints.ecsv`). Luego recalcular:
-  `python tiempos_exposicion.py --zp-b … --zp-v … --ruido … --oscuridad …`.
-- [x] **Ganancia.** 0,85 e⁻/ADU: header `GAIN` de 2023 y 2025 y ficha de Moravian (modo 16-bit HDR).
-  Si TheSkyX mostrara otro modo de lectura (12 bits), la ganancia cambia: revisarlo.
-- [ ] **Temperatura del sensor.** En 2025 el sensor quedó a −14 °C sin llegar a la consigna
-  (−16 °C); en 2023 trabajó a −25 °C. La corriente oscura depende de la temperatura: tomar los
-  darks a la misma temperatura que la ciencia.
-- [ ] **Hora en los FITS.** `DATE-OBS` está en UTC (hora local = UTC − 3). El informe de 2025
-  confundió ambas.
-- [ ] **Nivel de bias y saturación.** El nivel del bias se suma a la señal: el límite útil es
-  ~65 535 ADU menos el bias. Se usó un límite conservador de 40 000 ADU sobre el bias.
-- [ ] **Guiado.** Preguntar si la montura guía (cámara ZWO ASI174). Las exposiciones de
-  90–120 s dependen de eso; sin guiado, probar si 60 s salen sin estelas.
-- [ ] **Tiempo de cambio de filtro y de guardado.** La descarga toma 0,25 s por USB 3 (Moravian);
-  se supusieron 5 s por imagen en total. Afecta
-  cuántas exposiciones caben en 30 min.
+**Resuelto** (detalles en [`verificacion_informe_2025.md`](verificacion_informe_2025.md)):
+
+- [x] **Escala de placa y campo:** 0,317″/px y 21,6′ × 21,6′.
+  - Medidos con estrellas de Gaia ([`medir_escala.py`](medir_escala.py)); coinciden con la
+    solución de astrometry.net de 2025.
+  - El 0,36″/px (24,6′) del informe de 2025 era incorrecto.
+  - La cámara está prácticamente alineada con el norte (rotación −0,5°).
+- [x] **Cámara** (ficha de Moravian y headers FITS):
+  - sensor GSENSE4040 FSI, en modo de lectura 16-bit HDR;
+  - ganancia de 0,85 e⁻/ADU, ruido de lectura de 3,9 e⁻ y capacidad de pozo de 56 600 e⁻;
+  - el convertidor satura en 65 535 ADU, antes que el pozo;
+  - obturador electrónico: las exposiciones cortas son uniformes;
+  - descarga de 0,25 s por USB 3.
+- [x] **Hora en los FITS:** `DATE-OBS` está en UTC (hora local = UTC − 3). El pipeline ya lo
+  trata así. El informe de 2025 confundió ambas.
+- [x] **Sitio (El Sauce):** −30,4597°, −70,7503°, 1600 m (header). Ya está en
+  `pipeline/config.example.yaml`. Para la visibilidad, el enunciado pide Cerro Tololo.
+
+**Medir con los datos de 2025** (notebook del pipeline: `paso_calibracion` y `paso_estandares`,
+que no necesitan imágenes de ciencia):
+
+- [ ] **Corriente oscura.** Moravian no la publica; se supuso 0,05 e⁻/s/px. Sale en
+  `calibracion.json` (`dark_current_mediana_adu_s` × 0,85).
+- [ ] **Nivel de bias.** Se suma a la señal: el margen real hasta saturar es 65 535 ADU menos el
+  bias. Sale en `calibracion.json` (`bias_mediana_adu`).
+- [ ] **Zeropoint.** Se estimó en teoría (±0,5 mag) e incluye la eficiencia cuántica, que Moravian
+  tampoco publica. Sale en `zeropoints.ecsv`. Para la calculadora: ZP(e⁻/s) = ZP(ADU) − 0,18.
+- [ ] **Recalcular los tiempos de exposición** con los valores medidos:
+  `python tiempos_exposicion.py --zp-b … --zp-v … --oscuridad …`.
+- [ ] **(Opcional) Verificar el ruido de lectura** en los bias: debería dar ~3,9 e⁻
+  (`ruido_lectura_e`).
+
+**Preguntar al ayudante:**
+
+- [ ] **Configuración óptica:** ¿es la misma de 2023 y 2025? La focal real es ~5860 mm; el
+  `FOCALLEN = 6500` del header es solo nominal.
+- [ ] **Modo de lectura en TheSkyX:** confirmar que es 16-bit HDR. En los modos de 12 bits cambian
+  la ganancia y el ruido (baja ganancia: 19,5 e⁻/ADU y 34,5 e⁻).
+- [ ] **Guiado:** ¿guía la montura (cámara ZWO ASI174)? Las exposiciones de 90–120 s dependen de
+  eso; sin guiado, probar si 60 s salen sin estelas.
+- [ ] **Temperatura del sensor:** en 2025 quedó a −14 °C sin llegar a la consigna (−16 °C); en
+  2023 trabajó a −25 °C. La corriente oscura depende de la temperatura, así que los darks deben
+  tomarse a la misma que la ciencia.
+- [ ] **Tiempo entre exposiciones:** la descarga es de 0,25 s, pero falta el guardado en TheSkyX
+  y el cambio de filtro. Se supusieron 5 s por imagen, lo que define cuántas caben en 30 min.
 
 ### Plan de observación (con los otros grupos y el ayudante)
 
-- [ ] **Elegir el objeto de cada grupo** sin repetir. Los objetos que salen tarde (NGC 1097,
-  1291, 1316 y 1313) van en los últimos bloques. NGC 6744 va al comienzo.
+- [ ] **Elegir el objeto de cada grupo** sin repetir.
+  - Los objetos que salen tarde (NGC 1097, 1291, 1316 y 1313) van en los últimos bloques.
+  - NGC 6744 va al comienzo.
+  - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que
+    asumir que el fondo se mide con poco cielo libre.
 - [ ] **Elegir las dos estándares de cada noche:** una al comienzo y otra al final, para tener
   dos masas de aire distintas y poder medir el coeficiente de extinción k.
-  - HD 210300 y HD 12206 obligan a exposiciones de 1–1,5 s. Mejor preferir HD 215863, HD 562 o
-    HD 220881, que permiten 3–4 s.
+  - Mejor HD 215863, HD 562 o HD 220881, que permiten 3–4 s.
+  - HD 210300 y HD 12206 obligan a 1–1,5 s y a tomar más exposiciones por el centelleo.
 - [ ] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
 - [ ] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
@@ -68,15 +103,20 @@ y de lo que hay que considerar en el informe.
 
 ## 2. Durante la observación (en TheSkyX)
 
+- [ ] **Al comienzo de la noche:** confirmar en TheSkyX el modo de lectura (16-bit HDR) y que el
+  sensor llegue a la temperatura de consigna.
 - [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B.
   - Revisar el **máximo** del núcleo o de la estrella y el **nivel de fondo**, ambos en ADU y
     restando el bias.
   - Si el máximo supera ~40 000 ADU, bajar el tiempo. Si el fondo es muy bajo y el máximo está
     lejos del límite, se puede subir (si el guiado lo permite).
-- [ ] **Anotar en la bitácora:** tiempos de prueba, valores medidos, decisión final, hora,
-  filtro, número de archivo, nubes, viento y satélites. El enunciado pide justificar los tiempos.
+  - **Encuadre:** revisar que el objeto quede centrado y no toque los bordes. Es crítico en
+    NGC 247 (1′ libre en norte-sur) y NGC 300 (1,6′ libre en este-oeste).
+- [ ] **Anotar en la bitácora:** tiempos de prueba, valores medidos, decisión final, hora (y si
+  es local o UTC), filtro, número de archivo, temperatura del sensor, nubes, viento y satélites.
+  El enunciado pide justificar los tiempos.
 - [ ] **Enfoque.** Revisar que el FWHM de las estrellas no empeore durante la noche. En 2025 se
-  midieron 3,9–4,4″, que es alto; puede haber influido el enfoque.
+  midieron ~3,9″ (con la escala correcta), que es alto; puede haber influido el enfoque.
 - [ ] **Satélites.** Revisar cada imagen. Con exposiciones largas, perder una cuesta más; si una
   sale contaminada, tomar otra.
 - [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar. Con 1–1,5 s tomar
@@ -89,26 +129,32 @@ y de lo que hay que considerar en el informe.
 ## 3. Después, para el análisis y el informe
 
 - [ ] **Pipeline.** Copiar `config.example.yaml` como `config.yaml` y completarlo:
-  - escala de placa (0,317″/px, ya en `config.example.yaml`);
-  - ganancia (0,85 e⁻/ADU);
-  - objeto y coordenadas;
-  - estándares con sus magnitudes B y V;
-  - rutas de los archivos de las dos noches.
+  - ya trae la escala (0,317″/px), la ganancia (0,85 e⁻/ADU) y el sitio;
+  - falta el objeto y sus coordenadas;
+  - las estándares con sus magnitudes B y V;
+  - las rutas de los archivos de las dos noches.
 - [ ] **Detección con photutils.** Se usa photutils en vez de Source Extractor. El pipeline ya
   tiene las dos configuraciones (agresiva y extendida); hay que explicar en qué se diferencian
   los parámetros de deblending.
 - [ ] **Astrometría.** Usar astrometry.net (modo `archivo` o `astrometry_net`); el modo `header`
-  es solo aproximado.
+  es solo aproximado. La escala resuelta debería dar ~0,317″/px.
+- [ ] **Sección "Observaciones" del informe:** detalles técnicos del telescopio y la cámara.
+  - Usar la ficha de Moravian y la escala medida, no el 0,36″/px ni la focal de 6500 mm.
+  - El límite de difracción es 0,22″ en B y 0,28″ en V.
 - [ ] **Comparación de noches.** Usar `comparacion_noches.tex` (seeing, brillo del cielo,
   magnitud límite y Luna) para responder si un conjunto de imágenes es mejor que el otro.
 - [ ] **Comparar lo planificado con lo obtenido:** S/N, cielo y seeing reales frente a los
   estimados en `tiempos_exposicion.md`.
-- [ ] **Errores de 2025 que no hay que repetir:**
+- [ ] **Errores de 2025 que no hay que repetir** (ver `verificacion_informe_2025.md`):
   - usar `log10` y no `log`;
   - normalizar cada imagen por su propio tiempo de exposición;
+  - usar magnitudes Johnson (B, V), no Tycho (BT, VT), y no cruzar las estrellas;
+  - revisar que el zeropoint sea razonable (~20–23 en ADU/s, no 39);
   - calcular el error del ZP como σ/√N;
   - marcar los píxeles malos como NaN, no como 0;
   - alinear las imágenes antes de combinarlas;
-  - calcular el color como B − V, cruzando las fuentes por posición.
+  - calcular el color como B − V, cruzando las fuentes por posición;
+  - poner las horas en local o en UTC, pero rotuladas correctamente;
+  - usar la escala medida (0,317″/px) para el seeing y el campo.
 - [ ] **Código.** Va completo y comentado en el apéndice. Todos los integrantes deben poder
   explicarlo.
