@@ -100,7 +100,7 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
 | Escala (Tabla 4, matriz CD) | No la calculan | 0,3163″/px, rotación 1,3° | Dato correcto, no aprovechado |
 | Seeing HIP 117678 B | 13,17 px → 4,47″ | 13,17 × 0,36 = 4,74″ (error de transcripción) | ✗ |
 | Seeing HIP 117678 V, HIP 116375 B y V | 12,42 → 4,47″; 10,73 → 3,86″; 12,42 → 4,47″ | Aritmética correcta con 0,36 | ✓ |
-| Seeing promedio | 4,39″ | 4,39″ con 0,36 (usa el 4,74 correcto). Con 0,317″/px: **3,86″** | Escala errada |
+| Seeing promedio | 4,39″ | 4,39″ con 0,36 (usa el 4,74 correcto); con 0,317″/px serían 3,86″. Pero el método (sigma del segmento de una estrella brillante) sobreestima el FWHM: el ajuste gaussiano del pipeline sobre las mismas 40 imágenes da **2,5″** (1,9–3,2″) | ✗ |
 | Horas de las tablas 1 y 2 | Rotuladas como CLT (UTC−3) | Son **UTC**. M17 se observó a las 20:46–20:57 hora local; HIP 116375 a las 22:08 y HIP 117678 a las 23:52–23:54 | ✗ |
 | Culminación de M17 (2/10) | ~22:30, 70° | 19:18 hora local, 75,7° | ✗ |
 | Altura de M17 durante la observación | No la dan | 64–65° (masa de aire 1,10–1,11), igual al `CENTALT` y `AIRMASS` del header. Si la hora fuera 23:46 local, M17 habría estado a 27° | — |
@@ -111,7 +111,7 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
 | HIP 117678: V, M, d | 7,06; 1,17; 150,9 pc = 492,0 ly | V = 7,058; M = 1,17; 492,2 ly | ✓ |
 | B−V (Johnson) | 1,075 y 0,972 | 0,85·(BT−VT) = 1,073 y 0,961 | ✓ / ≈ |
 | Magnitudes usadas para el ZP | Tycho (BT, VT) | Debían ser Johnson; además, las etiquetas de las dos estrellas están cruzadas en el código | ✗ |
-| Zeropoints | B 39,26 · V 39,66 | Imposibles: una estrella de V ≈ 7 daría 10¹³ ADU/s. Ni con los 16,7 millones de píxeles saturados en 3 s se llega a 4·10¹¹ ADU/s | ✗ |
+| Zeropoints | B 39,26 · V 39,66 | Imposibles: una estrella de V ≈ 7 daría 10¹³ ADU/s. Ni con los 16,7 millones de píxeles saturados en 3 s se llega a 4·10¹¹ ADU/s. El pipeline, con los mismos datos, da **B 21,85 · V 21,94** (ADU/s, corregidos por extinción) | ✗ |
 | Magnitudes del catálogo | `np.log` | Debía ser `np.log10` | ✗ |
 | Error del ZP | σ/N | σ/√N | ✗ |
 | Bias | "exposición de 1 s" en el texto, 0 s en la Tabla 3 | Inconsistente | Menor |
@@ -129,5 +129,11 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
   lo trata así.
 - **Sitio:** las coordenadas del header (−30,4597°, −70,7503°) quedan en `config.example.yaml`.
   Para la visibilidad, el enunciado pide Cerro Tololo.
-- **Ruido de lectura, corriente oscura y zeropoint:** siguen pendientes; medirlos con los datos
-  de 2025 (ver [`pendientes.md`](pendientes.md)).
+- **Medido con los datos de 2025** (pipeline, `paso_calibracion` y `paso_estandares`):
+  - ruido de lectura de 3,56 e⁻ y bias de 92,5 ADU;
+  - corriente oscura no detectable (dark − bias < 0);
+  - ZP de B 21,85 y de V 21,94 en ADU/s;
+  - seeing de 2,5″.
+
+  El ZP de B difiere 0,29 mag entre las dos estándares; está pendiente revisar los headers de
+  esas imágenes (ver [`pendientes.md`](pendientes.md)).

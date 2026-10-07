@@ -9,9 +9,12 @@ y de lo que hay que considerar en el informe. Actualizada el 7/10/2026.
 - escala de placa (0,317″/px) y campo (21,6′ × 21,6′);
 - datos de la cámara: ganancia, ruido de lectura, capacidad de pozo, obturador y descarga;
 - hora de los FITS (UTC);
-- encuadre de cada objeto en el campo.
+- encuadre de cada objeto en el campo;
+- con los datos de 2025: zeropoint, ruido de lectura (3,56 e⁻), nivel de bias (92,5 ADU) y seeing
+  típico (2,5″); los tiempos de exposición ya están recalculados con ellos.
 
-**Falta medir con los datos de 2025:** la corriente oscura, el zeropoint y el nivel de bias.
+**Falta revisar en los datos de 2025:** por qué el ZP en B difiere 0,29 mag entre las dos
+estándares (headers `FILTER` y `EXPTIME`).
 
 **Falta preguntar al ayudante:** si hay guiado, el modo de lectura, las calibraciones, el
 horario y si la óptica sigue igual.
@@ -43,16 +46,22 @@ horario y si la óptica sigue igual.
 **Medir con los datos de 2025** (notebook del pipeline: `paso_calibracion` y `paso_estandares`,
 que no necesitan imágenes de ciencia):
 
-- [ ] **Corriente oscura.** Moravian no la publica; se supuso 0,05 e⁻/s/px. Sale en
-  `calibracion.json` (`dark_current_mediana_adu_s` × 0,85).
-- [ ] **Nivel de bias.** Se suma a la señal: el margen real hasta saturar es 65 535 ADU menos el
-  bias. Sale en `calibracion.json` (`bias_mediana_adu`).
-- [ ] **Zeropoint.** Se estimó en teoría (±0,5 mag) e incluye la eficiencia cuántica, que Moravian
-  tampoco publica. Sale en `zeropoints.ecsv`. Para la calculadora: ZP(e⁻/s) = ZP(ADU) − 0,18.
-- [ ] **Recalcular los tiempos de exposición** con los valores medidos:
-  `python tiempos_exposicion.py --zp-b … --zp-v … --oscuridad …`.
-- [ ] **(Opcional) Verificar el ruido de lectura** en los bias: debería dar ~3,9 e⁻
-  (`ruido_lectura_e`).
+- [x] **Corriente oscura:** no detectada. Dark − bias dio −0,039 ADU/s, es decir, los darks de
+  100 s quedaron 3,9 ADU bajo el bias. Para planificar se usa 0,033 e⁻/s/px como cota
+  conservadora.
+- [x] **Nivel de bias.** Se suma a la señal: el margen real hasta saturar es 65 535 ADU menos el
+  bias. Sale en `calibracion.json` (`bias_mediana_adu`): 92,5 ADU.
+- [x] **Zeropoint:** B 21,845 y V 21,941 en ADU/s, que son 21,665 y 21,761 en e⁻/s. Queda
+  0,3 mag bajo la estimación teórica: el sistema es ~25 % menos eficiente que lo supuesto.
+- [ ] **Diferencia de 0,29 mag en el ZP de B entre HIP 116375 (21,99) y HIP 117678 (21,70).** En V
+  coinciden a 0,01 mag. Revisar `FILTER` y `EXPTIME` en el header de una imagen B de cada
+  estrella (por ejemplo, las imágenes 557 y 592). Si no hay una explicación, considerar ±0,15 mag
+  de incertidumbre en el ZP de B.
+- [x] **Tiempos de exposición recalculados** con esos valores, que ahora son los predeterminados
+  de `tiempos_exposicion.py`. La S/N baja ~20 % y las estándares admiten ~30 % más de tiempo.
+- [x] **Ruido de lectura:** 3,56 e⁻ (4,19 ADU), coherente con los 3,9 e⁻ de la ficha. Confirma el
+  modo 16-bit HDR.
+- [x] **Seeing de 2025:** 2,5″ de mediana (1,9–3,2″) en las 40 exposiciones de estándares.
 
 **Preguntar al ayudante:**
 
@@ -77,15 +86,17 @@ que no necesitan imágenes de ciencia):
     asumir que el fondo se mide con poco cielo libre.
 - [ ] **Elegir las dos estándares de cada noche:** una al comienzo y otra al final, para tener
   dos masas de aire distintas y poder medir el coeficiente de extinción k.
-  - Mejor HD 215863, HD 562 o HD 220881, que permiten 3–4 s.
-  - HD 210300 y HD 12206 obligan a 1–1,5 s y a tomar más exposiciones por el centelleo.
+  - Mejor HD 215863, HD 562 o HD 220881, que permiten ~3 s en B y 2–2,5 s en V.
+  - HD 210300 y HD 12206 obligan a ~1 s y a tomar más exposiciones por el centelleo.
 - [ ] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
 - [ ] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
   hora de inicio (el enunciado dice desde las 19:00).
 - [ ] **Calibraciones.** Preguntar cuándo y cuántos bias, darks y flats se toman, y con qué
-  tiempos. Tomar darks con el mismo tiempo de exposición que la ciencia o, si no, darks largos
-  para escalar.
+  tiempos. **Pedir darks con el mismo tiempo de exposición que la ciencia y que las estándares**,
+  tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
+  quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
+  sensor CMOS.
 - [ ] **Noche de respaldo.** Si el clima falla, se observa el jueves 22/10. Ese día la Luna está
   al ~88 %, en AR 23h20m, y sobre el horizonte toda la ventana.
   - Queda a 22° de la Hélice, 28° de NGC 247, 32° de NGC 7793, 35° de NGC 7009 y 42° de NGC 300.
@@ -119,7 +130,7 @@ que no necesitan imágenes de ciencia):
   midieron ~3,9″ (con la escala correcta), que es alto; puede haber influido el enfoque.
 - [ ] **Satélites.** Revisar cada imagen. Con exposiciones largas, perder una cuesta más; si una
   sale contaminada, tomar otra.
-- [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar. Con 1–1,5 s tomar
+- [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar. Con ~1 s tomar
   más, porque el centelleo agrega más ruido en exposiciones cortas.
 - [ ] **15/10:** la Luna está alta hasta las 00:52. El fondo en B será más alto; revisarlo en la
   prueba.
