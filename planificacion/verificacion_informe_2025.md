@@ -49,11 +49,7 @@ Fuente: [C4 Series CMOS Cameras](https://www.gxccd.com/art?id=607&lang=409), con
 
 ### Sin confirmar
 
-La ficha no publica la **eficiencia cuántica** ni la **corriente oscura** del C4-16000. Siguen
-como supuestos en `tiempos_exposicion.py`:
-- la corriente oscura se puede medir con los darks de 2025 (`paso_calibracion` → `calibracion.json`);
-- la eficiencia cuántica queda incluida en el zeropoint, que se mide con las estándares (ver
-  la sección siguiente).
+- La eficiencia cuántica queda incluida en el zeropoint, que se mide con las estándares (ver  la sección siguiente).
 
 ### Eficiencia cuántica y eficiencia total del sistema
 
