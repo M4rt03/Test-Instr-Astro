@@ -84,7 +84,7 @@ cuántica, sin la atmósfera). Sale del zeropoint de las estándares de 2025:
   ZP teórico usa el flujo de Vega en B y V (Bessell et al. 1998) y un área efectiva de 1570 cm²
   (espejo de 0,5 m con una obstrucción central supuesta de ~45 %, no verificada).
 - **Si la obstrucción fuera otra,** cambia el área y, en la misma proporción, la eficiencia
-  deducida. Por ejemplo, con 35 % de obstrucción ambas bajarían ~8 %.
+  deducida. Por ejemplo, con 35 % de obstrucción ambas bajarían ~9 %.
 - **Incertidumbre en B:** el ZP de B tiene una incertidumbre de ±0,15 mag (las dos estándares
   difieren 0,29 mag), así que la eficiencia en B es 0,22 ± 0,03.
 - **Para el informe:** reportar la eficiencia total medida junto al zeropoint. La eficiencia
