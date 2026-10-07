@@ -99,13 +99,10 @@ cuántica, sin la atmósfera). Sale del zeropoint de las estándares de 2025:
 ### Cómo se midió
 
 1. **Datos:** `Calibracao.ipynb` tiene impresa la tabla completa de las 8 fuentes detectadas en
-   una exposición de 9 s en B de la estándar HIP 117445 (2023-10-06). La fuente más grande, en
-   (2042, 2036), es la estrella, en el centro de la imagen.
-2. **Catálogo:** se descargaron de VizieR las estrellas de Gaia DR3 con G < 15 del campo y se
-   corrigió su movimiento propio a la fecha de la imagen.
+   una exposición de 9 s en B de la estándar HIP 117445 (2023-10-06). La fuente más grande, en (2042, 2036), es la estrella, en el centro de la imagen.
+2. **Catálogo:** se descargaron de VizieR las estrellas de Gaia DR3 con G < 15 del campo y se corrigió su movimiento propio a la fecha de la imagen.
 3. **Búsqueda:** se probó con escalas de 0,24 a 0,40″/px, rotaciones de 0 a 360° y ambas
-   orientaciones, contando cuántas de las otras 7 fuentes caen a menos de 6″ de una estrella
-   de Gaia. Solo una solución hace coincidir las 7:
+   orientaciones, contando cuántas de las otras 7 fuentes caen a menos de 6″ de una estrella de Gaia. Solo una solución hace coincidir las 7:
 
    | Escala | Estrellas que coinciden (de 7) |
    |---|---|
@@ -119,8 +116,7 @@ cuántica, sin la atmósfera). Sale del zeropoint de las estándares de 2025:
 ### Conclusión
 
 La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
-- La medición de 2023 y la solución de astrometry.net de 2025 coinciden, así que la óptica no
-  cambió entre esos años.
+- La medición de 2023 y la solución de astrometry.net de 2025 coinciden, así que la óptica no  cambió entre esos años.
 - El `FOCALLEN = 6500` del header es nominal: la focal efectiva es ~5860 mm (f/11,7),
   probablemente por un corrector o reductor.
 - El 0,36″/px del informe de 2025 no tiene respaldo y sobreestima el campo en un 14 %.
@@ -168,5 +164,4 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
   - ZP de B 21,85 y de V 21,94 en ADU/s;
   - seeing de 2,5″.
 
-  El ZP de B difiere 0,29 mag entre las dos estándares; está pendiente revisar los headers de
-  esas imágenes (ver [`pendientes.md`](pendientes.md)).
+  El ZP de B difiere 0,29 mag entre las dos estándares; está pendiente revisar los headers de esas imágenes (ver [`pendientes.md`](pendientes.md)).

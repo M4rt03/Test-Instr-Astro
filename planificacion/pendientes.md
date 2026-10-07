@@ -10,8 +10,7 @@ y de lo que hay que considerar en el informe. Actualizada el 7/10/2026.
 - datos de la cámara: ganancia, ruido de lectura, capacidad de pozo, obturador y descarga;
 - hora de los FITS (UTC);
 - encuadre de cada objeto en el campo;
-- con los datos de 2025: zeropoint, ruido de lectura (3,56 e⁻), nivel de bias (92,5 ADU) y seeing
-  típico (2,5″); los tiempos de exposición ya están recalculados con ellos.
+- con los datos de 2025: zeropoint*, ruido de lectura (3,56 e⁻), nivel de bias (92,5 ADU) y seeing típico (2,5″); los tiempos de exposición ya están recalculados con ellos.
 
 **Falta revisar en los datos de 2025:** por qué el ZP en B difiere 0,29 mag entre las dos
 estándares (headers `FILTER` y `EXPTIME`).

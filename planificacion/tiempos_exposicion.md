@@ -113,8 +113,7 @@ Luego: `python tiempos_exposicion.py --zp-b … --zp-v … --ruido … --oscurid
 ## Resultado principal: dominan el ruido de lectura y la corriente oscura
 
 Con píxeles de 0,317″, cada píxel recibe muy poca luz del cielo: entre 0,03 y 0,10 e⁻/s.
-Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² por píxel) harían
-falta exposiciones de 20 a 70 minutos. Por lo tanto:
+Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² por píxel) harían falta exposiciones de 20 a 70 minutos. Por lo tanto:
 
 - **Conviene tomar pocas exposiciones largas en lugar de muchas cortas.** Con el mismo
   tiempo total (~14 min en B, NGC 300):
