@@ -52,7 +52,44 @@ Fuente: [C4 Series CMOS Cameras](https://www.gxccd.com/art?id=607&lang=409), con
 La ficha no publica la **eficiencia cuántica** ni la **corriente oscura** del C4-16000. Siguen
 como supuestos en `tiempos_exposicion.py`:
 - la corriente oscura se puede medir con los darks de 2025 (`paso_calibracion` → `calibracion.json`);
-- la eficiencia cuántica queda incluida en el zeropoint, que se mide con las estándares.
+- la eficiencia cuántica queda incluida en el zeropoint, que se mide con las estándares (ver
+  la sección siguiente).
+
+### Eficiencia cuántica y eficiencia total del sistema
+
+**Gpixel (fabricante del sensor)** solo publica hoy la versión BSI del GSENSE4040
+([ficha](https://gpixel.com/en/pro_details_11100.html) y hoja de datos V1.0.0, consultadas el
+7/10/2026):
+
+| GSENSE4040**BSI** (no es la del MAS500) | Valor |
+|---|---|
+| Eficiencia cuántica máxima | 90 % a 600 nm |
+| Capacidad de pozo · ruido de lectura | 39 200 e⁻ · 2,3 e⁻ |
+| Corriente oscura | 0,04 e⁻/s/px a −40 °C |
+
+La cámara del MAS500 usa la versión **FSI**. La ficha de la BSI dice que es compatible con
+ella, pero Gpixel no publica una ficha de la FSI. Por eso su eficiencia cuántica sigue sin un
+valor oficial; solo se sabe que es menor que la de la BSI, porque en la FSI el cableado tapa
+parte del píxel.
+
+**Lo que sí está medido es la eficiencia total del sistema** (espejos × filtro × eficiencia
+cuántica, sin la atmósfera). Sale del zeropoint de las estándares de 2025:
+
+| Filtro | ZP medido (e⁻/s) | ZP teórico con eficiencia total supuesta | Eficiencia total medida |
+|---|---|---|---|
+| B | 21,665 | 21,98 con 0,30 | **≈ 0,22** |
+| V | 21,761 | 22,05 con 0,48 | **≈ 0,37** |
+
+- **Cálculo:** eficiencia medida = eficiencia supuesta × 10^(−0,4·(ZP teórico − ZP medido)). El
+  ZP teórico usa el flujo de Vega en B y V (Bessell et al. 1998) y un área efectiva de 1570 cm²
+  (espejo de 0,5 m con una obstrucción central supuesta de ~45 %, no verificada).
+- **Si la obstrucción fuera otra,** cambia el área y, en la misma proporción, la eficiencia
+  deducida. Por ejemplo, con 35 % de obstrucción ambas bajarían ~8 %.
+- **Incertidumbre en B:** el ZP de B tiene una incertidumbre de ±0,15 mag (las dos estándares
+  difieren 0,29 mag), así que la eficiencia en B es 0,22 ± 0,03.
+- **Para el informe:** reportar la eficiencia total medida junto al zeropoint. La eficiencia
+  cuántica sola no se puede separar sin conocer la reflectividad de los espejos y la transmisión
+  de los filtros.
 
 ## 2. Escala de placa: tres valores distintos
 
