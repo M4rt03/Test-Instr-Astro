@@ -7,23 +7,33 @@ y de lo que hay que considerar en el informe.
 
 ### Instrumento (preguntar al ayudante o medir con los datos de 2025)
 
-- [ ] **Escala de placa y campo.** El header dice 0,36″/px (campo de 24,6′), pero astrometry.net
-  dio 0,316″/px en 2025 (campo de ~21,6′). Resolver una imagen en
-  [nova.astrometry.net](https://nova.astrometry.net) y comparar.
-  - Si el campo es 21,6′, NGC 247 (19,7′), NGC 300 (19,4′) y la Hélice (16,3′) quedan muy
-    justas y casi sin cielo libre para el fondo.
-- [ ] **Ruido de lectura y corriente oscura.** Se supusieron 3,7 e⁻ y 0,05 e⁻/s/px. Medirlos
-  corriendo `paso_calibracion` en el notebook del pipeline con los bias y darks de 2025
-  (`calibracion.json`).
+- [x] **Escala de placa y campo.** Resuelto: 0,317″/px y un campo de 21,6′ × 21,6′, medidos con
+  estrellas de Gaia ([`medir_escala.py`](medir_escala.py)) y coincidentes con astrometry.net en 2025.
+  Ver [`verificacion_informe_2025.md`](verificacion_informe_2025.md).
+  - NGC 247 (19,7′), NGC 300 (19,4′) y la Hélice (16,3′) caben, pero dejan muy poco cielo libre
+    para el fondo. NGC 253 (26,8′) y NGC 55 (29,9′) no caben.
+  - Confirmar con el ayudante que la configuración óptica sigue siendo la misma de 2023 y 2025.
+- [x] **Ruido de lectura y capacidad de pozo.** Confirmados en la ficha de Moravian para el
+  modo 16-bit HDR (ganancia 0,85 e⁻/ADU): 3,9 e⁻ y 56 600 e⁻. Se pueden verificar con los
+  bias de 2025.
+- [ ] **Corriente oscura.** Moravian no la publica; se supuso 0,05 e⁻/s/px. Medirla corriendo
+  `paso_calibracion` en el notebook del pipeline con los bias y darks de 2025 (`calibracion.json`).
 - [ ] **Zeropoint.** Se estimó en teoría (±0,5 mag). Medirlo con `paso_estandares` y las
   estándares de 2025 (`zeropoints.ecsv`). Luego recalcular:
   `python tiempos_exposicion.py --zp-b … --zp-v … --ruido … --oscuridad …`.
-- [ ] **Ganancia.** Confirmar que sigue siendo 0,85 e⁻/ADU (header `GAIN`).
+- [x] **Ganancia.** 0,85 e⁻/ADU: header `GAIN` de 2023 y 2025 y ficha de Moravian (modo 16-bit HDR).
+  Si TheSkyX mostrara otro modo de lectura (12 bits), la ganancia cambia: revisarlo.
+- [ ] **Temperatura del sensor.** En 2025 el sensor quedó a −14 °C sin llegar a la consigna
+  (−16 °C); en 2023 trabajó a −25 °C. La corriente oscura depende de la temperatura: tomar los
+  darks a la misma temperatura que la ciencia.
+- [ ] **Hora en los FITS.** `DATE-OBS` está en UTC (hora local = UTC − 3). El informe de 2025
+  confundió ambas.
 - [ ] **Nivel de bias y saturación.** El nivel del bias se suma a la señal: el límite útil es
   ~65 535 ADU menos el bias. Se usó un límite conservador de 40 000 ADU sobre el bias.
 - [ ] **Guiado.** Preguntar si la montura guía (cámara ZWO ASI174). Las exposiciones de
   90–120 s dependen de eso; sin guiado, probar si 60 s salen sin estelas.
-- [ ] **Tiempo de descarga y de cambio de filtro.** Se supusieron 5 s por imagen. Afecta
+- [ ] **Tiempo de cambio de filtro y de guardado.** La descarga toma 0,25 s por USB 3 (Moravian);
+  se supusieron 5 s por imagen en total. Afecta
   cuántas exposiciones caben en 30 min.
 
 ### Plan de observación (con los otros grupos y el ayudante)
@@ -69,8 +79,8 @@ y de lo que hay que considerar en el informe.
   midieron 3,9–4,4″, que es alto; puede haber influido el enfoque.
 - [ ] **Satélites.** Revisar cada imagen. Con exposiciones largas, perder una cuesta más; si una
   sale contaminada, tomar otra.
-- [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar y sin bajar de ~2 s si
-  se puede.
+- [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar. Con 1–1,5 s tomar
+  más, porque el centelleo agrega más ruido en exposiciones cortas.
 - [ ] **15/10:** la Luna está alta hasta las 00:52. El fondo en B será más alto; revisarlo en la
   prueba.
 - [ ] **Descargar todo** al terminar: la ciencia del grupo, las estándares y todas las
@@ -79,8 +89,8 @@ y de lo que hay que considerar en el informe.
 ## 3. Después, para el análisis y el informe
 
 - [ ] **Pipeline.** Copiar `config.example.yaml` como `config.yaml` y completarlo:
-  - escala de placa medida;
-  - ganancia;
+  - escala de placa (0,317″/px, ya en `config.example.yaml`);
+  - ganancia (0,85 e⁻/ADU);
   - objeto y coordenadas;
   - estándares con sus magnitudes B y V;
   - rutas de los archivos de las dos noches.

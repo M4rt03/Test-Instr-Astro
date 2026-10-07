@@ -5,6 +5,7 @@
 **Ventana útil:** 21:00 → 01:00 (extendida a 02:00), hora de Chile CLST = UTC−3
 **Criterio de visibilidad:** horas sobre 30° de altura (masa de aire < 2) dentro de la ventana, en ambas noches
 **Cálculo:** astropy (script `visibilidad_tarea2.py`), contrastado con Staralt
+**Campo del MAS500:** 21,6′ × 21,6′ (0,317″/px, medido con Gaia; ver [`verificacion_informe_2025.md`](verificacion_informe_2025.md)). El campo de 24,6′ que se usaba antes venía de una escala errónea
 
 ---
 
@@ -44,6 +45,35 @@ Coordenadas J2000 y magnitudes integradas de OpenNGC. "h>30°" son las horas sob
 
 Para los objetos 6 a 9, la altura máxima indicada se alcanza a las 02:00, porque siguen subiendo al cierre de la ventana.
 
+### Encuadre en el campo de 21,6′ × 21,6′
+
+Extensión de cada objeto proyectada en las direcciones este-oeste (E-O) y norte-sur (N-S) del
+detector. Se usan los tamaños de la tabla, el ángulo de posición (PA) de SIMBAD y la rotación
+medida de la cámara (−0,5°, prácticamente con el norte hacia arriba). "Margen" es el cielo libre
+que queda a cada lado en la dirección más justa, con el objeto centrado. "Área" es la fracción del
+campo que cubre la elipse del objeto.
+
+| Objeto | PA | Extensión E-O × N-S | Margen mínimo | Área | Encuadre |
+|---|---|---|---|---|---|
+| NGC 7293 (Helix) | — | 16,3′ × 16,3′ | 2,7′ | 45 % | Cabe; poco cielo libre |
+| NGC 7009 | 70° | 0,7′ × 0,7′ | 10,5′ | < 1 % | Sobrado |
+| NGC 300 | 114° | 18,5′ × 14,3′ | **1,6′** (E-O) | 43 % | Justo |
+| NGC 7793 | 84° | 10,4′ × 6,1′ | 5,6′ | 10 % | Sobrado |
+| NGC 247 | 178° | 5,5′ × 19,7′ | **1,0′** (N-S) | 18 % | Muy justo en N-S |
+| NGC 1097 | 147° | 7,9′ × 9,5′ | 6,0′ | 11 % | Sobrado |
+| NGC 1291 | 156° | 10,1′ × 11,0′ | 5,3′ | 19 % | Sobrado |
+| NGC 1316 | 49° | 11,4′ × 10,6′ | 5,1′ | 17 % | Sobrado |
+| NGC 1313 | 39° | 9,9′ × 10,4′ | 5,6′ | 17 % | Sobrado |
+| NGC 6744 | 16° | 10,4′ × 15,3′ | 3,1′ | 26 % | Cabe |
+
+- Los tamaños corresponden a la isofota de 25 mag/arcsec² en B (D25). Las galaxias tienen luz
+  más allá de ese borde, así que el cielo libre real es algo menor que el margen.
+- **NGC 247 y NGC 300:** hay que centrarlas bien, porque un error de apuntado de 1′ las deja
+  tocando el borde. El fondo se mide en las esquinas y en los márgenes; conviene mencionarlo
+  como limitación en el informe.
+- **Helix:** el disco principal (16,3′) cabe, pero su halo débil exterior se extiende más allá
+  del campo.
+
 ### Coordenadas (formato Staralt)
 
 ```
@@ -63,7 +93,7 @@ NGC6744  19 09 46 -63 51 27
 
 - **NGC 1316:** está justo en el límite de 2 h el 8/10. Si la ventana se extiende hasta las 02:00, tiene 2,9 h.
 - **NGC 6744:** está a 40° de la Luna el 15/10. Conviene observarla al comienzo de la noche, porque además va bajando (alt. 54° a las 21:00).
-- **NGC 300, NGC 247 y Helix:** caben en el campo de 24,6′, pero ocupan gran parte de él. Queda poco cielo libre para estimar el fondo, y son objetos de bajo brillo superficial.
+- **NGC 300, NGC 247 y Helix:** caben en el campo de 21,6′, pero con márgenes de 1,6′, 1,0′ y 2,7′ por lado (ver la tabla de encuadre). Queda poco cielo libre para estimar el fondo, y son objetos de bajo brillo superficial.
 - **NGC 1097, 1291, 1316 y 1313:** salen tarde, así que conviene dejarlos para los últimos bloques del plan.
 
 ### Reservas
@@ -84,8 +114,8 @@ NGC1365  03 33 36 -36 08 25
 
 | Objeto | Motivo |
 |---|---|
-| NGC 253 | 26.8′, no cabe en el campo de 24,6′ |
-| NGC 55 | 29.9′, no cabe en el campo |
+| NGC 253 | 26.8′ (PA 53°): proyectada mide 21,7′ en E-O, todo el ancho del campo de 21,6′, sin cielo libre |
+| NGC 55 | 29.9′ (PA 101°): proyectada mide 29,4′ en E-O, no cabe en el campo de 21,6′ |
 | NGC 6822 | 33° de la Luna el 15/10, bajo brillo superficial |
 | NGC 6818 | 33° de la Luna el 15/10 |
 | NGC 6302 | 10° de la Luna el 15/10, menos de 2 h sobre 30° |

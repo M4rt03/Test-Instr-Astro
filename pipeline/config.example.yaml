@@ -9,8 +9,8 @@ objeto:
 
 sitio:
   nombre: "Observatorio El Sauce (OMA)"
-  latitud: -30.4725             # grados (sur negativo); verifica con el manual del MAS500
-  longitud: -70.7631            # grados (oeste negativo)
+  latitud: -30.4597             # grados (sur negativo); OBSGEO-B del header de 2025
+  longitud: -70.7503            # grados (oeste negativo); OBSGEO-L del header de 2025
   altitud: 1600                 # metros
   utc_offset_h: -3              # hora local = UTC - 3 (horario de verano de Chile)
 
@@ -18,8 +18,8 @@ instrumento:
   telescopio: "MAS500 (Ritchey-Chrétien, 0.5 m, f/13)"
   camara: "Moravian C4-16000EC (4096 x 4096)"
   diametro_m: 0.5
-  escala_arcsec_px: 0.36
-  ganancia_e_adu: 1.0           # revisa el header (EGAIN / GAIN) o el manual
+  escala_arcsec_px: 0.317       # medida con Gaia (planificacion/medir_escala.py); el 0.36 de 2025 era incorrecto
+  ganancia_e_adu: 0.85          # header GAIN de los datos 2023 y 2025
   saturacion_adu: 60000         # límite de linealidad; la saturación dura es 65535
   bpm: null                     # ej. "datos/BPM.fit" (1 = píxel bueno, 0 = malo)
   seeing_estimado_arcsec: 3.0   # valor inicial para detectar estrellas; el pipeline lo mide

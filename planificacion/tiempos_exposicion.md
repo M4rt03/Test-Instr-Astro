@@ -56,11 +56,11 @@ medio, `μ = m + 2.5 log10(área en arcsec²)`, y la S/N se calcula en un elemen
 
 | Parámetro | Valor | Origen |
 |---|---|---|
-| Escala de placa | 0,316″/px | Solución de astrometry.net del informe 2025 (CD = 8,785·10⁻⁵ °/px). El header dice 0,36″/px |
+| Escala de placa | 0,317″/px | Medida con estrellas de Gaia ([`medir_escala.py`](medir_escala.py): 0,3168″/px); coincide con astrometry.net en 2025 (0,3163″/px). El 0,36″/px que usó el informe de 2025 era incorrecto |
 | Ganancia | 0,85 e⁻/ADU | Header `GAIN` de los datos de 2025 |
-| Ruido de lectura | 3,7 e⁻ | Hoja de datos del sensor (GSENSE4040). **Medir** en los bias |
-| Corriente oscura | 0,05 e⁻/s/px | Supuesto. **Medir** en los darks |
-| Límite de saturación | 40 000 ADU sobre el bias | Conservador, para quedar en el rango lineal |
+| Ruido de lectura | 3,9 e⁻ | Ficha de Moravian: GSENSE4040 FSI en modo 16-bit HDR (el de ganancia 0,85 e⁻/ADU). Conviene verificarlo en los bias |
+| Corriente oscura | 0,05 e⁻/s/px | Supuesto: Moravian no lo publica. **Medir** en los darks |
+| Límite de saturación | 40 000 ADU sobre el bias | Conservador. El ADC satura en 65 535 ADU, antes que el pozo (56 600 e⁻ = 66 600 ADU); según Moravian, el modo HDR es lineal en todo el rango |
 | ZP sobre la atmósfera | B 21,98 · V 22,05 (e⁻/s) | Estimado; ver detalle debajo |
 | Extinción | k_B = 0,25 · k_V = 0,15 | Valores típicos de Cerro Tololo |
 | Cielo sin Luna (8/10) | B 22,7 · V 21,8 mag/arcsec² | Valores típicos de Cerro Tololo |
@@ -73,7 +73,7 @@ medio, `μ = m + 2.5 log10(área en arcsec²)`, y la S/N se calcula en un elemen
 - eficiencia total de 0,30 en B y 0,48 en V (espejos, filtro y eficiencia cuántica).
 
 **El ZP es la mayor incertidumbre: puede estar errado en ±0,5 mag.** Con un ZP 0,5 mag peor, la
-S/N de los objetos débiles baja en un factor ~1,5 (NGC 300 en B: 14 → 9).
+S/N de los objetos débiles baja en un factor ~1,5 (NGC 300 en B: 13,6 → 9,0).
 
 ### Cómo medir los valores reales con los datos de 2025
 
@@ -90,24 +90,24 @@ Luego: `python tiempos_exposicion.py --zp-b … --zp-v … --ruido … --oscurid
 
 ## Resultado principal: dominan el ruido de lectura y la corriente oscura
 
-Con píxeles de 0,316″, cada píxel recibe muy poca luz del cielo: entre 0,04 y 0,13 e⁻/s.
+Con píxeles de 0,317″, cada píxel recibe muy poca luz del cielo: entre 0,04 y 0,13 e⁻/s.
 Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² por píxel) harían
-falta exposiciones de 20 a 60 minutos. Por lo tanto:
+falta exposiciones de 20 a 65 minutos. Por lo tanto:
 
 - **Conviene tomar pocas exposiciones largas en lugar de muchas cortas.** Con el mismo
   tiempo total (~14 min en B, NGC 300):
 
   | Exposición | S/N |
   |---|---|
-  | 30 s × 28 | 8,8 |
-  | 60 s × 14 | 11,4 |
-  | 120 s × 7 | 14,0 |
-  | 300 s × 3 | 17,3 |
+  | 30 s × 28 | 8,4 |
+  | 60 s × 14 | 11,0 |
+  | 120 s × 7 | 13,6 |
+  | 300 s × 3 | 17,1 |
 
 - **El límite práctico de t_exp lo ponen otras cosas:** el seguimiento o guiado de la montura,
   los satélites (con pocas exposiciones, perder una cuesta más) y la saturación del núcleo del
   objeto. Por eso se propone 90–120 s y no 300 s. Si el guiado funciona bien, se puede subir.
-- **La Luna del 15/10 casi no cambia la S/N** (NGC 300 en B: 14,0 → 13,1), porque el cielo no
+- **La Luna del 15/10 casi no cambia la S/N** (NGC 300 en B: 13,6 → 12,8), porque el cielo no
   es la fuente dominante de ruido. Sí cambia el nivel de fondo, que debe sustraerse bien.
 - **Los 30 s de 2025 (M17) quedaban en el régimen dominado por el ruido de lectura.** Para M17 no
   importaba, porque es muy brillante. Para galaxias de ~23 mag/arcsec² sí importa.
@@ -119,16 +119,16 @@ y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la ef
 
 | Objeto | X | B: t_exp × N | V: t_exp × N | Tiempo total (min) | μB medio | μV medio | S/N B 8/10 · 15/10 | S/N V 8/10 · 15/10 | S/N B borde (μ+2) 8/10 | μ límite B 8/10 (S/N=3) | μ satura B · V | Estrella satura V |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| NGC 7293 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.2 | 22.0 | 41 · 39 | 38 · 37 | 7 | 25.2 | 13.1 · 13.0 | V < 10.8 |
-| NGC 7009 | 1.06 | 30 s × 12 | 20 s × 12 | 12 | 16.2 | 15.9 | 857 · 856 | 871 · 871 | 316 | 24.2 | 11.6 · 11.3 | V < 9.2 |
-| NGC 300 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 23.3 | 14 · 13 | 12 · 11 | 2 | 25.2 | 13.1 · 12.9 | V < 10.8 |
-| NGC 7793 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.8 | 22.4 | 24 · 23 | 26 · 26 | 4 | 25.2 | 13.1 · 13.0 | V < 10.8 |
-| NGC 247 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 22.9 | 14 · 13 | 17 · 17 | 2 | 25.2 | 13.1 · 12.9 | V < 10.8 |
-| NGC 1097 | 1.15 | 90 s × 9 | 60 s × 9 | 24 | 23.3 | 23.0 | 14 · 13 | 14 · 14 | 2 | 25.0 | 12.7 · 12.5 | V < 10.4 |
-| NGC 1291 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.4 | 16 · 15 | 23 · 23 | 3 | 25.0 | 12.7 · 12.5 | V < 10.4 |
-| NGC 1316 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.2 | 17 · 16 | 29 · 28 | 3 | 25.0 | 12.7 · 12.5 | V < 10.4 |
-| NGC 1313 | 1.41 | 120 s × 7 | 90 s × 6 | 24 | 23.3 | 23.1 | 14 · 13 | 14 · 13 | 2 | 25.1 | 13.0 · 12.9 | V < 10.8 |
-| NGC 6744 | 1.31 | 120 s × 7 | 90 s × 6 | 24 | 23.2 | 23.4 | 16 · 16 | 11 · 11 | 3 | 25.1 | 13.0 · 12.9 | V < 10.8 |
+| NGC 7293 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.2 | 22.0 | 40 · 38 | 37 · 36 | 7 | 25.1 | 13.1 · 13.0 | V < 10.8 |
+| NGC 7009 | 1.06 | 30 s × 12 | 20 s × 12 | 12 | 16.2 | 15.9 | 855 · 855 | 870 · 870 | 313 | 24.1 | 11.6 · 11.3 | V < 9.2 |
+| NGC 300 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 23.3 | 14 · 13 | 12 · 11 | 2 | 25.1 | 13.1 · 13.0 | V < 10.8 |
+| NGC 7793 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.8 | 22.4 | 24 · 22 | 26 · 25 | 4 | 25.1 | 13.1 · 13.0 | V < 10.8 |
+| NGC 247 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 22.9 | 14 · 13 | 17 · 16 | 2 | 25.1 | 13.1 · 13.0 | V < 10.8 |
+| NGC 1097 | 1.15 | 90 s × 9 | 60 s × 9 | 24 | 23.3 | 23.0 | 14 · 13 | 14 · 13 | 2 | 25.0 | 12.8 · 12.5 | V < 10.4 |
+| NGC 1291 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.4 | 16 · 15 | 22 · 22 | 3 | 25.0 | 12.7 · 12.5 | V < 10.4 |
+| NGC 1316 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.2 | 17 · 16 | 28 · 28 | 3 | 25.0 | 12.7 · 12.5 | V < 10.4 |
+| NGC 1313 | 1.41 | 120 s × 7 | 90 s × 6 | 24 | 23.3 | 23.1 | 14 · 13 | 13 · 13 | 2 | 25.0 | 13.0 · 12.9 | V < 10.8 |
+| NGC 6744 | 1.31 | 120 s × 7 | 90 s × 6 | 24 | 23.2 | 23.4 | 16 · 15 | 11 · 10 | 3 | 25.1 | 13.0 · 12.9 | V < 10.8 |
 
 **Cómo leer la tabla:**
 - **X:** masa de aire a la altura típica de observación de cada objeto.
@@ -149,9 +149,8 @@ y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la ef
 - **NGC 300 y NGC 247:** son las de más bajo brillo superficial (~23,4 mag/arcsec² en B). La S/N
   en las partes externas es baja. Si el bloque lo permite, conviene alargar las exposiciones o
   combinar ambas noches.
-- **Campo:** con 0,316″/px el lado del campo sería ~21,6′ y no 24,6′. NGC 247 (19,7′), NGC 300
-  (19,4′) y la Hélice (16,3′) quedarían todavía más justas. Conviene confirmar la escala con
-  una imagen resuelta en astrometry.net.
+- **Campo:** con 0,317″/px el lado del campo es 21,6′, no 24,6′. NGC 247 (19,7′), NGC 300
+  (19,4′) y la Hélice (16,3′) caben, pero dejan muy poco cielo libre para medir el fondo.
 
 ## 2. Estrellas estándar
 
@@ -160,20 +159,22 @@ redondeado a 0,5 s.
 
 | Estrella | B | V | t satura B | t satura V | t_exp B | t_exp V | pico B (ADU) | pico V (ADU) | S/N B | S/N V |
 |---|---|---|---|---|---|---|---|---|---|---|
-| HD 195500 | 7.38 | 7.32 | 4.4 s | 3.6 s | 2.5 s | 2.0 s | 22529 | 22379 | 1159 | 1155 |
-| HD 202941 | 7.07 | 7.07 | 3.3 s | 2.8 s | 2.0 s | 1.5 s | 23979 | 21130 | 1196 | 1122 |
-| HD 210300 | 6.59 | 6.44 | 2.1 s | 1.6 s | 1.0 s | 1.0 s | 18656 | 25166 | 1053 | 1225 |
-| HD 215863 | 7.84 | 7.69 | 6.8 s | 5.0 s | 4.0 s | 3.0 s | 23598 | 23874 | 1186 | 1193 |
-| HD 220881 | 7.74 | 7.45 | 6.2 s | 4.0 s | 3.5 s | 2.0 s | 22640 | 19853 | 1162 | 1087 |
-| HD 562 | 7.80 | 7.66 | 6.5 s | 4.9 s | 3.5 s | 2.5 s | 21423 | 20453 | 1130 | 1103 |
-| HD 8130 | 7.50 | 7.45 | 5.0 s | 4.0 s | 2.5 s | 2.0 s | 20172 | 19853 | 1096 | 1087 |
-| HD 12206 | 6.81 | 6.79 | 2.6 s | 2.2 s | 1.5 s | 1.0 s | 22851 | 18231 | 1167 | 1041 |
+| HD 195500 | 7.38 | 7.32 | 4.4 s | 3.6 s | 2.5 s | 2.0 s | 22672 | 22521 | 1158 | 1154 |
+| HD 202941 | 7.07 | 7.07 | 3.3 s | 2.8 s | 1.5 s | 1.5 s | 18099 | 21264 | 1033 | 1121 |
+| HD 210300 | 6.59 | 6.44 | 2.1 s | 1.6 s | 1.0 s | 1.0 s | 18774 | 25325 | 1052 | 1225 |
+| HD 215863 | 7.84 | 7.69 | 6.7 s | 5.0 s | 4.0 s | 2.5 s | 23747 | 20021 | 1185 | 1087 |
+| HD 220881 | 7.74 | 7.45 | 6.1 s | 4.0 s | 3.5 s | 2.0 s | 22783 | 19979 | 1161 | 1086 |
+| HD 562 | 7.80 | 7.66 | 6.5 s | 4.9 s | 3.5 s | 2.5 s | 21559 | 20582 | 1129 | 1103 |
+| HD 8130 | 7.50 | 7.45 | 4.9 s | 4.0 s | 2.5 s | 2.0 s | 20300 | 19979 | 1095 | 1086 |
+| HD 12206 | 6.81 | 6.79 | 2.6 s | 2.2 s | 1.5 s | 1.0 s | 22995 | 18346 | 1166 | 1040 |
 
 **Recomendaciones para las estándares:**
-- **Evitar exposiciones menores a ~2 s.** Con tiempos muy cortos, la apertura y el cierre del
-  obturador iluminan el detector de forma desigual, y el centelleo atmosférico agrega ~0,3 % de
-  ruido por exposición. Las más débiles (HD 215863, HD 562, HD 220881) permiten 3–4 s en B.
-  HD 210300 y HD 12206 obligan a usar 1–1,5 s.
+- **Exposiciones cortas.** La cámara usa obturador electrónico (*rolling shutter*): todas las
+  filas se exponen el mismo tiempo, con un desfase de 85 ms entre la primera y la última. Por
+  eso 1 s es tan uniforme como 10 s. El límite lo pone el centelleo atmosférico, que agrega
+  ~0,3 % de ruido en una exposición de 2 s y más en una de 1 s.
+  - HD 215863, HD 562 y HD 220881 permiten 3–4 s en B.
+  - HD 210300 y HD 12206 obligan a usar 1–1,5 s; con ellas conviene tomar más exposiciones.
 - **Tomar 5 o más exposiciones por filtro y promediar.** La S/N de cada una ya supera 1000; la
   precisión la limitan el centelleo y el flat, no los fotones.
 - **Como referencia:** en 2025 se usaron 5 s (B) y 3 s (V) para estrellas de B ≈ 8,4 y V ≈ 7,2,

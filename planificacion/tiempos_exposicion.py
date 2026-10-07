@@ -20,12 +20,12 @@ import math
 # Instrumento y sitio
 # ----------------------------------------------------------------------------
 INSTRUMENTO = {
-    "escala": 0.316,          # arcsec/px (astrometry.net, informe 2025: CD = 8.785e-5 °/px)
+    "escala": 0.317,          # arcsec/px medida (medir_escala.py: 0.3168; astrometry.net 2025: 0.3163)
     "ganancia": 0.85,         # e-/ADU (header GAIN de los datos 2025)
-    "ruido": 3.7,             # e- por lectura (hoja de datos del sensor GSENSE4040; medir en bias)
-    "oscuridad": 0.05,        # e-/s/px (supuesto; medir con los darks)
-    "saturacion": 40000,      # ADU sobre el bias: límite conservador de linealidad (máx. 65535)
-    "lectura_s": 5,           # s entre exposiciones (descarga + guardado)
+    "ruido": 3.9,             # e- RMS, modo 16-bit HDR del GSENSE4040 FSI (ficha de Moravian)
+    "oscuridad": 0.05,        # e-/s/px (supuesto: Moravian no lo publica; medir con los darks)
+    "saturacion": 40000,      # ADU sobre el bias; el ADC llega a 65535 (pozo: 56600 e- = 66600 ADU)
+    "lectura_s": 5,           # s entre exposiciones: descarga 0.25 s (USB 3) + guardado en TheSkyX (supuesto)
     # Zeropoints sobre la atmósfera: magnitud que da 1 e-/s. Estimados con
     # área efectiva 1570 cm2 (0.5 m con obstrucción ~45 %), flujo de Vega en B y V
     # (Bessell 1998) y eficiencia total 0.30 (B) y 0.48 (V).
