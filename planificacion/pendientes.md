@@ -1,7 +1,7 @@
 # Pendientes: qué confirmar, revisar y tener en cuenta
 
 Lista de lo que falta confirmar antes y durante las noches del 8 y 15 de octubre de 2026,
-y de lo que hay que considerar en el informe. Actualizada el 7/10/2026.
+y de lo que hay que considerar en el informe. Actualizada el 8/10/2026.
 
 ## Resumen
 
@@ -17,6 +17,10 @@ estándares (headers `FILTER` y `EXPTIME`).
 
 **Falta preguntar:**  guiado, el modo de lectura, las calibraciones, el
 horario y si la óptica sigue igual.
+
+**Calibraciones y estándares:** plan con tiempos en [`calibraciones.md`](calibraciones.md). Las
+magnitudes B y V de las estándares salen de Mermilliod (Johnson) con
+[`estrellas_estandar.py`](estrellas_estandar.py) (astroquery).
 
 **Falta acordar con los otros grupos:** el objeto de cada grupo, las estándares y la tabla del plan.
 
@@ -83,17 +87,21 @@ que no necesitan imágenes de ciencia):
   - NGC 6744 va al comienzo.
   - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que
     asumir que el fondo se mide con poco cielo libre.
-- [ ] **Elegir las dos estándares de cada noche:** una al comienzo y otra al final, para tener
-  dos masas de aire distintas y poder medir el coeficiente de extinción k.
-  - Mejor HD 215863, HD 562 o HD 220881, que permiten ~3 s en B y 2–2,5 s en V.
+- [ ] **Elegir las estándares de cada noche** (plan en [`calibraciones.md`](calibraciones.md)):
+  HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos
+  masas de aire, y HD 220881 o HD 562 a mitad de la noche.
+  - HD 195500 y HD 215863 no tienen B−V medido en Johnson (viene de Tycho). Decidir si se
+    reemplazan por HD 207480 y HD 212643, que están en Mermilliod.
   - HD 210300 y HD 12206 obligan a ~1 s y a tomar más exposiciones por el centelleo.
 - [ ] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
 - [ ] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
   hora de inicio (el enunciado dice desde las 19:00).
-- [ ] **Calibraciones.** Preguntar cuándo y cuántos bias, darks y flats se toman, y con qué
-  tiempos. **Pedir darks con el mismo tiempo de exposición que la ciencia y que las estándares**,
-  tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
+- [ ] **Calibraciones.** Plan propuesto en [`calibraciones.md`](calibraciones.md): 25 + 25 bias,
+  10 darks por cada t_exp de ciencia (120, 90 y 60 s) y 10–15 flats de crepúsculo por filtro
+  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si
+  hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
+  ciencia** (las estándares de 1–3 s se corrigen bien solo con el bias), tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
   quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
   sensor CMOS.
 - [ ] **Noche de respaldo.** Si el clima falla, se observa el jueves 22/10. Ese día la Luna está
@@ -141,7 +149,7 @@ que no necesitan imágenes de ciencia):
 - [ ] **Pipeline.** Copiar `config.example.yaml` como `config.yaml` y completarlo:
   - ya trae la escala (0,317″/px), la ganancia (0,85 e⁻/ADU) y el sitio;
   - falta el objeto y sus coordenadas;
-  - las estándares con sus magnitudes B y V;
+  - las estándares con sus magnitudes B y V: el bloque lo genera `estrellas_estandar.py`;
   - las rutas de los archivos de las dos noches.
 - [ ] **Detección con photutils.** Se usa photutils en vez de Source Extractor. El pipeline ya
   tiene las dos configuraciones (agresiva y extendida); hay que explicar en qué se diferencian
