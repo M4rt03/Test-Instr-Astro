@@ -25,7 +25,8 @@ INSTRUMENTO = {
     "ruido": 3.56,            # e- RMS medido en los bias de 2025 (ficha de Moravian: 3.9)
     "oscuridad": 0.033,       # e-/s/px: cota conservadora; en 2025 no se detectó (dark - bias = -0.039 ADU/s)
     "saturacion": 40000,      # ADU sobre el bias; el ADC llega a 65535 (pozo: 56600 e- = 66600 ADU)
-    "lectura_s": 5,           # s entre exposiciones: descarga 0.25 s (USB 3) + guardado en TheSkyX (supuesto)
+    "lectura_s": 1,           # s muertos por imagen: medido en DATE-OBS de 2025 (5 s cada 6.05 s, 3 s cada 4.05 s)
+    "cambio_filtro_s": 10,    # s para cambiar de filtro: medido en 2025 (~9 s entre la última B y la primera V)
     # Zeropoints sobre la atmósfera: magnitud que da 1 e-/s. Medidos con las estándares
     # de 2025 (pipeline, zeropoints.ecsv: ZP_ADU - 0.18). La estimación teórica previa
     # (área 1570 cm2, Vega de Bessell 1998, eficiencia 0.30 en B y 0.48 en V) daba
@@ -182,7 +183,7 @@ def imprimir(inst):
     t15 = tabla_objetos(inst, "15/10 Luna 25 %")
     for f8, f15 in zip(t8, t15):
         tb, nb, tv, nv = f8["plan"]
-        total = (nb * (tb + inst["lectura_s"]) + nv * (tv + inst["lectura_s"])) / 60
+        total = (nb * (tb + inst["lectura_s"]) + nv * (tv + inst["lectura_s"]) + inst["cambio_filtro_s"]) / 60
         print(f"| {f8['objeto']} | {f8['X']:.2f} | {tb} s × {nb} | {tv} s × {nv} | {total:.0f} | "
               f"{f8['B']['mu']:.1f} | {f8['V']['mu']:.1f} | "
               f"{f8['B']['snr']:.0f} · {f15['B']['snr']:.0f} | {f8['V']['snr']:.0f} · {f15['V']['snr']:.0f} | "

@@ -60,6 +60,7 @@ Las tasas se obtienen de las magnitudes con el zeropoint (ZP, la magnitud que da
 | Extinción | k_B = 0,25 · k_V = 0,15 | Valores típicos de Cerro Tololo |
 | Cielo sin Luna (8/10) | B 22,7 · V 21,8 mag/arcsec² | Valores típicos de Cerro Tololo |
 | Cielo con Luna al 25 % (15/10) | B 22,1 · V 21,6 mag/arcsec² | Valores típicos para esa fase |
+| Tiempo muerto | 1 s por imagen · 10 s por cambio de filtro | **Medido** en los `DATE-OBS` de 2025: las imágenes de 5 s salen cada 6,05 s y las de 3 s cada 4,05 s; entre la última B y la primera V pasan ~9 s. Antes se suponían 5 s por imagen |
 | Seeing | 2,5″ típico · 2,0″ para la saturación | **Medido** por el pipeline en las 40 exposiciones de estándares de 2025: mediana 2,5″, rango 1,9–3,2″. El informe de 2025 daba 3,9–4,4″ por usar mal la escala y el método |
 
 **El ZP medido frente al estimado:**
@@ -74,7 +75,9 @@ Las tasas se obtienen de las magnitudes con el zeropoint (ZP, la magnitud que da
 - **En B difieren en 0,29 mag:** HIP 116375 da 21,989 y HIP 117678 da 21,701, cada una con solo  0,008 mag de dispersión entre sus 10 exposiciones.
   - Según los catálogos, HIP 117678 debería verse un 16 % más brillante que HIP 116375 en B, pero se midió un 11 % más débil.
   - Las magnitudes de catálogo coinciden entre Hipparcos, Tycho-2 y SIMBAD, y la diferencia de masa de aire (0,13) o de color (0,1 mag) no alcanza a explicarla.
-  - Lo más probable es un problema de las imágenes en B de una de las dos estrellas: otro filtro en la rueda, otro tiempo de exposición real o nubes durante esa serie. Hay que revisar el header (`FILTER`, `EXPTIME`) de una imagen B de cada estrella.
+  - **Headers revisados:** todas las imágenes B de ambas estrellas tienen `FILTER = B` y `EXPTIME = 5.0`. La masa de aire (1,155 y 1,022) explica solo 0,03 mag.
+  - **El color medido contradice a los catálogos:** Tycho (B−V 1,075 contra 0,972), Gaia DR3 (BP−RP 1,213 contra 1,098) y el tipo espectral (K1III contra K0III) dicen que HIP 116375 es la más roja. En 2025, en cambio, HIP 117678 se midió 0,15 mag más roja (b−v instrumental 1,30 contra 1,14). Gaia no muestra vecinas brillantes a menos de 40″ de ninguna.
+  - **Conclusión:** algo afectó la serie B de una de las dos estrellas (nube delgada en ese minuto, rueda de filtros o escarcha en la ventana; la temperatura bajó de −15,1 a −16,7 °C entre ambas). Con dos estrellas no se puede saber cuál es el ZP correcto. En 2026 se resuelve con 3–5 estándares por noche con colores de Mermilliod ([`calibraciones.md`](calibraciones.md)).
   - Para planificar se usa el promedio (21,845 en ADU/s). Un error de ±0,15 mag cambia la S/N solo en ±12 %. Para la fotometría del informe, en cambio, sería un error sistemático importante en B y en B−V.
 
 **Corriente oscura negativa:** los darks de 100 s quedaron 3,9 ADU *por debajo* del bias. No es físico. Indica que la corriente oscura es menor de lo que se puede medir así y que el nivel de bias no es idéntico entre una exposición de 0 s y una de 100 s (algo común en sensores CMOS).
@@ -115,20 +118,20 @@ Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² p
 
 ## 1. Objetos: plan por bloque de 30 min
 
-Los tiempos suman ~24 min de exposición más lecturas, lo que deja ~6 min para apuntar, enfocar y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
+Los tiempos suman ~23 min de exposición más el tiempo muerto (1 s por imagen y 10 s por cambio de filtro, medidos en 2025), lo que deja ~7 min para apuntar, enfocar y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
 
 | Objeto | X | B: t_exp × N | V: t_exp × N | Tiempo total (min) | μB medio | μV medio | S/N B 8/10 · 15/10 | S/N V 8/10 · 15/10 | S/N B borde (μ+2) 8/10 | μ límite B 8/10 (S/N=3) | μ satura B · V | Estrella satura V |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| NGC 7293 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.2 | 22.0 | 34 · 32 | 32 · 31 | 6 | 24.9 | 12.8 · 12.7 | V < 11.0 |
-| NGC 7009 | 1.06 | 30 s × 12 | 20 s × 12 | 12 | 16.2 | 15.9 | 739 · 738 | 761 · 760 | 269 | 23.9 | 11.3 · 11.0 | V < 9.4 |
-| NGC 300 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 23.3 | 12 · 11 | 10 · 10 | 2 | 24.9 | 12.8 · 12.7 | V < 11.0 |
-| NGC 7793 | 1.04 | 120 s × 7 | 90 s × 6 | 24 | 22.8 | 22.4 | 20 · 19 | 22 · 22 | 3 | 24.9 | 12.8 · 12.7 | V < 11.0 |
-| NGC 247 | 1.06 | 120 s × 7 | 90 s × 6 | 24 | 23.4 | 22.9 | 12 · 11 | 15 · 14 | 2 | 24.9 | 12.8 · 12.7 | V < 11.0 |
-| NGC 1097 | 1.15 | 90 s × 9 | 60 s × 9 | 24 | 23.3 | 23.0 | 12 · 11 | 12 · 12 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
-| NGC 1291 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.4 | 13 · 13 | 19 · 19 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
-| NGC 1316 | 1.22 | 90 s × 9 | 60 s × 9 | 24 | 23.1 | 22.2 | 14 · 13 | 24 · 24 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
-| NGC 1313 | 1.41 | 120 s × 7 | 90 s × 6 | 24 | 23.3 | 23.1 | 12 · 11 | 11 · 11 | 2 | 24.9 | 12.7 · 12.6 | V < 11.0 |
-| NGC 6744 | 1.31 | 120 s × 7 | 90 s × 6 | 24 | 23.2 | 23.4 | 14 · 13 | 9 · 9 | 2 | 24.9 | 12.7 · 12.6 | V < 11.0 |
+| NGC 7293 | 1.04 | 120 s × 7 | 90 s × 6 | 23 | 22.2 | 22.0 | 34 · 32 | 32 · 31 | 6 | 24.9 | 12.8 · 12.7 | V < 11.0 |
+| NGC 7009 | 1.06 | 30 s × 12 | 20 s × 12 | 11 | 16.2 | 15.9 | 739 · 738 | 761 · 760 | 269 | 23.9 | 11.3 · 11.0 | V < 9.4 |
+| NGC 300 | 1.06 | 120 s × 7 | 90 s × 6 | 23 | 23.4 | 23.3 | 12 · 11 | 10 · 10 | 2 | 24.9 | 12.8 · 12.7 | V < 11.0 |
+| NGC 7793 | 1.04 | 120 s × 7 | 90 s × 6 | 23 | 22.8 | 22.4 | 20 · 19 | 22 · 22 | 3 | 24.9 | 12.8 · 12.7 | V < 11.0 |
+| NGC 247 | 1.06 | 120 s × 7 | 90 s × 6 | 23 | 23.4 | 22.9 | 12 · 11 | 15 · 14 | 2 | 24.9 | 12.8 · 12.7 | V < 11.0 |
+| NGC 1097 | 1.15 | 90 s × 9 | 60 s × 9 | 23 | 23.3 | 23.0 | 12 · 11 | 12 · 12 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
+| NGC 1291 | 1.22 | 90 s × 9 | 60 s × 9 | 23 | 23.1 | 22.4 | 13 · 13 | 19 · 19 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
+| NGC 1316 | 1.22 | 90 s × 9 | 60 s × 9 | 23 | 23.1 | 22.2 | 14 · 13 | 24 · 24 | 2 | 24.8 | 12.4 · 12.2 | V < 10.6 |
+| NGC 1313 | 1.41 | 120 s × 7 | 90 s × 6 | 23 | 23.3 | 23.1 | 12 · 11 | 11 · 11 | 2 | 24.9 | 12.7 · 12.6 | V < 11.0 |
+| NGC 6744 | 1.31 | 120 s × 7 | 90 s × 6 | 23 | 23.2 | 23.4 | 14 · 13 | 9 · 9 | 2 | 24.9 | 12.7 · 12.6 | V < 11.0 |
 
 **Cómo leer la tabla:**
 - **X:** masa de aire a la altura típica de observación de cada objeto.
