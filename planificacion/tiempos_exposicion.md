@@ -14,10 +14,8 @@ python tiempos_exposicion.py --zp-v 21.8 --ruido 3.2 --seeing 3.5   # con valore
 "Calcular el tiempo de exposición" significa decidir, para cada objeto y cada filtro:
 
 1. **Cuánto dura cada exposición (t_exp).** Tiene un máximo: ni el objeto ni las estrellas
-   que se usarán deben saturar. Tiene también un mínimo: si la exposición es muy corta, domina
-   el ruido de lectura del detector.
-2. **Cuántas exposiciones tomar (N).** Con eso se alcanza la señal a ruido (S/N) buscada en el
-   apilado, dentro del bloque de 30 minutos del plan.
+   que se usarán deben saturar. Tiene también un mínimo: si la exposición es muy corta, domina el ruido de lectura del detector.
+2. **Cuántas exposiciones tomar (N).** Con eso se alcanza la señal a ruido (S/N) buscada en el apilado, dentro del bloque de 30 minutos del plan.
 
 Es lo que pide el punto 7 del enunciado: llegar con una estimación, confirmarla con
 exposiciones de prueba al comienzo de cada bloque y **justificar en el informe** la elección final.
@@ -41,10 +39,7 @@ S/N = ────────────────────────�
 | D | corriente oscura | e⁻/s/px |
 | RN | ruido de lectura | e⁻ |
 
-Las tasas se obtienen de las magnitudes con el zeropoint (ZP, la magnitud que da 1 e⁻/s) y la
-extinción: `S = 10^(0.4·(ZP − k·X − m))`. Para objetos extendidos se usa el brillo superficial
-medio, `μ = m + 2.5 log10(área en arcsec²)`, y la S/N se calcula en un círculo de 4″ de
-diámetro (~1,6 veces el seeing típico).
+Las tasas se obtienen de las magnitudes con el zeropoint (ZP, la magnitud que da 1 e⁻/s) y la extinción: `S = 10^(0.4·(ZP − k·X − m))`. Para objetos extendidos se usa el brillo superficial medio, `μ = m + 2.5 log10(área en arcsec²)`, y la S/N se calcula en un círculo de 4″ de diámetro (~1,6 veces el seeing típico).
 
 ### Saturación
 
@@ -76,25 +71,14 @@ diámetro (~1,6 veces el seeing típico).
   lo supuesto, dentro de la incertidumbre de ±0,5 mag de la estimación.
 - Las tablas usan los valores medidos.
 - **En V las dos estrellas coinciden** (21,942 y 21,941, con 0,01 mag de dispersión).
-- **En B difieren en 0,29 mag:** HIP 116375 da 21,989 y HIP 117678 da 21,701, cada una con solo
-  0,008 mag de dispersión entre sus 10 exposiciones.
-  - Según los catálogos, HIP 117678 debería verse un 16 % más brillante que HIP 116375 en B, pero
-    se midió un 11 % más débil.
-  - Las magnitudes de catálogo coinciden entre Hipparcos, Tycho-2 y SIMBAD, y la diferencia de
-    masa de aire (0,13) o de color (0,1 mag) no alcanza a explicarla.
-  - Lo más probable es un problema de las imágenes en B de una de las dos estrellas: otro filtro
-    en la rueda, otro tiempo de exposición real o nubes durante esa serie. Hay que revisar el
-    header (`FILTER`, `EXPTIME`) de una imagen B de cada estrella.
-  - Para planificar se usa el promedio (21,845 en ADU/s). Un error de ±0,15 mag cambia la S/N
-    solo en ±12 %. Para la fotometría del informe, en cambio, sería un error sistemático
-    importante en B y en B−V.
+- **En B difieren en 0,29 mag:** HIP 116375 da 21,989 y HIP 117678 da 21,701, cada una con solo  0,008 mag de dispersión entre sus 10 exposiciones.
+  - Según los catálogos, HIP 117678 debería verse un 16 % más brillante que HIP 116375 en B, pero se midió un 11 % más débil.
+  - Las magnitudes de catálogo coinciden entre Hipparcos, Tycho-2 y SIMBAD, y la diferencia de masa de aire (0,13) o de color (0,1 mag) no alcanza a explicarla.
+  - Lo más probable es un problema de las imágenes en B de una de las dos estrellas: otro filtro en la rueda, otro tiempo de exposición real o nubes durante esa serie. Hay que revisar el header (`FILTER`, `EXPTIME`) de una imagen B de cada estrella.
+  - Para planificar se usa el promedio (21,845 en ADU/s). Un error de ±0,15 mag cambia la S/N solo en ±12 %. Para la fotometría del informe, en cambio, sería un error sistemático importante en B y en B−V.
 
-**Corriente oscura negativa:** los darks de 100 s quedaron 3,9 ADU *por debajo* del bias. No es
-físico. Indica que la corriente oscura es menor de lo que se puede medir así y que el nivel de
-bias no es idéntico entre una exposición de 0 s y una de 100 s (algo común en sensores CMOS).
-Consecuencia práctica: en las noches de 2026 conviene tomar **darks con el mismo tiempo de
-exposición que la ciencia** (y que las estándares) y restarlos directamente, en lugar de usar
-bias + corriente oscura escalada.
+**Corriente oscura negativa:** los darks de 100 s quedaron 3,9 ADU *por debajo* del bias. No es físico. Indica que la corriente oscura es menor de lo que se puede medir así y que el nivel de bias no es idéntico entre una exposición de 0 s y una de 100 s (algo común en sensores CMOS).
+Consecuencia práctica: en las noches de 2026 conviene tomar **darks con el mismo tiempo de exposición que la ciencia** (y que las estándares) y restarlos directamente, en lugar de usar bias + corriente oscura escalada.
 
 ### Cómo medir los valores reales con los datos de 2025
 
@@ -125,18 +109,13 @@ Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² p
   | 120 s × 7 | 11,6 |
   | 300 s × 3 | 14,8 |
 
-- **El límite práctico de t_exp lo ponen otras cosas:** el seguimiento o guiado de la montura,
-  los satélites (con pocas exposiciones, perder una cuesta más) y la saturación del núcleo del
-  objeto. Por eso se propone 90–120 s y no 300 s. Si el guiado funciona bien, se puede subir.
-- **La Luna del 15/10 casi no cambia la S/N** (NGC 300 en B: 11,6 → 10,9), porque el cielo no
-  es la fuente dominante de ruido. Sí cambia el nivel de fondo, que debe sustraerse bien.
-- **Los 30 s de 2025 (M17) quedaban en el régimen dominado por el ruido de lectura.** Para M17 no
-  importaba, porque es muy brillante. Para galaxias de ~23 mag/arcsec² sí importa.
+- **El límite práctico de t_exp lo ponen otras cosas:** el seguimiento o guiado de la montura,  los satélites (con pocas exposiciones, perder una cuesta más) y la saturación del núcleo del objeto. Por eso se propone 90–120 s y no 300 s. Si el guiado funciona bien, se puede subir.
+- **La Luna del 15/10 casi no cambia la S/N** (NGC 300 en B: 11,6 → 10,9), porque el cielo no es la fuente dominante de ruido. Sí cambia el nivel de fondo, que debe sustraerse bien.
+- **Los 30 s de 2025 (M17) quedaban en el régimen dominado por el ruido de lectura.** Para M17 no mportaba, porque es muy brillante. Para galaxias de ~23 mag/arcsec² sí importa.
 
 ## 1. Objetos: plan por bloque de 30 min
 
-Los tiempos suman ~24 min de exposición más lecturas, lo que deja ~6 min para apuntar, enfocar
-y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
+Los tiempos suman ~24 min de exposición más lecturas, lo que deja ~6 min para apuntar, enfocar y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
 
 | Objeto | X | B: t_exp × N | V: t_exp × N | Tiempo total (min) | μB medio | μV medio | S/N B 8/10 · 15/10 | S/N V 8/10 · 15/10 | S/N B borde (μ+2) 8/10 | μ límite B 8/10 (S/N=3) | μ satura B · V | Estrella satura V |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -175,8 +154,7 @@ y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la ef
 
 ## 2. Estrellas estándar
 
-Se usa seeing de 2,0″ (el mejor observado en 2025) y masa de aire 1,05. El t_exp propuesto es ~60 % del tiempo de saturación,
-redondeado a 0,5 s.
+Se usa seeing de 2,0″ (el mejor observado en 2025) y masa de aire 1,05. El t_exp propuesto es ~60 % del tiempo de saturación, redondeado a 0,5 s.
 
 | Estrella | B | V | t satura B | t satura V | t_exp B | t_exp V | pico B (ADU) | pico V (ADU) | S/N B | S/N V |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -191,18 +169,13 @@ redondeado a 0,5 s.
 
 **Recomendaciones para las estándares:**
 - **Exposiciones cortas.** La cámara usa obturador electrónico (*rolling shutter*): todas las
-  filas se exponen el mismo tiempo, con un desfase de 85 ms entre la primera y la última. Por
-  eso 1 s es tan uniforme como 10 s. El límite lo pone el centelleo atmosférico, que agrega
+  filas se exponen el mismo tiempo, con un desfase de 85 ms entre la primera y la última. Por eso 1 s es tan uniforme como 10 s. El límite lo pone el centelleo atmosférico, que agrega
   ~0,3 % de ruido en una exposición de 2 s y más en una de 1 s.
   - HD 562, HD 220881 y HD 8130 permiten 2,5–3 s en B y 1,5–2 s en V.
-  - HD 210300, HD 212643 y HD 12206 obligan a usar ~1 s; con ellas conviene tomar más
-    exposiciones. HD 212643 y HD 210300 llegan a 30 000–35 000 ADU en 1 s con seeing de 2″:
-    revisar el máximo en la prueba.
-- **Tomar 5 o más exposiciones por filtro y promediar.** La S/N de cada una ya es de ~800–1000; la
-  precisión la limitan el centelleo y el flat, no los fotones.
+  - HD 210300, HD 212643 y HD 12206 obligan a usar ~1 s; con ellas conviene tomar más exposiciones. HD 212643 y HD 210300 llegan a 30 000–35 000 ADU en 1 s con seeing de 2″: revisar el máximo en la prueba.
+- **Tomar 5 o más exposiciones por filtro y promediar.** La S/N de cada una ya es de ~800–1000; la precisión la limitan el centelleo y el flat, no los fotones.
 - **Como referencia:** en 2025 se usaron 5 s (B) y 3 s (V) para estrellas de B ≈ 8,1 y V ≈ 7,1,
-  con seeing de ~2,5″, y ninguna exposición saturó. Es coherente con esta tabla: estas estándares
-  son ~0,5–1 mag más brillantes en B, por eso sus tiempos son más cortos.
+  con seeing de ~2,5″, y ninguna exposición saturó. Es coherente con esta tabla: estas estándares son ~0,5–1 mag más brillantes en B, por eso sus tiempos son más cortos.
 
 ## 3. Procedimiento en el telescopio (exposiciones de prueba)
 
@@ -226,5 +199,4 @@ Con la prueba se puede recalcular todo:
 - **Nuevo cálculo:** `python tiempos_exposicion.py --zp-b … --zp-v …`.
 
 Después de la observación, el pipeline (photutils, sin Source Extractor) mide el seeing, el
-brillo del cielo y la magnitud límite reales de cada noche (`comparacion_noches.tex`). Con eso se
-puede comparar lo planificado con lo obtenido.
+brillo del cielo y la magnitud límite reales de cada noche (`comparacion_noches.tex`). Con eso se puede comparar lo planificado con lo obtenido.
