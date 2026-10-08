@@ -164,4 +164,6 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
   - ZP de B 21,85 y de V 21,94 en ADU/s;
   - seeing de 2,5″.
 
-  El ZP de B difiere 0,29 mag entre las dos estándares; está pendiente revisar los headers de esas imágenes (ver [`pendientes.md`](pendientes.md)).
+  El ZP de B difiere 0,29 mag entre las dos estándares. Los headers están bien (`FILTER = B`,
+  `EXPTIME = 5.0`) y los catálogos coinciden; falló la serie B de una de las dos, sin poder saber
+  cuál (ver [`tiempos_exposicion.md`](tiempos_exposicion.md)).

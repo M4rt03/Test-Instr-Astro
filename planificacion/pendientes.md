@@ -12,8 +12,9 @@ y de lo que hay que considerar en el informe. Actualizada el 8/10/2026.
 - encuadre de cada objeto en el campo;
 - con los datos de 2025: zeropoint*, ruido de lectura (3,56 e⁻), nivel de bias (92,5 ADU) y seeing típico (2,5″); los tiempos de exposición ya están recalculados con ellos.
 
-**Falta revisar en los datos de 2025:** por qué el ZP en B difiere 0,29 mag entre las dos
-estándares (headers `FILTER` y `EXPTIME`).
+**Revisado en los datos de 2025:** la diferencia de 0,29 mag en el ZP de B entre las dos
+estándares no viene de los headers (`FILTER` y `EXPTIME` están bien) ni del catálogo. Queda
+±0,15 mag de incertidumbre en el ZP de B, que se resuelve con las estándares de 2026.
 
 **Falta preguntar:**  guiado, el modo de lectura, las calibraciones, el
 horario y si la óptica sigue igual.
@@ -56,10 +57,15 @@ que no necesitan imágenes de ciencia):
   bias. Sale en `calibracion.json` (`bias_mediana_adu`): 92,5 ADU.
 - [x] **Zeropoint:** B 21,845 y V 21,941 en ADU/s, que son 21,665 y 21,761 en e⁻/s. Queda
   0,3 mag bajo la estimación teórica: el sistema es ~25 % menos eficiente que lo supuesto.
-- [ ] **Diferencia de 0,29 mag en el ZP de B entre HIP 116375 (21,99) y HIP 117678 (21,70).** En V
-  coinciden a 0,01 mag. Revisar `FILTER` y `EXPTIME` en el header de una imagen B de cada
-  estrella (por ejemplo, las imágenes 557 y 592). Si no hay una explicación, considerar ±0,15 mag
-  de incertidumbre en el ZP de B.
+- [x] **Diferencia de 0,29 mag en el ZP de B entre HIP 116375 (21,99) y HIP 117678 (21,70).** En V
+  coinciden a 0,01 mag. Revisado (detalle en [`tiempos_exposicion.md`](tiempos_exposicion.md)):
+  - todas las imágenes B tienen `FILTER = B` y `EXPTIME = 5.0`; la masa de aire explica solo 0,03 mag;
+  - Tycho, Gaia y el tipo espectral dicen que HIP 116375 es la más roja, pero en 2025 se midió
+    más roja HIP 117678 (0,15 mag): falló la serie B de una de las dos;
+  - no se puede saber cuál ZP es el correcto, así que queda ±0,15 mag en B. En 2026 se resuelve
+    con 3–5 estándares por noche.
+- [x] **Fecha de las calibraciones de 2025:** los bias y darks son del 26/09 y las estándares del
+  03/10. En 2026, tomarlos la misma noche.
 - [x] **Tiempos de exposición recalculados** con esos valores, que ahora son los predeterminados
   de `tiempos_exposicion.py`. La S/N baja ~20 % y las estándares admiten ~30 % más de tiempo.
 - [x] **Ruido de lectura:** 3,56 e⁻ (4,19 ADU), coherente con los 3,9 e⁻ de la ficha. Confirma el
@@ -77,8 +83,9 @@ que no necesitan imágenes de ciencia):
 - [ ] **Temperatura del sensor:** en 2025 quedó a −14 °C sin llegar a la consigna (−16 °C); en
   2023 trabajó a −25 °C. La corriente oscura depende de la temperatura, así que los darks deben
   tomarse a la misma que la ciencia.
-- [ ] **Tiempo entre exposiciones:** la descarga es de 0,25 s, pero falta el guardado en TheSkyX
-  y el cambio de filtro. Se supusieron 5 s por imagen, lo que define cuántas caben en 30 min.
+- [x] **Tiempo entre exposiciones:** medido en los `DATE-OBS` de 2025: ~1 s por imagen (5 s cada
+  6,05 s) y ~10 s por cambio de filtro. Ya está en `tiempos_exposicion.py`; cada bloque del plan
+  toma ~23 min en vez de 24.
 
 ### Plan de observación (con los otros grupos y el ayudante)
 

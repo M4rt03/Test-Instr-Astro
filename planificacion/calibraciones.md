@@ -7,7 +7,7 @@ grupo: NGC 7793 y NGC 1291. Todas las horas son de Chile (UTC−3).
 
 | Imagen | Cuántas | t_exp | Cuándo | Tiempo aprox. |
 |---|---|---|---|---|
-| Bias | 25 al inicio y 25 al final | 0 s | Antes de los flats y al terminar | ~3 min cada serie |
+| Bias | 25 al inicio y 25 al final | 0 s | Antes de los flats y al terminar | < 1 min cada serie (en 2025, un bias cada 0,7 s) |
 | Darks | 10 por cada t_exp de ciencia: 120, 90 y 60 s | 120 / 90 / 60 s | Con la cúpula cerrada: antes de anochecer o al final | ~45 min (mínimo: 10 × 120 s, ~21 min) |
 | Flats de cielo | 10–15 por filtro, primero B y luego V | 1–30 s, para 20 000–30 000 ADU | Crepúsculo: 20:00–20:35 (8/10) y 20:05–20:40 (15/10) | ~35 min |
 | Estándares | 5 por filtro en cada visita, 5 visitas | 1–3 s (tabla abajo) | 21:15, ~23:30 y ~00:50 | ~25 min en total |
