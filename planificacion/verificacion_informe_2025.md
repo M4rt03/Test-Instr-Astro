@@ -21,7 +21,7 @@ Astrométrica y Fotométrica de NGC 6618" (2025), hecha el 7/10/2026.
 | Binning | 1 × 1 | `XBINNING` |
 | Ganancia | 0,85 e⁻/ADU | `GAIN` |
 | Profundidad | 16 bits (0–65 535 ADU) | `BITPIX = 16`, `BZERO = 32768` |
-| Temperatura del sensor | −14,3 °C con consigna −16 °C (2025); −24,8 °C con consigna −25 °C (2023) | `CCD-TEMP`, `SET-TEMP` |
+| Temperatura del sensor | Consigna −16 °C (2025) y −25 °C (2023), sin alcanzarse al comienzo de la noche: ver «Temperatura del sensor» abajo | `CCD-TEMP`, `SET-TEMP` |
 | Apertura | 500 mm | `APTDIA` |
 | Focal | 6500 mm (valor ingresado en el software, no medido) | `FOCALLEN` |
 | Sitio (El Sauce) | −30,4597°, −70,7503°, 1600 m | `OBSGEO-B/L/H` |
@@ -46,6 +46,24 @@ Fuente: [C4 Series CMOS Cameras](https://www.gxccd.com/art?id=607&lang=409), con
 | Enfriamiento | Regulado hasta 33 °C bajo el ambiente (versión EC) o 28 °C (estándar), con precisión de 0,1 °C |
 | Binning | Por software (el de hardware, 2 × 2, da peor calidad) |
 | Píxeles defectuosos | Sensor grado 1: hasta 300 píxeles defectuosos |
+
+### Temperatura del sensor
+
+En ambos años la cámara no llegó a la consigna al comienzo de la noche y la temperatura varió
+~2 °C durante la sesión (en 2025 hay imágenes desde −14,3 °C):
+
+| Año | Imagen | Hora (UTC) | `CCD-TEMP` | `SET-TEMP` |
+|---|---|---|---|---|
+| 2023 | NGC 6514, V, 100 s (imagen calibrada) | 06/10 00:10 | −22,5 °C | −25 °C |
+| 2023 | HIP 117445, B, 9 s | 06/10 03:32 | −24,8 °C | −25 °C |
+| 2025 | Darks de 100 s | 25/09 23:47–00:02 | −15,6 a −16,0 °C | −16 °C |
+| 2025 | HIP 116375 | 03/10 01:08 | −15,1 °C | −16 °C |
+| 2025 | HIP 117678 | 03/10 02:52 | −16,7 °C | −16 °C |
+
+Consecuencias para 2026:
+- Fijar una consigna que la cámara alcance con la temperatura ambiente de esa noche y esperar a
+  que `CCD-TEMP` se estabilice antes de los bias, darks y ciencia.
+- Anotar `CCD-TEMP` en la bitácora y tomar los darks a la misma temperatura que la ciencia.
 
 ### Sin confirmar
 
@@ -92,7 +110,7 @@ cuántica, sin la atmósfera). Sale del zeropoint de las estándares de 2025:
 | Origen | Escala | Campo (4096 px) |
 |---|---|---|
 | Header: 206 265 × 9 µm / 6500 mm | 0,2856″/px | 19,5′ |
-| Informe 2025 (`PIXSCALE = 0.36`, escrito a mano en su código) | 0,36″/px | 24,6′ |
+| Informe 2025 (`PIXSCALE = 0.36`, copiado del header de las imágenes calibradas) | 0,36″/px | 24,6′ |
 | Matriz CD de astrometry.net en el informe (Tabla 4) | 0,3163″/px | 21,6′ |
 | **Medición propia con Gaia ([`medir_escala.py`](medir_escala.py))** | **0,3168″/px** | **21,6′** |
 
@@ -120,6 +138,13 @@ La escala es **0,317″/px** y el campo, **21,6′ × 21,6′**.
 - El `FOCALLEN = 6500` del header es nominal: la focal efectiva es ~5860 mm (f/11,7),
   probablemente por un corrector o reductor.
 - El 0,36″/px del informe de 2025 no tiene respaldo y sobreestima el campo en un 14 %.
+  - **De dónde sale:** las imágenes calibradas de 2023 (por ejemplo, NGC 6514 en V, 100 s,
+    06/10/2023) traen `PIXSCALE = 0.36` y una astrometría de relleno: `CD1_1 = −0.0001`,
+    `CD2_2 = 0.0001` (0,0001° = 0,36″ por píxel), sin rotación y con `CRVAL1/2` iguales al
+    apuntado (`OBJCTRA`/`OBJCTDEC`). Es un valor puesto por el programa de calibración, no una
+    medición, y el informe de 2025 lo usó como si lo fuera.
+  - Con esas imágenes hay que resolver la astrometría de nuevo (astrometry.net) antes de usar sus
+    coordenadas.
 
 ## 3. Revisión de los cálculos del informe
 

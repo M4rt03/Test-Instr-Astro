@@ -16,14 +16,15 @@ y de lo que hay que considerar en el informe. Actualizada el 8/10/2026.
 estándares no viene de los headers (`FILTER` y `EXPTIME` están bien) ni del catálogo. Queda
 ±0,15 mag de incertidumbre en el ZP de B, que se resuelve con las estándares de 2026.
 
-**Falta preguntar:**  guiado, el modo de lectura, las calibraciones, el
-horario y si la óptica sigue igual.
+**Falta preguntar:** el modo de lectura, las calibraciones y si la óptica sigue igual (el
+guiado y el horario ya están confirmados).
 
 **Calibraciones y estándares:** plan con tiempos en [`calibraciones.md`](calibraciones.md). Las
 magnitudes B y V de las estándares salen de Mermilliod (Johnson) con
 [`estrellas_estandar.py`](estrellas_estandar.py) (astroquery).
 
-**Falta acordar con los otros grupos:** el objeto de cada grupo, las estándares y la tabla del plan.
+**Falta acordar con los otros grupos:** las estándares (avisar el cambio de HD 195500 y HD 215863).
+El objeto de cada grupo y la tabla del plan ya están.
 
 ## 1. Antes de la observación
 
@@ -34,7 +35,8 @@ magnitudes B y V de las estándares salen de Mermilliod (Johnson) con
 - [x] **Escala de placa y campo:** 0,317″/px y 21,6′ × 21,6′.
   - Medidos con estrellas de Gaia ([`medir_escala.py`](medir_escala.py)); coinciden con la
     solución de astrometry.net de 2025.
-  - El 0,36″/px (24,6′) del informe de 2025 era incorrecto.
+  - El 0,36″/px (24,6′) del informe de 2025 era incorrecto: viene del `PIXSCALE = 0.36` y de la
+    astrometría de relleno (CD = 0,0001°) que traen los headers de las imágenes calibradas.
   - La cámara está prácticamente alineada con el norte (rotación −0,5°).
 - [x] **Cámara** (ficha de Moravian y headers FITS):
   - sensor GSENSE4040 FSI, en modo de lectura 16-bit HDR;
@@ -73,12 +75,16 @@ que no necesitan imágenes de ciencia):
 
 - [ ] **Configuración óptica:** ¿es la misma de 2023 y 2025? La focal real es ~5860 mm; el
   `FOCALLEN = 6500` del header es solo nominal.
-- [ ] **Modo de lectura en TheSkyX:** confirmar que es 16-bit HDR. En los modos de 12 bits cambian  la ganancia y el ruido (baja ganancia: 19,5 e⁻/ADU y 34,5 e⁻).
-- [x] **Guiado:** ¿guía la montura (cámara ZWO ASI174)? Las exposiciones de 90–120 s dependen de  eso; sin guiado, probar si 60 s salen sin estelas.
-    - Hay guiado
-- [ ] **Temperatura del sensor:** en 2025 quedó a −14 °C sin llegar a la consigna (−16 °C); en
-  2023 trabajó a −25 °C. La corriente oscura depende de la temperatura, así que los darks deben tomarse a la misma que la ciencia.
-- [x] **Tiempo entre exposiciones:** medido en los `DATE-OBS` de 2025: ~1 s por imagen (5 s cada (6,05 s) y ~10 s por cambio de filtro. Ya está en `tiempos_exposicion.py`; cada bloque del plan toma ~23 min en vez de 24.
+- [ ] **Modo de lectura en TheSkyX:** confirmar que es 16-bit HDR. En los modos de 12 bits cambian la ganancia y el ruido (baja ganancia: 19,5 e⁻/ADU y 34,5 e⁻).
+- [x] **Guiado:** ¿guía la montura (cámara ZWO ASI174)? Las exposiciones de 90–120 s dependen de eso; sin guiado, probar si 60 s salen sin estelas.
+    - Hay guiado. Con guiado se puede probar subir el t_exp en B (por ejemplo, 180 s × 5 en vez
+      de 120 s × 7, con el mismo tiempo total), siempre que la prueba no sature el núcleo.
+- [ ] **Temperatura del sensor:** en ningún año llegó a la consigna al comienzo de la noche. En 2023
+  (consigna −25 °C) pasó de −22,5 °C a las 00:10 UTC a −24,8 °C a las 03:32 UTC; en 2025 (consigna
+  −16 °C) varió entre −14,3 y −16,7 °C. Preguntar qué consigna usar: una que la cámara alcance con
+  la temperatura ambiente de esa noche. La corriente oscura depende de la temperatura, así que los
+  darks deben tomarse a la misma que la ciencia.
+- [x] **Tiempo entre exposiciones:** medido en los `DATE-OBS` de 2025: ~1 s por imagen (5 s cada 6,05 s) y ~10 s por cambio de filtro. Ya está en `tiempos_exposicion.py`; cada bloque del plan toma ~23 min en vez de 24.
 
 ### Plan de observación (con los otros grupos y el ayudante)
 
@@ -88,7 +94,7 @@ que no necesitan imágenes de ciencia):
   - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que asumir que el fondo se mide con poco cielo libre.
 - [ ] **Elegir las estándares de cada noche** (plan en [`calibraciones.md`](calibraciones.md)):
   HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos masas de aire, y HD 220881 o HD 562 a mitad de la noche.
-  - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod(las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
+  - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod (las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
   - HD 210300 y HD 12206 obligan a ~1 s y a tomar más exposiciones por el centelleo.
 - [x] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
@@ -96,7 +102,7 @@ que no necesitan imágenes de ciencia):
   hora de inicio (el enunciado dice desde las 19:00).
 - [ ] **Calibraciones.** Plan propuesto en [`calibraciones.md`](calibraciones.md): 25 + 25 bias,
   10 darks por cada t_exp de ciencia (120, 90 y 60 s) y 10–15 flats de crepúsculo por filtro
-  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si  hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
+  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
   ciencia** (las estándares de 1–3 s se corrigen bien solo con el bias), tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
   quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
   sensor CMOS.
@@ -118,7 +124,11 @@ que no necesitan imágenes de ciencia):
 ## 2. Durante la observación (en TheSkyX)
 
 - [ ] **Al comienzo de la noche:** confirmar en TheSkyX el modo de lectura (16-bit HDR) y que el
-  sensor llegue a la temperatura de consigna.
+  sensor llegue a la temperatura de consigna y se mantenga estable (`CCD-TEMP`).
+- [ ] **Sitio en el header.** En la primera imagen, revisar que `SITELAT`/`SITELONG` (y
+  `OBSGEO-B/L`) sean los de El Sauce (−30,46°, −70,75°). En 2023 TheSkyX tenía configurado
+  Santiago (−33,43°, −70,57°), así que el `AIRMASS` y la altura de esos headers están mal. El
+  pipeline calcula la masa de aire con el sitio de `config.yaml`, pero hay que saberlo.
 - [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B.
   - Revisar el **máximo** del núcleo o de la estrella y el **nivel de fondo**, ambos en ADU y
     restando el bias.
