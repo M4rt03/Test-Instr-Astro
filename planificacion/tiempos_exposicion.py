@@ -146,16 +146,22 @@ def tabla_objetos(inst, noche):
     return filas
 
 
+def t_estandar(m, filt, inst, x=1.05):
+    """t_exp de una estrella estándar: ~60 % del tiempo de saturación, redondeado
+    hacia abajo a 0.5 s y con mínimo 1 s. Devuelve (t_exp, t_sat, pico en ADU/s)."""
+    zp = zp_efectivo(filt, x, inst)
+    pico = tasa(m, zp) * fraccion_pico(SEEING_SAT, inst["escala"]) / inst["ganancia"]
+    t_sat = inst["saturacion"] / pico
+    return max(1.0, math.floor(0.6 * t_sat * 2) / 2), t_sat, pico
+
+
 def tabla_estandares(inst, x=1.05):
     filas = []
     for nombre, v, b in ESTANDARES:
         fila = {"estrella": nombre}
         for filt, m in (("B", b), ("V", v)):
             zp = zp_efectivo(filt, x, inst)
-            pico = tasa(m, zp) * fraccion_pico(SEEING_SAT, inst["escala"]) / inst["ganancia"]  # ADU/s
-            t_sat = inst["saturacion"] / pico
-            # tiempo redondeado hacia abajo a 0.5 s, con ~60 % del límite y mínimo 1 s
-            t = max(1.0, math.floor(0.6 * t_sat * 2) / 2)
+            t, t_sat, pico = t_estandar(m, filt, inst, x)
             señal = tasa(m, zp) * t
             npix = math.pi * (1.5 * SEEING / inst["escala"]) ** 2      # apertura r = 1.5 FWHM
             ruido = math.sqrt(señal + npix * (inst["ruido"] ** 2 + tasa(CIELO["15/10 Luna 25 %"][filt], zp)
