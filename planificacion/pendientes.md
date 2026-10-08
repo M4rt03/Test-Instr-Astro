@@ -57,13 +57,10 @@ que no necesitan imágenes de ciencia):
   bias. Sale en `calibracion.json` (`bias_mediana_adu`): 92,5 ADU.
 - [x] **Zeropoint:** B 21,845 y V 21,941 en ADU/s, que son 21,665 y 21,761 en e⁻/s. Queda
   0,3 mag bajo la estimación teórica: el sistema es ~25 % menos eficiente que lo supuesto.
-- [x] **Diferencia de 0,29 mag en el ZP de B entre HIP 116375 (21,99) y HIP 117678 (21,70).** En V
-  coinciden a 0,01 mag. Revisado (detalle en [`tiempos_exposicion.md`](tiempos_exposicion.md)):
+- [x] **Diferencia de 0,29 mag en el ZP de B entre HIP 116375 (21,99) y HIP 117678 (21,70).** En V coinciden a 0,01 mag. Revisado (detalle en [`tiempos_exposicion.md`](tiempos_exposicion.md)):
   - todas las imágenes B tienen `FILTER = B` y `EXPTIME = 5.0`; la masa de aire explica solo 0,03 mag;
-  - Tycho, Gaia y el tipo espectral dicen que HIP 116375 es la más roja, pero en 2025 se midió
-    más roja HIP 117678 (0,15 mag): falló la serie B de una de las dos;
-  - no se puede saber cuál ZP es el correcto, así que queda ±0,15 mag en B. En 2026 se resuelve
-    con 3–5 estándares por noche.
+  - Tycho, Gaia y el tipo espectral dicen que HIP 116375 es la más roja, pero en 2025 se midió más roja HIP 117678 (0,15 mag): falló la serie B de una de las dos;
+  - no se puede saber cuál ZP es el correcto, así que queda ±0,15 mag en B. En 2026 se resuelve con 3–5 estándares por noche.
 - [x] **Fecha de las calibraciones de 2025:** los bias y darks son del 26/09 y las estándares del
   03/10. En 2026, tomarlos la misma noche.
 - [x] **Tiempos de exposición recalculados** con esos valores, que ahora son los predeterminados
@@ -76,38 +73,30 @@ que no necesitan imágenes de ciencia):
 
 - [ ] **Configuración óptica:** ¿es la misma de 2023 y 2025? La focal real es ~5860 mm; el
   `FOCALLEN = 6500` del header es solo nominal.
-- [ ] **Modo de lectura en TheSkyX:** confirmar que es 16-bit HDR. En los modos de 12 bits cambian
-  la ganancia y el ruido (baja ganancia: 19,5 e⁻/ADU y 34,5 e⁻).
-- [ ] **Guiado:** ¿guía la montura (cámara ZWO ASI174)? Las exposiciones de 90–120 s dependen de
-  eso; sin guiado, probar si 60 s salen sin estelas.
+- [ ] **Modo de lectura en TheSkyX:** confirmar que es 16-bit HDR. En los modos de 12 bits cambian  la ganancia y el ruido (baja ganancia: 19,5 e⁻/ADU y 34,5 e⁻).
+- [x] **Guiado:** ¿guía la montura (cámara ZWO ASI174)? Las exposiciones de 90–120 s dependen de  eso; sin guiado, probar si 60 s salen sin estelas.
+    - Hay guiado
 - [ ] **Temperatura del sensor:** en 2025 quedó a −14 °C sin llegar a la consigna (−16 °C); en
-  2023 trabajó a −25 °C. La corriente oscura depende de la temperatura, así que los darks deben
-  tomarse a la misma que la ciencia.
-- [x] **Tiempo entre exposiciones:** medido en los `DATE-OBS` de 2025: ~1 s por imagen (5 s cada
-  6,05 s) y ~10 s por cambio de filtro. Ya está en `tiempos_exposicion.py`; cada bloque del plan
-  toma ~23 min en vez de 24.
+  2023 trabajó a −25 °C. La corriente oscura depende de la temperatura, así que los darks deben tomarse a la misma que la ciencia.
+- [x] **Tiempo entre exposiciones:** medido en los `DATE-OBS` de 2025: ~1 s por imagen (5 s cada (6,05 s) y ~10 s por cambio de filtro. Ya está en `tiempos_exposicion.py`; cada bloque del plan toma ~23 min en vez de 24.
 
 ### Plan de observación (con los otros grupos y el ayudante)
 
-- [ ] **Elegir el objeto de cada grupo** sin repetir.
+- [x] **Elegir el objeto de cada grupo** sin repetir.
   - Los objetos que salen tarde (NGC 1097, 1291, 1316 y 1313) van en los últimos bloques.
   - NGC 6744 va al comienzo.
-  - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que
-    asumir que el fondo se mide con poco cielo libre.
+  - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que asumir que el fondo se mide con poco cielo libre.
 - [ ] **Elegir las estándares de cada noche** (plan en [`calibraciones.md`](calibraciones.md)):
-  HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos
-  masas de aire, y HD 220881 o HD 562 a mitad de la noche.
-  - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod
-    (las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
+  HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos masas de aire, y HD 220881 o HD 562 a mitad de la noche.
+  - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod(las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
   - HD 210300 y HD 12206 obligan a ~1 s y a tomar más exposiciones por el centelleo.
-- [ ] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
+- [x] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
-- [ ] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
+- [x] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
   hora de inicio (el enunciado dice desde las 19:00).
 - [ ] **Calibraciones.** Plan propuesto en [`calibraciones.md`](calibraciones.md): 25 + 25 bias,
   10 darks por cada t_exp de ciencia (120, 90 y 60 s) y 10–15 flats de crepúsculo por filtro
-  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si
-  hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
+  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si  hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
   ciencia** (las estándares de 1–3 s se corrigen bien solo con el bias), tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
   quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
   sensor CMOS.
