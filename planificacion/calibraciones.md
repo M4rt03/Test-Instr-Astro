@@ -149,6 +149,8 @@ Catálogos descartados:
   - **HD 207480** (AR 21:49) en lugar de HD 195500;
   - **HD 212643** (AR 22:26) en lugar de HD 215863.
 
+  Las estándares aún no están fijadas, así que el reemplazo es posible.
+
   Igual sirven para medir la extinción, porque ahí se comparan magnitudes de la *misma*
   estrella y su magnitud de catálogo se cancela.
 - **t_exp:** es ~60 % del tiempo de saturación con seeing de 2,0″ (mismo modelo de
@@ -198,4 +200,3 @@ coordenadas, magnitudes B y V, y rutas de archivos. Cambiar `--noche noche2` par
   de darks a la temperatura de consigna.
 - Si hay pantalla para flats de cúpula.
 - Qué t_exp usan los otros grupos, para tomar sus darks en la misma serie.
-- Si el reemplazo de HD 195500 y HD 215863 está bien, o si las estándares ya están fijadas.
