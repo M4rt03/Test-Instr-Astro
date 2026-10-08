@@ -118,7 +118,7 @@ Para que el ruido del cielo domine sobre el ruido de lectura (cielo > 10·RN² p
 
 ## 1. Objetos: plan por bloque de 30 min
 
-Los tiempos suman ~23 min de exposición más el tiempo muerto (1 s por imagen y 10 s por cambio de filtro, medidos en 2025), lo que deja ~7 min para apuntar, enfocar y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
+Cada bloque toma ~23 min, contando el tiempo muerto (1 s por imagen y 10 s por cambio de filtro, medidos en 2025). Eso deja ~7 min para apuntar, enfocar y tomar las pruebas. B recibe más tiempo porque el cielo es más oscuro y la eficiencia, menor.
 
 | Objeto | X | B: t_exp × N | V: t_exp × N | Tiempo total (min) | μB medio | μV medio | S/N B 8/10 · 15/10 | S/N V 8/10 · 15/10 | S/N B borde (μ+2) 8/10 | μ límite B 8/10 (S/N=3) | μ satura B · V | Estrella satura V |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
