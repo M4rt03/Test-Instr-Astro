@@ -15,7 +15,7 @@ y de lo que hay que considerar en el informe. Actualizada el 7/10/2026.
 **Falta revisar en los datos de 2025:** por qué el ZP en B difiere 0,29 mag entre las dos
 estándares (headers `FILTER` y `EXPTIME`).
 
-**Falta preguntar al ayudante:** si hay guiado, el modo de lectura, las calibraciones, el
+**Falta preguntar:**  guiado, el modo de lectura, las calibraciones, el
 horario y si la óptica sigue igual.
 
 **Falta acordar con los otros grupos:** el objeto de cada grupo, las estándares y la tabla del plan.

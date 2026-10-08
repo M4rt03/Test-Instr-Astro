@@ -30,18 +30,18 @@
 
 Coordenadas J2000 y magnitudes integradas de OpenNGC. "h>30°" son las horas sobre 30° entre las 21:00 y la 01:00. Un valor de 4,0 significa que el objeto está sobre 30° durante toda esa ventana.
 
-| # | Objeto | Tipo | V | B | Tamaño | h>30° 8/10 | h>30° 15/10 | Alt. máx. | Dist. Luna 15/10 |
-|---|---|---|---|---|---|---|---|---|---|
-| 1 | NGC 7293 (Helix) | Nebulosa planetaria | 7.3 | 7.5 | 16.3′ | 4.0 | 4.0 | 81° | 67° |
-| 2 | NGC 7009 (Saturno) | Nebulosa planetaria | 8.0 | 8.3 | 0.7′ | 4.0 | 4.0 | 71° | 52° |
-| 3 | NGC 300 | Galaxia Scd | 8.7 | 8.8 | 19.4′ × 13.1′ | 4.0 | 4.0 | 83° | 88° |
-| 4 | NGC 7793 | Galaxia Sd | 9.3 | 9.7 | 10.4′ × 6.0′ | 4.0 | 4.0 | 88° | 80° |
-| 5 | NGC 247 | Galaxia SABd | 9.2 | 9.7 | 19.7′ × 5.5′ | 4.0 | 4.0 | 80° | 95° |
-| 6 | NGC 1097 | Galaxia SBb (Seyfert) | 9.8 | 10.1 | 10.6′ × 6.4′ | 2.4 | 2.9 | 73–79° | 110° |
-| 7 | NGC 1291 | Galaxia S0/a | 8.7 | 9.4 | 11.2′ × 9.9′ | 2.2 | 2.6 | 65–70° | 105° |
-| 8 | NGC 1316 (Fornax A) | Galaxia S0 peculiar | 8.5 | 9.4 | 13.5′ × 7.7′ | **2.0** | 2.4 | 65–70° | 108° |
-| 9 | NGC 1313 | Galaxia SBd | 9.5 | 9.7 | 11.1′ × 9.1′ | 2.7 | 3.2 | 50–52° | 83° |
-| 10 | NGC 6744 | Galaxia SABbc | 9.3 | 9.1 | 15.7′ × 9.8′ | 4.0 | 3.8 | 54° | **40°** |
+| #   | Objeto              | Tipo                  | V   | B    | Tamaño        | h>30° 8/10 | h>30° 15/10 | Alt. máx. | Dist. Luna 15/10 |
+| --- | ------------------- | --------------------- | --- | ---- | ------------- | ---------- | ----------- | --------- | ---------------- |
+| 1   | NGC 7293 (Helix)    | Nebulosa planetaria   | 7.3 | 7.5  | 16.3′         | 4.0        | 4.0         | 81°       | 67°              |
+| 2   | NGC 7009 (Saturno)  | Nebulosa planetaria   | 8.0 | 8.3  | 0.7′          | 4.0        | 4.0         | 71°       | 52°              |
+| 3   | NGC 300             | Galaxia Scd           | 8.7 | 8.8  | 19.4′ × 13.1′ | 4.0        | 4.0         | 83°       | 88°              |
+| 4   | NGC 7793            | Galaxia Sd            | 9.3 | 9.7  | 10.4′ × 6.0′  | 4.0        | 4.0         | 88°       | 80°              |
+| 5   | NGC 247             | Galaxia SABd          | 9.2 | 9.7  | 19.7′ × 5.5′  | 4.0        | 4.0         | 80°       | 95°              |
+| 6   | NGC 1097            | Galaxia SBb (Seyfert) | 9.8 | 10.1 | 10.6′ × 6.4′  | 2.4        | 2.9         | 73–79°    | 110°             |
+| 7   | NGC 1291            | Galaxia S0/a          | 8.7 | 9.4  | 11.2′ × 9.9′  | 2.2        | 2.6         | 65–70°    | 105°             |
+| 8   | NGC 1316 (Fornax A) | Galaxia S0 peculiar   | 8.5 | 9.4  | 13.5′ × 7.7′  | **2.0**    | 2.4         | 65–70°    | 108°             |
+| 9   | NGC 1313            | Galaxia SBd           | 9.5 | 9.7  | 11.1′ × 9.1′  | 2.7        | 3.2         | 50–52°    | 83°              |
+| 10  | NGC 6744            | Galaxia SABbc         | 9.3 | 9.1  | 15.7′ × 9.8′  | 4.0        | 3.8         | 54°       | **40°**          |
 
 Para los objetos 6 a 9, la altura máxima indicada se alcanza a las 02:00, porque siguen subiendo al cierre de la ventana.
 
@@ -98,11 +98,11 @@ NGC6744  19 09 46 -63 51 27
 
 ### Reservas
 
-| Objeto | Tipo | V | B | Tamaño | h>30° 8/10 | h>30° 15/10 | Dist. Luna 15/10 | Comentario |
-|---|---|---|---|---|---|---|---|---|
-| NGC 613 | Galaxia SBbc | 10.4 | 10.7 | 5.5′ | 3.6 | 4.0 | 99° | Algo débil, bien posicionada |
-| NGC 1068 (M77) | Galaxia Sb (Seyfert) | 9.3 | 9.7 | 6.1′ | 1.4 | 1.8 | 131° | Cumple solo si la ventana llega a las 02:00 (2,4 / 2,8 h) |
-| NGC 1365 | Galaxia SBb | 10.1 | 10.4 | 12.0′ | 1.8 | 2.2 | 110° | Cumple solo si la ventana llega a las 02:00 (2,7 / 3,2 h) |
+| Objeto         | Tipo                 | V    | B    | Tamaño | h>30° 8/10 | h>30° 15/10 | Dist. Luna 15/10 | Comentario                                                |
+| -------------- | -------------------- | ---- | ---- | ------ | ---------- | ----------- | ---------------- | --------------------------------------------------------- |
+| NGC 613        | Galaxia SBbc         | 10.4 | 10.7 | 5.5′   | 3.6        | 4.0         | 99°              | Algo débil, bien posicionada                              |
+| NGC 1068 (M77) | Galaxia Sb (Seyfert) | 9.3  | 9.7  | 6.1′   | 1.4        | 1.8         | 131°             | Cumple solo si la ventana llega a las 02:00 (2,4 / 2,8 h) |
+| NGC 1365       | Galaxia SBb          | 10.1 | 10.4 | 12.0′  | 1.8        | 2.2         | 110°             | Cumple solo si la ventana llega a las 02:00 (2,7 / 3,2 h) |
 
 ```
 NGC613   01 34 18 -29 25 06
