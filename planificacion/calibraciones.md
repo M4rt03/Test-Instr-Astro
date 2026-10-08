@@ -129,29 +129,28 @@ Catálogos descartados:
 
 | Estrella | Uso | Tipo | Fuente | Calidad | B | V | t_exp B | t_exp V |
 |---|---|---|---|---|---|---|---|---|
-| HD 195500 | seleccionada | A1V | Hipparcos (V de Hp, B−V de Tycho) | **baja** | 7.380 | 7.320 | 2.0 s | 1.5 s |
 | HD 202941 | seleccionada | A0V | Hipparcos (terrestre) | alta | 7.072 | 7.070 | 1.5 s | 1.0 s |
+| HD 207480 | seleccionada | A1V | Mermilliod (7 obs.) | alta | 7.190 | 7.140 | 1.5 s | 1.5 s |
 | HD 210300 | seleccionada | A5V | Mermilliod (4 obs.) | alta | 6.590 | 6.440 | 1.0 s | 1.0 s |
-| HD 215863 | seleccionada | A2V | Hipparcos (V de Hp, B−V de Tycho) | **baja** | 7.836 | 7.690 | 3.0 s | 2.5 s |
+| HD 212643 | seleccionada | A0V | Mermilliod (4 obs.) | alta | 6.260 | 6.290 | 1.0 s | 1.0 s |
 | HD 220881 | seleccionada | A9V | Mermilliod (4 obs.) | alta | 7.720 | 7.440 | 3.0 s | 1.5 s |
 | HD 562 | seleccionada | A2V | Mermilliod (8 obs.) | alta | 7.787 | 7.650 | 3.0 s | 2.0 s |
 | HD 8130 | seleccionada | A0V | Mermilliod (9 obs.) | alta | 7.493 | 7.448 | 2.5 s | 2.0 s |
 | HD 12206 | seleccionada | A0V | Mermilliod (4 obs.) | alta | 6.810 | 6.790 | 1.0 s | 1.0 s |
-| HD 207480 | reserva | A1V | Mermilliod (7 obs.) | alta | 7.190 | 7.140 | 1.5 s | 1.5 s |
-| HD 212643 | reserva | A0V | Mermilliod (4 obs.) | alta | 6.260 | 6.290 | 1.0 s | 1.0 s |
 | HD 223884 | reserva | A5V | Mermilliod (4 obs.) | alta | 6.430 | 6.240 | 1.0 s | 1.0 s |
 | HD 225200 | reserva | A1V | Hipparcos (V de Hp, B−V terrestre) | media | 6.386 | 6.380 | 1.0 s | 1.0 s |
 | HD 7323 | reserva | A0V | Mermilliod (7 obs.) | alta | 7.928 | 7.830 | 3.5 s | 2.5 s |
+| HD 195500 | solo extinción | A1V | Hipparcos (V de Hp, B−V de Tycho) | **baja** | 7.380 | 7.320 | 2.0 s | 1.5 s |
+| HD 215863 | solo extinción | A2V | Hipparcos (V de Hp, B−V de Tycho) | **baja** | 7.836 | 7.690 | 3.0 s | 2.5 s |
 
 - En las estrellas que están en ambos catálogos, Mermilliod e Hipparcos coinciden a 0,01 mag.
-- **HD 195500 y HD 215863** no tienen fotometría Johnson medida: su B−V viene de Tycho. No conviene
-  usarlas para el zeropoint. Reemplazos con Mermilliod en la misma zona del cielo:
+- **HD 195500 y HD 215863** no tienen fotometría Johnson medida: su B−V viene de Tycho. Por eso
+  se **reemplazaron** por estrellas de Mermilliod en la misma zona del cielo:
   - **HD 207480** (AR 21:49) en lugar de HD 195500;
-  - **HD 212643** (AR 22:26) en lugar de HD 215863.
+  - **HD 212643** (AR 22:26) en lugar de HD 215863. Es brillante: en 1 s llega a ~30 000–35 000
+    ADU con seeing de 2″, así que hay que revisar el máximo en la prueba.
 
-  Las estándares aún no están fijadas, así que el reemplazo es posible.
-
-  Igual sirven para medir la extinción, porque ahí se comparan magnitudes de la *misma*
+  Las reemplazadas igual sirven para medir la extinción, porque ahí se comparan magnitudes de la *misma*
   estrella y su magnitud de catálogo se cancela.
 - **t_exp:** es ~60 % del tiempo de saturación con seeing de 2,0″ (mismo modelo de
   [`tiempos_exposicion.md`](tiempos_exposicion.md)). Tomar 5 o más por filtro, y más si son de 1 s.

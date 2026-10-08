@@ -180,13 +180,13 @@ redondeado a 0,5 s.
 
 | Estrella | B | V | t satura B | t satura V | t_exp B | t_exp V | pico B (ADU) | pico V (ADU) | S/N B | S/N V |
 |---|---|---|---|---|---|---|---|---|---|---|
-| HD 195500 | 7.38 | 7.32 | 3.8 s | 3.0 s | 2.0 s | 1.5 s | 21203 | 20224 | 899 | 877 |
 | HD 202941 | 7.07 | 7.07 | 2.8 s | 2.4 s | 1.5 s | 1.0 s | 21157 | 16973 | 898 | 803 |
+| HD 207480 | 7.19 | 7.14 | 3.2 s | 2.5 s | 1.5 s | 1.5 s | 18944 | 23871 | 849 | 954 |
 | HD 210300 | 6.59 | 6.44 | 1.8 s | 1.3 s | 1.0 s | 1.0 s | 21947 | 30323 | 914 | 1076 |
-| HD 215863 | 7.84 | 7.69 | 5.8 s | 4.2 s | 3.0 s | 2.5 s | 20821 | 23972 | 890 | 956 |
-| HD 220881 | 7.74 | 7.45 | 5.3 s | 3.3 s | 3.0 s | 2.0 s | 22829 | 23922 | 933 | 955 |
-| HD 562 | 7.80 | 7.66 | 5.6 s | 4.1 s | 3.0 s | 2.0 s | 21602 | 19715 | 907 | 866 |
-| HD 8130 | 7.50 | 7.45 | 4.2 s | 3.3 s | 2.5 s | 2.0 s | 23731 | 23922 | 951 | 955 |
+| HD 212643 | 6.26 | 6.29 | 1.3 s | 1.1 s | 1.0 s | 1.0 s | 29742 | 34815 | 1065 | 1153 |
+| HD 220881 | 7.72 | 7.44 | 5.2 s | 3.3 s | 3.0 s | 1.5 s | 23254 | 18108 | 941 | 830 |
+| HD 562 | 7.79 | 7.65 | 5.5 s | 4.0 s | 3.0 s | 2.0 s | 21802 | 19898 | 911 | 870 |
+| HD 8130 | 7.49 | 7.45 | 4.2 s | 3.3 s | 2.5 s | 2.0 s | 23950 | 23922 | 955 | 955 |
 | HD 12206 | 6.81 | 6.79 | 2.2 s | 1.8 s | 1.0 s | 1.0 s | 17921 | 21967 | 826 | 915 |
 
 **Recomendaciones para las estándares:**
@@ -194,8 +194,10 @@ redondeado a 0,5 s.
   filas se exponen el mismo tiempo, con un desfase de 85 ms entre la primera y la última. Por
   eso 1 s es tan uniforme como 10 s. El límite lo pone el centelleo atmosférico, que agrega
   ~0,3 % de ruido en una exposición de 2 s y más en una de 1 s.
-  - HD 215863, HD 562 y HD 220881 permiten ~3 s en B y 2–2,5 s en V.
-  - HD 210300 y HD 12206 obligan a usar ~1 s; con ellas conviene tomar más exposiciones.
+  - HD 562, HD 220881 y HD 8130 permiten 2,5–3 s en B y 1,5–2 s en V.
+  - HD 210300, HD 212643 y HD 12206 obligan a usar ~1 s; con ellas conviene tomar más
+    exposiciones. HD 212643 y HD 210300 llegan a 30 000–35 000 ADU en 1 s con seeing de 2″:
+    revisar el máximo en la prueba.
 - **Tomar 5 o más exposiciones por filtro y promediar.** La S/N de cada una ya es de ~800–1000; la
   precisión la limitan el centelleo y el flat, no los fotones.
 - **Como referencia:** en 2025 se usaron 5 s (B) y 3 s (V) para estrellas de B ≈ 8,1 y V ≈ 7,1,

@@ -129,7 +129,9 @@ NGC1365  03 33 36 -36 08 25
 
 **Criterios:**
 - Enanas de tipo A0–A9 V.
-- V y B entre 6 y 8, con B = V + (B−V) de Hipparcos.
+- V y B entre 6 y 8, en el sistema de Johnson: de Mermilliod (II/168) o, si no está, de Hipparcos
+  con fotometría terrestre. Se consultan con [`estrellas_estandar.py`](estrellas_estandar.py)
+  (ver [`calibraciones.md`](calibraciones.md)).
 - Dec entre −22° y −37°, cerca del cenit de Tololo (−30.2°).
 - Repartidas en AR para cubrir toda la noche.
 
@@ -141,13 +143,13 @@ NGC1365  03 33 36 -36 08 25
 
 | # | Estrella | HIP | AR (J2000) | Dec (J2000) | Tipo | V | B | Culmina 8/10 | Culmina 15/10 | Alt. máx. | Dist. Luna 15/10 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | HD 195500 | 101367 | 20:32:42 | −28:35:44 | A1V | 7.32 | 7.38 | 21:08 | 20:40 | 88° | 39° |
-| 2 | HD 202941 | 105318 | 21:19:51 | −27:12:33 | A0V | 7.07 | 7.07 | 21:54 | 21:26 | 87° | 50° |
+| 1 | HD 202941 | 105318 | 21:19:51 | −27:12:33 | A0V | 7.07 | 7.07 | 21:54 | 21:26 | 87° | 50° |
+| 2 | HD 207480 | 107766 | 21:49:54 | −27:24:14 | A1V | 7.14 | 7.19 | 22:24 | 21:57 | 87° | 56° |
 | 3 | HD 210300 | 109412 | 22:10:00 | −28:17:33 | A5V | 6.44 | 6.59 | 22:44 | 22:16 | 88° | 60° |
-| 4 | HD 215863 | 112631 | 22:48:41 | −34:46:23 | A2V | 7.69 | 7.84 | 23:22 | 22:56 | 86° | 66° |
-| 5 | HD 220881 | 115796 | 23:27:33 | −27:16:41 | A9V | 7.45 | 7.74 | 00:02 | 23:34 | 87° | 76° |
-| 6 | HD 562 | 810 | 00:10:00 | −25:52:29 | A2V | 7.66 | 7.80 | 00:44 | 00:16 | 86° | 86° |
-| 7 | HD 8130 | 6257 | 01:20:16 | −36:14:34 | A0V | 7.45 | 7.50 | 01:54 | 01:26 | 84° | 93° |
+| 4 | HD 212643 | 110746 | 22:26:11 | −23:40:57 | A0V | 6.29 | 6.26 | 23:01 | 22:33 | 84° | 65° |
+| 5 | HD 220881 | 115796 | 23:27:33 | −27:16:41 | A9V | 7.44 | 7.72 | 00:02 | 23:34 | 87° | 76° |
+| 6 | HD 562 | 810 | 00:10:00 | −25:52:29 | A2V | 7.65 | 7.79 | 00:44 | 00:16 | 86° | 86° |
+| 7 | HD 8130 | 6257 | 01:20:16 | −36:14:34 | A0V | 7.45 | 7.49 | 01:54 | 01:26 | 84° | 93° |
 | 8 | HD 12206 | 9285 | 01:59:20 | −26:25:56 | A0V | 6.79 | 6.81 | 02:34 | 02:06 | 86° | 105° |
 
 Todas pasan más de 3 h sobre 30° dentro de la ventana en ambas noches.
@@ -155,10 +157,10 @@ Todas pasan más de 3 h sobre 30° dentro de la ventana en ambas noches.
 ### Coordenadas (formato Staralt)
 
 ```
-HD195500  20 32 42 -28 35 44
 HD202941  21 19 51 -27 12 33
+HD207480  21 49 54 -27 24 14
 HD210300  22 10 00 -28 17 33
-HD215863  22 48 41 -34 46 23
+HD212643  22 26 11 -23 40 57
 HD220881  23 27 33 -27 16 41
 HD562     00 10 00 -25 52 29
 HD8130    01 20 16 -36 14 34
@@ -168,12 +170,16 @@ HD12206   01 59 20 -26 25 56
 ### Estrellas de reserva (también cumplen todos los criterios)
 
 ```
-HD207480  21 49 54 -27 24 14
-HD212643  22 26 11 -23 40 57
 HD223884  23 53 21 -24 13 45
 HD225200  00 04 20 -29 16 08
 HD7323    01 12 55 -35 44 45
+HD195500  20 32 42 -28 35 44
+HD215863  22 48 41 -34 46 23
 ```
+
+HD 195500 y HD 215863 estaban seleccionadas, pero su B−V viene de Tycho, no de fotometría
+Johnson. Se reemplazaron por HD 207480 y HD 212643 (Mermilliod). Sirven solo para medir la
+extinción, donde la magnitud de catálogo se cancela.
 
 ### Estrellas descartadas
 

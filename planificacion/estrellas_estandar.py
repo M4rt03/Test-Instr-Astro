@@ -1,6 +1,7 @@
 """Magnitudes Johnson B y V de las estrellas estándar, consultadas con astroquery en VizieR.
 
-Para cada estrella de candidatos_2026.md (8 seleccionadas y 5 de reserva) consulta:
+Para cada estrella de candidatos_2026.md (8 seleccionadas, 3 de reserva y
+las 2 reemplazadas por tener B−V de Tycho) consulta:
 
 - II/168/ubvmeans: Mermilliod (1991), medias homogéneas de fotometría fotoeléctrica en el
   sistema UBV de Johnson. Es la referencia para estrellas brillantes.
@@ -28,10 +29,12 @@ from astroquery.vizier import Vizier
 
 import tiempos_exposicion as te
 
-ESTRELLAS = [  # (HD, seleccionada)
-    (195500, True), (202941, True), (210300, True), (215863, True),
-    (220881, True), (562, True), (8130, True), (12206, True),
-    (207480, False), (212643, False), (223884, False), (225200, False), (7323, False),
+SEL, RES, EXT = "seleccionada", "reserva", "solo extinción"
+ESTRELLAS = [  # (HD, uso)
+    (202941, SEL), (207480, SEL), (210300, SEL), (212643, SEL),
+    (220881, SEL), (562, SEL), (8130, SEL), (12206, SEL),
+    (223884, RES), (225200, RES), (7323, RES),
+    (195500, EXT), (215863, EXT),         # B−V de Tycho: solo para medir la extinción
 ]
 DIFERENCIA_MAX = 0.03   # mag: avisar si Mermilliod e Hipparcos difieren más que esto
 
@@ -130,9 +133,9 @@ def main():
 
     inst = te.INSTRUMENTO
     estrellas = []
-    for hd, seleccionada in ESTRELLAS:
+    for hd, uso in ESTRELLAS:
         r = elegir(hd, *consultar(hd))
-        r["seleccionada"] = seleccionada
+        r["uso"] = uso
         for filt in "BV":
             r[f"t_{filt}"] = te.t_estandar(r[filt], filt, inst)[0]
         estrellas.append(r)
@@ -142,7 +145,7 @@ def main():
     print("|---|---|---|---|---|---|---|---|---|---|---|---|---|")
     fmt = lambda x: "—" if x is None else f"{x:.3f}"
     for r in estrellas:
-        print(f"| {r['nombre']} | {'seleccionada' if r['seleccionada'] else 'reserva'} | {r['tipo']} | "
+        print(f"| {r['nombre']} | {r['uso']} | {r['tipo']} | "
               f"{fmt(r['V_merm'])} | {fmt(r['BV_merm'])} | {fmt(r['V_hip'])} | "
               f"{fmt(r['BV_hip'])} ({r['origen_hip']}) | {r['fuente']} | {r['calidad']} | "
               f"{r['B']:.3f} | {r['V']:.3f} | {r['t_B']:.1f} s | {r['t_V']:.1f} s |")
@@ -153,7 +156,7 @@ def main():
 
     print(f"\n# Bloque para pipeline/config.yaml (dentro de la noche, en 'estandares:')")
     for r in estrellas:
-        if not (r["seleccionada"] or args.todas):
+        if not (r["uso"] == SEL or args.todas):
             continue
         carpeta = r["nombre"].replace(" ", "_")
         print(f'      - nombre: "{r["nombre"]}"\n'
@@ -165,7 +168,7 @@ def main():
               f'          V: "datos/{args.noche}/{carpeta}/*_V_*.fit"')
 
     if args.csv:
-        campos = ["nombre", "HIP", "seleccionada", "tipo", "ra", "dec", "V_merm", "BV_merm", "n_merm",
+        campos = ["nombre", "HIP", "uso", "tipo", "ra", "dec", "V_merm", "BV_merm", "n_merm",
                   "V_hip", "BV_hip", "origen_hip", "fuente", "calidad", "B", "V", "t_B", "t_V", "aviso"]
         with open(args.csv, "w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=campos, extrasaction="ignore")
