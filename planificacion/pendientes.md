@@ -90,8 +90,8 @@ que no necesitan imágenes de ciencia):
 - [ ] **Elegir las estándares de cada noche** (plan en [`calibraciones.md`](calibraciones.md)):
   HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos
   masas de aire, y HD 220881 o HD 562 a mitad de la noche.
-  - HD 195500 y HD 215863 no tienen B−V medido en Johnson (viene de Tycho). Las estándares aún
-    no están fijadas: proponer reemplazarlas por HD 207480 y HD 212643, que están en Mermilliod.
+  - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod
+    (las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
   - HD 210300 y HD 12206 obligan a ~1 s y a tomar más exposiciones por el centelleo.
 - [ ] **Hacer la tabla del plan** con el formato del enunciado: hora, AR, Dec, objeto, tipo,
   magnitud, distancia a la Luna y observador.
