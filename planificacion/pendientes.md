@@ -136,7 +136,9 @@ que no necesitan imágenes de ciencia):
   `OBSGEO-B/L`) sean los de El Sauce (−30,46°, −70,75°). En 2023 TheSkyX tenía configurado
   Santiago (−33,43°, −70,57°), así que el `AIRMASS` y la altura de esos headers están mal. El
   pipeline calcula la masa de aire con el sitio de `config.yaml`, pero hay que saberlo.
-- [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B.
+- [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B. Revisarla
+  con `python revisar_prueba.py <archivo>` (carpeta `pipeline`), que muestra todo lo de abajo.
+  Probarlo antes de la noche con los datos de 2025.
   - Revisar el **máximo** del núcleo o de la estrella y el **nivel de fondo**, ambos en ADU y
     restando el bias.
   - Si el máximo supera ~40 000 ADU, bajar el tiempo. Si el fondo es muy bajo y el máximo está

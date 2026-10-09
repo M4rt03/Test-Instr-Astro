@@ -182,7 +182,9 @@ Se usa seeing de 2,0″ (el mejor observado en 2025) y masa de aire 1,05. El t_e
 
 ## 3. Procedimiento en el telescopio (exposiciones de prueba)
 
-En TheSkyX, al comienzo de cada bloque:
+En TheSkyX, al comienzo de cada bloque. Cada prueba se puede revisar con
+[`pipeline/revisar_prueba.py`](../pipeline/revisar_prueba.py), que entrega el máximo, el fondo,
+el seeing y, en las estándares, el ZP:
 
 1. Apuntar, enfocar y tomar **una exposición de prueba en V** con el t_exp de la tabla.
 2. Revisar el **máximo** del núcleo del objeto (o de la estrella estándar) y el **nivel de
