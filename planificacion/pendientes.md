@@ -73,6 +73,7 @@ que no necesitan imágenes de ciencia):
 - [x] **Ruido de lectura:** 3,56 e⁻ (4,19 ADU), coherente con los 3,9 e⁻ de la ficha. Confirma el
   modo 16-bit HDR.
 - [x] **Seeing de 2025:** 2,5″ de mediana (1,9–3,2″) en las 40 exposiciones de estándares.
+- [ ] Instalar en Nitro SExtractor
 
 **Preguntar al ayudante:**
 
@@ -125,8 +126,7 @@ que no necesitan imágenes de ciencia):
   elegido y las estándares; van en el informe.
   - Staralt usa UTC−4: su marca de las 24 h corresponde a la 01:00 en Chile.
 - [ ] **SIMBAD.** Revisar la ficha del objeto y de las estándares elegidas. En las nebulosas
-  planetarias, SIMBAD da la magnitud de la estrella central, no la de la nebulosa: aclarar en
-  el informe cuál se usa.
+  planetarias, SIMBAD da la magnitud de la estrella central, no la de la nebulosa: aclarar en  el informe cuál se usa.
 
 ## 2. Durante la observación (en TheSkyX)
 
