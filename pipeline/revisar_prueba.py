@@ -35,6 +35,7 @@ import numpy as np
 from astropy import units as u
 from astropy.coordinates import AltAz, EarthLocation
 from astropy.stats import sigma_clipped_stats
+from astropy.utils import iers
 from scipy import ndimage
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -54,6 +55,12 @@ CIELO_OSCURO = {"B": 22.7, "V": 21.8}    # mag/arcsec2 en el cenit sin Luna
 
 # Magnitudes Johnson (B, V): estrellas_estandar.py (2026) y las estándares de 2025 (Tycho
 # convertido, como en el config de 2025, para poder probar el script con esos datos)
+# Para la masa de aire basta la tabla de rotación terrestre que trae astropy: así no intenta
+# descargar la del IERS (que falla sin internet en el observatorio).
+iers.conf.auto_download = False
+if hasattr(iers.conf, "iers_degraded_accuracy"):
+    iers.conf.iers_degraded_accuracy = "ignore"
+
 ESTANDARES = {
     "HD 202941": (7.072, 7.070), "HD 207480": (7.190, 7.140), "HD 210300": (6.590, 6.440),
     "HD 212643": (6.260, 6.290), "HD 220881": (7.720, 7.440), "HD 562": (7.787, 7.650),
@@ -79,7 +86,9 @@ def masa_de_aire(header):
     except (KeyError, ValueError):
         return None, None
     lugar = EarthLocation(lat=SITIO["lat"] * u.deg, lon=SITIO["lon"] * u.deg, height=SITIO["alt"] * u.m)
-    altaz = coord.transform_to(AltAz(obstime=obs_time(header), location=lugar))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        altaz = coord.transform_to(AltAz(obstime=obs_time(header), location=lugar))
     alt = float(altaz.alt.deg)
     return (float(altaz.secz) if alt > 5 else None), alt
 
