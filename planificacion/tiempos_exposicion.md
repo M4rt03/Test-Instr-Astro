@@ -81,6 +81,8 @@ Las tasas se obtienen de las magnitudes con el zeropoint (ZP, la magnitud que da
   - Para planificar se usa el promedio (21,845 en ADU/s). Un error de ±0,15 mag cambia la S/N solo en ±12 %. Para la fotometría del informe, en cambio, sería un error sistemático importante en B y en B−V.
 
 **Corriente oscura negativa:** los darks de 100 s quedaron 3,9 ADU *por debajo* del bias. No es físico. Indica que la corriente oscura es menor de lo que se puede medir así y que el nivel de bias no es idéntico entre una exposición de 0 s y una de 100 s (algo común en sensores CMOS).
+- **Confirmado con `revisar_prueba.py`:** las estándares de 3–5 s también tienen el fondo 2,5–4,5 ADU *bajo* el bias, con un cielo que en 5 s aporta menos de 1 ADU. El desfase no depende del tiempo de exposición: el bias de 0 s queda ~3–5 ADU sobre el nivel cero de cualquier exposición. No es corriente oscura.
+- **Consecuencia:** el 15/10 el cielo aporta solo 4–12 ADU por exposición, así que un error de 4 ADU en el nivel cero es la mitad del cielo. La fotometría no se afecta, porque resta el fondo local, pero para medir el brillo del cielo hay que restar un dark del mismo t_exp, no un bias.
 Consecuencia práctica: en las noches de 2026 conviene tomar **darks con el mismo tiempo de exposición que la ciencia** (y que las estándares) y restarlos directamente, en lugar de usar bias + corriente oscura escalada.
 
 ### Cómo medir los valores reales con los datos de 2025

@@ -21,7 +21,7 @@ Astrométrica y Fotométrica de NGC 6618" (2025), hecha el 7/10/2026.
 | Binning | 1 × 1 | `XBINNING` |
 | Ganancia | 0,85 e⁻/ADU | `GAIN` |
 | Profundidad | 16 bits (0–65 535 ADU) | `BITPIX = 16`, `BZERO = 32768` |
-| Temperatura del sensor | Consigna −16 °C (2025) y −25 °C (2023), sin alcanzarse al comienzo de la noche: ver «Temperatura del sensor» abajo | `CCD-TEMP`, `SET-TEMP` |
+| Temperatura del sensor | Consigna −16 °C y luego −20 °C (2025) y −25 °C (2023), sin alcanzarse al comienzo de la noche: ver «Temperatura del sensor» abajo | `CCD-TEMP`, `SET-TEMP` |
 | Apertura | 500 mm | `APTDIA` |
 | Focal | 6500 mm (valor ingresado en el software, no medido) | `FOCALLEN` |
 | Sitio (El Sauce) | −30,4597°, −70,7503°, 1600 m | `OBSGEO-B/L/H` |
@@ -58,9 +58,13 @@ En ambos años la cámara no llegó a la consigna al comienzo de la noche y la t
 | 2023 | HIP 117445, B, 9 s | 06/10 03:32 | −24,8 °C | −25 °C |
 | 2025 | Darks de 100 s | 25/09 23:47–00:02 | −15,6 a −16,0 °C | −16 °C |
 | 2025 | HIP 116375 | 03/10 01:08 | −15,1 °C | −16 °C |
-| 2025 | HIP 117678 | 03/10 02:52 | −16,7 °C | −16 °C |
+| 2025 | HIP 117678 | 03/10 02:52 | −16,7 °C | **−20 °C** |
+
+En 2025 la consigna se cambió de −16 °C a −20 °C entre las dos estándares, y la cámara no la
+alcanzó.
 
 Consecuencias para 2026:
+- No cambiar la consigna durante la noche.
 - Fijar una consigna que la cámara alcance con la temperatura ambiente de esa noche y esperar a
   que `CCD-TEMP` se estabilice antes de los bias, darks y ciencia.
 - Anotar `CCD-TEMP` en la bitácora y tomar los darks a la misma temperatura que la ciencia.

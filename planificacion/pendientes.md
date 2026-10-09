@@ -138,6 +138,8 @@ que no necesitan imágenes de ciencia):
   pipeline calcula la masa de aire con el sitio de `config.yaml`, pero hay que saberlo.
 - [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B. Revisarla
   con `python revisar_prueba.py <archivo>` (carpeta `pipeline`), que muestra todo lo de abajo.
+  Para que mida bien el cielo, darle un dark del mismo t_exp (`--dark`): el bias de 0 s queda
+  3–5 ADU sobre el nivel real de las exposiciones.
   Probarlo antes de la noche con los datos de 2025.
   - Revisar el **máximo** del núcleo o de la estrella y el **nivel de fondo**, ambos en ADU y
     restando el bias.

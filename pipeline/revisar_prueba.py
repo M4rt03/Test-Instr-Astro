@@ -17,6 +17,12 @@ Uso (desde la carpeta pipeline):
     python revisar_prueba.py datos/noche1/*.fit
     python revisar_prueba.py prueba.fit --estandar "HD 8130"     # si OBJECT no dice el nombre
     python revisar_prueba.py prueba.fit --bias datos/noche1/Bias_1x1_00000001.fit
+    python revisar_prueba.py prueba_120s.fit --dark datos/noche1/Dark_120.000secs_00000001.fit
+
+Nivel cero: en 2025 el bias de 0 s quedó 3–5 ADU *sobre* el nivel de las exposiciones reales
+(las imágenes dieron fondo negativo y los darks de 100 s quedaron 3,9 ADU bajo el bias). Con un
+bias, el fondo tiene ese error; para medir un cielo débil (15/10: 4–12 ADU) hay que usar
+--dark con un dark del mismo t_exp.
 
 Para probarlo con los datos de 2025 (deberían salir ZP de ~21,97–21,99 en B para HIP 116375,
 ~21,70 para HIP 117678 y ~21,94 en V para las dos):
@@ -131,8 +137,13 @@ def revisar(path, args):
         print(f"        Altura {alt:.0f}°, masa de aire {x_air:.3f} (calculada para El Sauce; "
               f"header: {h.get('AIRMASS', '—')})")
 
-    # --- Bias
-    if args.bias:
+    # --- Nivel cero: un dark del mismo t_exp (mejor) o un bias
+    if args.dark:
+        bias_img, hd = read_fits(args.dark)
+        bias_txt = f"dark de {exptime(hd):g} s ({Path(args.dark).name})"
+        if abs(exptime(hd) - t) > 0.5:
+            print(f"  [OJO] El dark es de {exptime(hd):g} s y la imagen de {t:g} s")
+    elif args.bias:
         bias_img, _ = read_fits(args.bias)
         bias_txt = f"bias de {Path(args.bias).name}"
     else:
@@ -147,12 +158,14 @@ def revisar(path, args):
         _, fondo, ruido = sigma_clipped_stats(data[::4, ::4], sigma=3.0, maxiters=5)
     print(f"  Fondo {fondo:.1f} ADU sobre el {bias_txt} ({fondo / t:.3f} ADU/s), "
           f"ruido {ruido:.1f} ADU por píxel")
-    if filt in ZP_2025 and x_air is not None and fondo > 0:
+    minimo = 1.0 if args.dark else 15.0     # con un bias, el nivel cero tiene ~3–5 ADU de error
+    if filt in ZP_2025 and x_air is not None and fondo > minimo:
         mu = ZP_2025[filt] - K[filt] * x_air - 2.5 * math.log10(fondo / t / ESCALA ** 2)
         print(f"        Cielo ≈ {mu:.1f} mag/arcsec² en {filt} (sin Luna en el cenit: "
               f"{CIELO_OSCURO[filt]}; con la Luna al 88 % se espera ~19)")
-    elif fondo <= 0:
-        print("  [OJO] Fondo ≤ 0: revisar el nivel de bias (¿otro modo de lectura?)")
+    elif not args.dark:
+        print("        Cielo demasiado débil para medirlo contra un bias de 0 s (en 2025 el bias quedó"
+              " 3–5 ADU sobre el nivel real). Para medirlo: --dark con un dark del mismo t_exp")
 
     # --- Máximo del centro (núcleo) y saturación
     ny, nx = data.shape
@@ -161,8 +174,13 @@ def revisar(path, args):
     pico = float(np.nanmax(centro) - fondo)
     print(f"  [{aviso(pico < LIMITE)}] Máximo en el centro ({args.caja} px) {pico:.0f} ADU sobre el "
           f"fondo (límite {LIMITE})" + (f": t_exp máximo ≈ {t * LIMITE / pico:.0f} s" if pico > 0 else ""))
-    n_sat = int(sat.sum())
-    print(f"  [{aviso(n_sat == 0)}] Píxeles saturados (≥ {SATURA} ADU): {n_sat}")
+    grupos, n = ndimage.label(sat)
+    tamanos = np.bincount(grupos.ravel())[1:] if n else np.array([], dtype=int)
+    n_estrellas_sat = int(np.sum(tamanos >= 3))
+    n_calientes = int(np.sum(tamanos[tamanos < 3]))
+    print(f"  [{aviso(n_estrellas_sat == 0)}] Estrellas o núcleos saturados (grupos de ≥ 3 píxeles "
+          f"≥ {SATURA} ADU): {n_estrellas_sat}" + (f"; además {n_calientes} píxeles calientes aislados"
+                                                    if n_calientes else ""))
 
     # --- Seeing y forma de las estrellas
     fwhm_guess = args.seeing / ESCALA
@@ -171,11 +189,12 @@ def revisar(path, args):
         tbl = seeing.measure_psf(data.astype(np.float32), sat, fwhm_guess, max_stars=60)
     res = seeing.summarize(tbl, ESCALA)
     if res["n_estrellas"] >= 3:
-        ok_e = res["elipticidad"] < 0.15
+        ok_e = res["elipticidad"] < 0.3      # en 2025, con 3–5 s, salió 0,16–0,25
         print(f"  [{aviso(res['seeing_arcsec'] < 4)}] Seeing {res['seeing_arcsec']:.2f}″ "
               f"({res['fwhm_px']:.1f} px, {res['n_estrellas']} estrellas)")
         print(f"  [{aviso(ok_e)}] Elipticidad {res['elipticidad']:.2f}"
-              + ("" if ok_e else " — estrellas alargadas: revisar guiado o seguimiento"))
+              + (" (en 2025, con 3–5 s: 0,16–0,25)" if ok_e
+                 else " — estrellas alargadas: revisar guiado, seguimiento o viento"))
     else:
         print("        Pocas estrellas aisladas para medir el seeing (normal en estándares de 1–3 s)")
 
@@ -206,6 +225,7 @@ def main():
     p.add_argument("archivos", nargs="+", help="imágenes FITS (se aceptan comodines)")
     p.add_argument("--estandar", help="nombre de la estándar si OBJECT no lo dice (ej. \"HD 8130\")")
     p.add_argument("--bias", help="un bias o master bias de la noche (si no, se usan 92,5 ADU)")
+    p.add_argument("--dark", help="un dark del mismo t_exp: mejor nivel cero que el bias para medir el cielo")
     p.add_argument("--seeing", type=float, default=2.5, help="seeing inicial en arcsec (2,5)")
     p.add_argument("--caja", type=int, default=600, help="lado de la caja central en píxeles (600 = 3,2′)")
     args = p.parse_args()
