@@ -203,3 +203,54 @@ Con la prueba se puede recalcular todo:
 
 Después de la observación, el pipeline (photutils, sin Source Extractor) mide el seeing, el
 brillo del cielo y la magnitud límite reales de cada noche (`comparacion_noches.tex`). Con eso se puede comparar lo planificado con lo obtenido.
+
+## 4. Noches con Luna: 15/10 y 22/10
+
+La noche del 8/10 se nubló. Quedan el 15/10 (Luna al 26 %) y, como respaldo, el 22/10 (Luna al
+88 %). [`cielo_luna.py`](cielo_luna.py) calcula hora por hora la posición y la fase de la Luna, el
+brillo del cielo en la dirección de cada objeto y la S/N del mismo plan (120 s × 7 en B y
+90 s × 6 en V para NGC 7793; 90 s × 9 y 60 s × 9 para NGC 1291):
+
+```
+python cielo_luna.py
+```
+
+**Modelo:** Krisciunas & Schaefer (1991) para la luz de Luna dispersada en V, con k_V = 0,15. En B
+se usa la misma luz con un color B−V = 0,0, porque el modelo solo está calibrado en V. Por eso μB
+tiene ±0,3–0,5 mag de incertidumbre. La posición de la Luna coincide con la de Staralt: el 15/10
+está en AR 17h34m y el 22/10 en AR 23h18m.
+
+| Noche | Objeto | Hora | Alt. | Alt. Luna | Dist. Luna | μB | μV | S/N B | S/N V |
+|---|---|---|---|---|---|---|---|---|---|
+| Sin Luna (referencia) | NGC 7793 | — | 75° | — | — | 22,7 | 21,8 | 20 | 22 |
+| Sin Luna (referencia) | NGC 1291 | — | 55° | — | — | 22,7 | 21,8 | 13 | 19 |
+| 15/10 (26 %) | NGC 7793 | 23:00 | 77° | 21° | 80° | 22,1 | 21,5 | 19 | 21 |
+| 15/10 (26 %) | NGC 1291 | 00:00–01:00 | 48–60° | 9° a −1° | 104° | 22,0–22,6 | 21,3–21,7 | 12–13 | 18–19 |
+| 22/10 (88 %) | NGC 7793 | 22:00–00:00 | 70–84° | 58–61° | 31–32° | 19,0 | 19,0 | 9 | 11 |
+| 22/10 (88 %) | NGC 1291 | 00:00–01:00 | 54–65° | 58–49° | 66° | 19,6–19,7 | 19,5–19,6 | 7–8 | 12 |
+| 22/10 (88 %) | NGC 1291 | 02:00 | 75° | 38° | 65° | 19,8 | 19,7 | 8 | 13 |
+
+**15/10:** es casi como una noche sin Luna. La Luna está baja (21° a las 23:00) y se pone a la
+01:00, así que la S/N baja solo ~5 %. Es la noche principal.
+
+**22/10:**
+- **El cielo es ~3–3,5 mag más brillante en B y ~2,5–3 mag en V.** La Luna está sobre 38° toda la ventana
+  y no se pone antes de las 02:00.
+- **Cambia el régimen de ruido.** Cada exposición de 120 s en B recibe ~110 e⁻ de cielo por píxel,
+  bastante más que el ruido de lectura al cuadrado (12,7 e⁻²). Ahora domina el cielo.
+  - Dividir el tiempo en más exposiciones cortas casi no cuesta S/N.
+  - El fondo (~130 ADU) está lejos de saturar.
+- **La S/N baja a la mitad en NGC 7793** (B: 20 → 9) y ~40 % en NGC 1291 (B: 13 → 7–8).
+  - Recuperar la S/N de 20 en B de NGC 7793 exigiría ~5 veces más tiempo; no cabe.
+  - Si se observan ambas noches, sumar el 22/10 al 15/10 (pesando por la varianza) sube la S/N
+    de NGC 7793 en B solo de 19 a ~21.
+- **Horario:**
+  - NGC 7793 está a ~31° de la Luna toda la noche y su S/N casi no cambia con la hora: basta
+    observarla alta.
+  - NGC 1291 mejora un poco hacia el final, porque ella sube y la Luna baja: 01:00–02:00 si la
+    ventana lo permite.
+- **Para el informe:** comparar 15/10 con 22/10 es comparar Luna baja al 26 % con Luna alta al
+  88 %. Es justo lo que pide la pregunta de qué conjunto de imágenes es mejor.
+- **Revisar en la prueba:** el fondo (`fondo/t_exp`) da el brillo real del cielo. Con él se
+  corrige el μB del modelo.
+
