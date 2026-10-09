@@ -3,17 +3,16 @@
 Plan de bias, darks, flats y estrellas estándar para el MAS500 (El Sauce), con los objetos del
 grupo: NGC 7793 y NGC 1291. Todas las horas son de Chile (UTC−3).
 
-La noche del 8/10 se nubló: quedan el 15/10 y, como respaldo, el 22/10. Los flats los toma el
-ayudante.
+La noche del 8/10 se nubló: quedan el 15/10 y, como respaldo, el 22/10. Los flats los toma el ayudante.
 
 ## Resumen
 
-| Imagen | Cuántas | t_exp | Cuándo | Tiempo aprox. |
-|---|---|---|---|---|
-| Bias | 25 al inicio y 25 al final | 0 s | Al comienzo y al terminar | < 1 min cada serie (en 2025, un bias cada 0,7 s) |
-| Darks | 10 por cada t_exp de ciencia: 120, 90 y 60 s | 120 / 90 / 60 s | Con la cúpula cerrada: antes de anochecer o al final | ~45 min (mínimo: 10 × 120 s, ~21 min) |
-| Flats de cielo | 10–15 por filtro, primero B y luego V | 1–30 s, para 20 000–30 000 ADU | **Los toma el ayudante.** En el crepúsculo serían 20:05–20:40 (15/10) y 20:10–20:45 (22/10) | ~35 min |
-| Estándares | 5 por filtro en cada visita, 5 visitas | 1–3 s (tabla abajo) | Comienzo, mitad y final de la noche (tabla de visitas) | ~25 min en total |
+| Imagen         | Cuántas                                      | t_exp                          | Cuándo                                                                                      | Tiempo aprox.                                    |
+| -------------- | -------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Bias           | 25 al inicio y 25 al final                   | 0 s                            | Al comienzo y al terminar                                                                   | < 1 min cada serie (en 2025, un bias cada 0,7 s) |
+| Darks          | 10 por cada t_exp de ciencia: 120, 90 y 60 s | 120 / 90 / 60 s                | Con la cúpula cerrada: antes de anochecer o al final                                        | ~45 min (mínimo: 10 × 120 s, ~21 min)            |
+| Flats de cielo | 10–15 por filtro, primero B y luego V        | 1–30 s, para 20 000–30 000 ADU | **Los toma el ayudante.** En el crepúsculo serían 20:05–20:40 (15/10) y 20:10–20:45 (22/10) | ~35 min                                          |
+| Estándares     | 5 por filtro en cada visita, 5 visitas       | 1–3 s (tabla abajo)            | Comienzo, mitad y final de la noche (tabla de visitas)                                      | ~25 min en total                                 |
 
 Las calibraciones sirven a todos los grupos de la misma noche. Conviene repartirlas: bias y flats
 una sola vez, y los darks con los t_exp de todos los grupos.
