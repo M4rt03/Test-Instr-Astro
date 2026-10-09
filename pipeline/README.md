@@ -46,6 +46,19 @@ pip install -r requirements.txt
    ```bash
    python -m pytest
    ```
+5. **En el telescopio: revisión rápida de las exposiciones de prueba.** Muestra el header
+   (filtro, t_exp, temperatura, ganancia y sitio), la masa de aire, el fondo del cielo, el máximo
+   del centro con el t_exp máximo sin saturar, el seeing y la elipticidad. Si la imagen es de una
+   estrella estándar conocida, también da su pico y el ZP:
+   ```bash
+   python revisar_prueba.py datos/noche1/prueba_V.fit
+   python revisar_prueba.py datos/noche1/prueba.fit --estandar "HD 8130" --bias datos/noche1/Bias_1x1_00000001.fit
+   python revisar_prueba.py datos/noche1/prueba_120s.fit --dark datos/noche1/Dark_120.000secs_00000001.fit
+   ```
+   Para medir el cielo conviene `--dark` con un dark del mismo t_exp: en 2025 el bias de 0 s quedó
+   3–5 ADU sobre el nivel cero de las exposiciones.
+   Conviene probarlo antes con los datos de 2025: en las estándares debería dar ZP de ~21,97–21,99
+   (B, HIP 116375), ~21,70 (B, HIP 117678) y ~21,94 (V).
 
 ## Qué produce
 
