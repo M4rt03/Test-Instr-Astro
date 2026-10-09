@@ -1,7 +1,10 @@
 # Pendientes: qué confirmar, revisar y tener en cuenta
 
-Lista de lo que falta confirmar antes y durante las noches del 8 y 15 de octubre de 2026,
-y de lo que hay que considerar en el informe. Actualizada el 8/10/2026.
+Lista de lo que falta confirmar antes y durante las noches de observación, y de lo que hay que
+considerar en el informe. Actualizada el 9/10/2026.
+
+**La noche del 8/10 se nubló.** Se observa el 15/10 y, como respaldo, el 22/10 (Luna al 88 %).
+La S/N esperada con Luna está en [`tiempos_exposicion.md`](tiempos_exposicion.md) (sección 4).
 
 ## Resumen
 
@@ -100,21 +103,25 @@ que no necesitan imágenes de ciencia):
   magnitud, distancia a la Luna y observador.
 - [x] **Horario.** Confirmar con el ayudante la ventana (21:00–01:00 o hasta las 02:00) y la
   hora de inicio (el enunciado dice desde las 19:00).
-- [ ] **Calibraciones.** Plan propuesto en [`calibraciones.md`](calibraciones.md): 25 + 25 bias,
-  10 darks por cada t_exp de ciencia (120, 90 y 60 s) y 10–15 flats de crepúsculo por filtro
-  entre las 20:00 y las 20:35. Preguntar si los darks se pueden tomar con la cúpula cerrada y si hay pantalla para flats de cúpula. **Pedir darks con el mismo tiempo de exposición que la
+- [ ] **Calibraciones.** Plan propuesto en [`calibraciones.md`](calibraciones.md): 25 + 25 bias y
+  10 darks por cada t_exp de ciencia (120, 90 y 60 s). **Los flats los toma el ayudante:**
+  preguntarle qué noche y con qué nivel (B y V, 10–15 por filtro, 20 000–30 000 ADU). Preguntar
+  si los darks se pueden tomar con la cúpula cerrada. **Pedir darks con el mismo tiempo de exposición que la
   ciencia** (las estándares de 1–3 s se corrigen bien solo con el bias), tomados la misma noche y a la misma temperatura del sensor. En 2025 los darks de 100 s
   quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
   sensor CMOS.
-- [ ] **Noche de respaldo.** Si el clima falla, se observa el jueves 22/10. Ese día la Luna está
-  al ~88 %, en AR 23h20m, y sobre el horizonte toda la ventana.
-  - Queda a 22° de la Hélice, 28° de NGC 247, 32° de NGC 7793, 35° de NGC 7009 y 42° de NGC 300.
-  - Los objetos de AR ~3h (NGC 1097, 1291, 1316 y 1313) y NGC 6744 quedan a más de 55°.
-  - El fondo será mucho más alto, sobre todo en B.
+- [x] **8/10 nublado:** no se pudo observar. Quedan el 15/10 y el jueves 22/10.
+- [ ] **Noche de respaldo (22/10).** La Luna está al 88 %, en AR 23h18m, y sobre 38° toda la
+  ventana ([`cielo_luna.py`](cielo_luna.py)).
+  - Queda a ~31° de NGC 7793 y a ~66° de NGC 1291.
+  - El cielo será ~3–3,5 mag más brillante en B y ~2,5–3 en V. La S/N baja a la mitad en NGC 7793
+    (B: 20 → 9) y ~40 % en NGC 1291 (B: 13 → 7–8).
+  - Secuencia propuesta en [`calibraciones.md`](calibraciones.md): NGC 7793 temprano y NGC 1291
+    lo más tarde posible.
 
 ### Revisiones finales de los candidatos
 
-- [ ] **Staralt.** Generar las curvas de visibilidad del 8/10 y del 15/10 para el objeto
+- [ ] **Staralt.** Generar las curvas de visibilidad del 15/10 y del 22/10 para el objeto
   elegido y las estándares; van en el informe.
   - Staralt usa UTC−4: su marca de las 24 h corresponde a la 01:00 en Chile.
 - [ ] **SIMBAD.** Revisar la ficha del objeto y de las estándares elegidas. En las nebulosas
@@ -145,8 +152,10 @@ que no necesitan imágenes de ciencia):
   sale contaminada, tomar otra.
 - [ ] **Estándares.** Tomar 5 o más exposiciones por filtro, sin saturar. Con ~1 s tomar
   más, porque el centelleo agrega más ruido en exposiciones cortas.
-- [ ] **15/10:** la Luna está alta hasta las 00:52. El fondo en B será más alto; revisarlo en la
-  prueba.
+- [ ] **15/10:** la Luna (26 %) está sobre el horizonte hasta la 01:00, pero a más de 79° de los
+  objetos. El fondo casi no cambia; igual revisarlo en la prueba.
+- [ ] **22/10:** con la Luna al 88 %, el fondo de la prueba (`fondo/t_exp`) da el brillo real del
+  cielo. Anotarlo: el μB del modelo tiene ±0,3–0,5 mag de incertidumbre.
 - [ ] **Descargar todo** al terminar: la ciencia del grupo, las estándares y todas las
   calibraciones (bias, darks, flats y BPM).
 

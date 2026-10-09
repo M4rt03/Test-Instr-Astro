@@ -1,46 +1,66 @@
-# Calibraciones y estrellas estándar: tiempos para las noches del 8 y 15/10
+# Calibraciones y estrellas estándar: tiempos para las noches del 15 y 22/10
 
 Plan de bias, darks, flats y estrellas estándar para el MAS500 (El Sauce), con los objetos del
 grupo: NGC 7793 y NGC 1291. Todas las horas son de Chile (UTC−3).
+
+La noche del 8/10 se nubló: quedan el 15/10 y, como respaldo, el 22/10. Los flats los toma el
+ayudante.
 
 ## Resumen
 
 | Imagen | Cuántas | t_exp | Cuándo | Tiempo aprox. |
 |---|---|---|---|---|
-| Bias | 25 al inicio y 25 al final | 0 s | Antes de los flats y al terminar | < 1 min cada serie (en 2025, un bias cada 0,7 s) |
+| Bias | 25 al inicio y 25 al final | 0 s | Al comienzo y al terminar | < 1 min cada serie (en 2025, un bias cada 0,7 s) |
 | Darks | 10 por cada t_exp de ciencia: 120, 90 y 60 s | 120 / 90 / 60 s | Con la cúpula cerrada: antes de anochecer o al final | ~45 min (mínimo: 10 × 120 s, ~21 min) |
-| Flats de cielo | 10–15 por filtro, primero B y luego V | 1–30 s, para 20 000–30 000 ADU | Crepúsculo: 20:00–20:35 (8/10) y 20:05–20:40 (15/10) | ~35 min |
-| Estándares | 5 por filtro en cada visita, 5 visitas | 1–3 s (tabla abajo) | 21:15, ~23:30 y ~00:50 | ~25 min en total |
+| Flats de cielo | 10–15 por filtro, primero B y luego V | 1–30 s, para 20 000–30 000 ADU | **Los toma el ayudante.** En el crepúsculo serían 20:05–20:40 (15/10) y 20:10–20:45 (22/10) | ~35 min |
+| Estándares | 5 por filtro en cada visita, 5 visitas | 1–3 s (tabla abajo) | Comienzo, mitad y final de la noche (tabla de visitas) | ~25 min en total |
 
 Las calibraciones sirven a todos los grupos de la misma noche. Conviene repartirlas: bias y flats
 una sola vez, y los darks con los t_exp de todos los grupos.
 
 ## Horario del Sol en El Sauce
 
-| Evento | 8/10 | 15/10 |
+| Evento | 15/10 | 22/10 |
 |---|---|---|
-| Puesta del Sol | 19:49 | 19:54 |
-| Sol a −6° (fin del crepúsculo civil) | 20:14 | 20:19 |
-| Sol a −12° (fin del náutico) | 20:42 | 20:47 |
-| Sol a −18° (comienza la noche astronómica) | 21:11 | 21:17 |
+| Puesta del Sol | 19:54 | 19:59 |
+| Sol a −6° (fin del crepúsculo civil) | 20:19 | 20:24 |
+| Sol a −12° (fin del náutico) | 20:47 | 20:53 |
+| Sol a −18° (comienza la noche astronómica) | 21:17 | 21:24 |
 
-Calculado para −30,4597°, −70,7503° (header de 2025). Coincide con Staralt para Tololo: la noche
-empieza a las 0h09m UT, es decir, a las 21:09.
+Calculado para −30,4597°, −70,7503° (header de 2025). Coincide con Staralt para Tololo: el 8/10
+la noche empezaba a las 0h09m UT, es decir, a las 21:09.
 
-### Secuencia de la noche del 8/10
-
-El 15/10 se corre todo ~5 min más tarde en el crepúsculo y ~30 min antes para los objetos.
+### Secuencia de la noche del 15/10
 
 | Hora | Qué |
 |---|---|
-| Antes de 19:45 | Enfriar la cámara y esperar que llegue a la temperatura de consigna. Bias (25). Darks, si se pueden tomar con la cúpula cerrada |
-| 20:00–20:35 | Flats de cielo: B y luego V |
-| 20:35–21:10 | Enfoque y apuntado; exposiciones de prueba |
+| Antes de 20:00 | Enfriar la cámara y esperar que `CCD-TEMP` se estabilice en la consigna. Bias (25). Darks, si se pueden tomar con la cúpula cerrada |
+| 20:05–20:45 | Flats (los toma el ayudante) |
+| 20:45–21:15 | Enfoque y apuntado; exposiciones de prueba |
 | 21:15–21:35 | **Estándares, visita 1:** HD 202941 y HD 8130 |
 | 22:30–23:30 | NGC 7793 |
 | ~23:30 | **Estándares, visita 2:** HD 220881 |
-| 00:00–01:00 | NGC 1291 (o 01:00–02:00 si la ventana llega a las 02:00) |
-| ~00:50–01:00 | **Estándares, visita 3:** HD 8130 y HD 202941 |
+| 23:50–00:45 | NGC 1291 (o 01:00–02:00 si la ventana llega a las 02:00) |
+| ~00:45–01:00 | **Estándares, visita 3:** HD 8130 y HD 202941 |
+| Al terminar | Bias (25) y los darks que falten |
+
+La Luna (26 %) se pone a la 01:00 y está a más de 79° de los dos objetos: casi no afecta.
+
+### Secuencia de la noche del 22/10 (respaldo)
+
+Todo ocurre ~30 min antes que el 15/10. La Luna (88 %) está sobre 38° toda la ventana; ver la
+S/N esperada en [`tiempos_exposicion.md`](tiempos_exposicion.md) (sección 4).
+
+| Hora | Qué |
+|---|---|
+| Antes de 20:05 | Cámara a la consigna y bias (25) |
+| 20:10–20:50 | Flats (los toma el ayudante) |
+| 20:50–21:25 | Enfoque y apuntado; exposiciones de prueba |
+| 21:25–21:45 | **Estándares, visita 1:** HD 202941 y HD 8130 |
+| 21:50–22:50 | NGC 7793 (está a ~31° de la Luna toda la noche; la hora casi no cambia la S/N) |
+| ~23:00 | **Estándares, visita 2:** HD 220881 |
+| 23:45–00:40 | NGC 1291 (mejor 01:00–02:00 si la ventana llega a las 02:00) |
+| ~00:45 | **Estándares, visita 3:** HD 8130 y HD 202941 |
 | Al terminar | Bias (25) y los darks que falten |
 
 ## 1. Bias
@@ -69,6 +89,9 @@ El 15/10 se corre todo ~5 min más tarde en el crepúsculo y ~30 min antes para 
   es < 1 e⁻.
 
 ## 3. Flats de cielo (crepúsculo)
+
+**Los toma el ayudante.** Lo que sigue sirve para pedirle lo necesario y revisar que los flats
+cumplan: B y V, 10–15 por filtro, con 20 000–30 000 ADU, y saber de qué noche son.
 
 **Nivel:** 20 000–30 000 ADU sobre el bias, dentro del rango lineal (límite de trabajo: 40 000 ADU).
 - Con 25 000 ADU, cada flat tiene 21 000 e⁻ por píxel: 0,7 % de ruido.
@@ -164,14 +187,15 @@ misma estrella a dos masas de aire, k se puede medir:
 
 Basta con dos estrellas, cada una al comienzo y al final:
 
-| Visita | Hora | Estrellas | X el 8/10 | X el 15/10 |
-|---|---|---|---|---|
-| 1 | 21:15–21:35 | HD 202941 · HD 8130 | 1,01 · 1,84 | 1,00 · 1,61 |
-| 2 | ~23:30 | HD 220881 (o HD 562) | 1,01 | 1,00 |
-| 3 | ~00:50–01:00 | HD 8130 · HD 202941 | 1,02 · 1,33 | 1,01 · 1,46 |
+| Visita | Hora 15/10 | Hora 22/10 | Estrellas | X el 15/10 | X el 22/10 |
+|---|---|---|---|---|---|
+| 1 | 21:15–21:35 | 21:25–21:45 | HD 202941 · HD 8130 | 1,00 · 1,61 | 1,01 · 1,37 |
+| 2 | ~23:30 | ~23:00 | HD 220881 (o HD 562) | 1,00 | 1,00 |
+| 3 | ~00:45–01:00 | ~00:45 | HD 8130 · HD 202941 | 1,01 · 1,46 | 1,01 · 1,54 |
 
-- HD 8130 pasa de X ≈ 1,8 a 1,0 y HD 202941 de 1,0 a 1,3–1,5: ΔX entre 0,3 y 0,8.
-- Si la ventana llega a las 02:00, dejar la visita 3 para el final: el ΔX sube (HD 202941 a 1,7–2,0).
+- HD 8130 pasa de X ≈ 1,4–1,6 a 1,0 y HD 202941 de 1,0 a ~1,5: ΔX entre 0,4 y 0,6.
+- Si la ventana llega a las 02:00, dejar la visita 3 para el final: el ΔX sube (HD 202941 a 2,0–2,4).
+- La Luna no afecta a las estándares: son de V 6–8 y las exposiciones son de 1–3 s.
 - Cada visita toma ~4–5 min por estrella: apuntar, centrar y tomar 5 + 5 exposiciones.
 
 ## 5. Cómo correr el script
@@ -197,5 +221,6 @@ coordenadas, magnitudes B y V, y rutas de archivos. Cambiar `--noche noche2` par
 
 - Si los darks se pueden tomar con la cúpula cerrada antes de anochecer, y si hay una biblioteca
   de darks a la temperatura de consigna.
-- Si hay pantalla para flats de cúpula.
+- Qué noche toma los flats y con qué nivel (20 000–30 000 ADU), para usarlos con las imágenes
+  correctas.
 - Qué t_exp usan los otros grupos, para tomar sus darks en la misma serie.
