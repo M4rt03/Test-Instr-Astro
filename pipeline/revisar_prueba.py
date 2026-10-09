@@ -230,6 +230,14 @@ def main():
     p.add_argument("--caja", type=int, default=600, help="lado de la caja central en píxeles (600 = 3,2′)")
     args = p.parse_args()
 
+    for opcion in ("bias", "dark"):         # también aceptan comodines (en Windows no los expande la consola)
+        valor = getattr(args, opcion)
+        if valor:
+            encontrados = sorted(glob.glob(valor, recursive=True))
+            if not encontrados:
+                p.error(f"--{opcion}: no se encontró {valor}")
+            setattr(args, opcion, encontrados[0])
+
     archivos = []
     for patron in args.archivos:
         archivos += sorted(glob.glob(patron, recursive=True)) or [patron]
