@@ -99,6 +99,14 @@ def masa_de_aire(header):
     return (float(altaz.secz) if alt > 5 else None), alt
 
 
+def un_archivo(patron):
+    """Ruta de un archivo; acepta comodines (en Windows la consola no los expande)."""
+    encontrados = sorted(glob.glob(patron, recursive=True))
+    if not encontrados:
+        raise FileNotFoundError(f"no se encontró {patron}")
+    return encontrados[0]
+
+
 def aviso(ok):
     return "OK " if ok else "OJO"
 
@@ -229,6 +237,10 @@ def main():
     p.add_argument("--seeing", type=float, default=2.5, help="seeing inicial en arcsec (2,5)")
     p.add_argument("--caja", type=int, default=600, help="lado de la caja central en píxeles (600 = 3,2′)")
     args = p.parse_args()
+    if args.dark:
+        args.dark = un_archivo(args.dark)
+    if args.bias:
+        args.bias = un_archivo(args.bias)
 
     for opcion in ("bias", "dark"):         # también aceptan comodines (en Windows no los expande la consola)
         valor = getattr(args, opcion)
