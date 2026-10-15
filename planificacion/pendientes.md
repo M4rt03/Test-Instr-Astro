@@ -96,6 +96,11 @@ que no necesitan imágenes de ciencia):
   - Los objetos que salen tarde (NGC 1097, 1291, 1316 y 1313) van en los últimos bloques.
   - NGC 6744 va al comienzo.
   - NGC 247 y NGC 300 llenan casi todo el campo (márgenes de 1,0′ y 1,6′). Si se eligen, hay que asumir que el fondo se mide con poco cielo libre.
+- [x] **Estándar propuesta por el grupo: HD 8130.** Mejor fotometría Johnson de la lista (9 obs.
+  en Mermilliod), mide la extinción sola (X de 1,6 a 1,0 el 15/10) y permite 2–2,5 s sin
+  saturar. A mitad de la noche se suma HD 220881 (B−V = 0,28, la más roja de la lista) para el ZP
+  y para revisar el término de color. Alternativa a HD 8130: HD 562. Detalle en
+  [`calibraciones.md`](calibraciones.md).
 - [ ] **Elegir las estándares de cada noche** (plan en [`calibraciones.md`](calibraciones.md)):
   HD 202941 y HD 8130 al comienzo y al final, para medir el coeficiente de extinción k con dos masas de aire, y HD 220881 o HD 562 a mitad de la noche.
   - HD 195500 y HD 215863 se reemplazaron por HD 207480 y HD 212643, que están en Mermilliod (las primeras tenían B−V de Tycho, no Johnson). Avisar a los otros grupos del cambio.
