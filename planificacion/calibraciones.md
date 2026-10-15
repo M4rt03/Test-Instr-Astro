@@ -177,6 +177,28 @@ Catálogos descartados:
 - **t_exp:** es ~60 % del tiempo de saturación con seeing de 2,0″ (mismo modelo de
   [`tiempos_exposicion.md`](tiempos_exposicion.md)). Tomar 5 o más por filtro, y más si son de 1 s.
 
+### Estándar propuesta por el grupo: HD 8130
+
+Cada grupo propone una estándar; la nuestra es **HD 8130** (A0V, V = 7,448, B = 7,493, AR
+01:20:16, Dec −36:14:34).
+- **Mejor fotometría Johnson de la lista:** 9 observaciones fotoeléctricas en Mermilliod, que
+  coinciden con la fotometría terrestre de Hipparcos.
+- **Mide la extinción sola:** el 15/10 pasa de X = 1,61 (21:15) a 1,01 (01:00); el 22/10, de 1,37
+  a 1,01. Observada al comienzo y al final, k sale de la diferencia sin depender del catálogo.
+- **Exposiciones cómodas:** 2,5 s en B y 2 s en V, con pico de ~24 000 ADU. No satura y el
+  centelleo pesa menos que en las estándares de 1 s.
+- **Bien ubicada:** entre NGC 7793 y NGC 1291 en el cielo, culmina a las 01:26 el 15/10 (cerca de
+  NGC 1291) y queda a 93° de la Luna.
+- **Limpia:** constante en Hipparcos, sin compañeras en WDS ni entrada en VSX.
+- **Limitación:** es azul (B−V = 0,045). Una sola estrella no permite medir el término de color,
+  y las galaxias son más rojas (B−V ~0,6–0,9). Conviene que otro grupo proponga una más roja,
+  como HD 220881 (B−V = 0,28).
+- **Alternativa:** HD 562 (8 observaciones en Mermilliod, a ~7° de NGC 7793), pero su masa de
+  aire cambia menos esa noche (1,30 → 1,00).
+
+En cada visita: 5 exposiciones de 2,5 s en B y 5 de 2 s en V. Revisar la primera con
+`python revisar_prueba.py <archivo> --estandar "HD 8130"`.
+
 ### Visitas: dos masas de aire para medir la extinción
 
 El pipeline usa un k fijo (`extincion` en `config.yaml`: 0,25 en B y 0,15 en V). Si se observa la
