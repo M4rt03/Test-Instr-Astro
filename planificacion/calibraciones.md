@@ -191,13 +191,29 @@ Cada grupo propone una estándar; la nuestra es **HD 8130** (A0V, V = 7,448, B =
   NGC 1291) y queda a 93° de la Luna.
 - **Limpia:** constante en Hipparcos, sin compañeras en WDS ni entrada en VSX.
 - **Limitación:** es azul (B−V = 0,045). Una sola estrella no permite medir el término de color,
-  y las galaxias son más rojas (B−V ~0,6–0,9). Conviene que otro grupo proponga una más roja,
-  como HD 220881 (B−V = 0,28).
+  y las galaxias son más rojas (B−V ~0,4–0,7).
 - **Alternativa:** HD 562 (8 observaciones en Mermilliod, a ~7° de NGC 7793), pero su masa de
-  aire cambia menos esa noche (1,30 → 1,00).
+  aire cambia menos esa noche (1,30 → 1,00). Tampoco ayuda con el color (B−V = 0,137).
 
-En cada visita: 5 exposiciones de 2,5 s en B y 5 de 2 s en V. Revisar la primera con
-`python revisar_prueba.py <archivo> --estandar "HD 8130"`.
+**Combinación con HD 220881 (segunda estándar, a mitad de la noche):**
+
+| Visita | Hora (15/10) | Estrella | X | t_exp B · V | Para qué |
+|---|---|---|---|---|---|
+| 1 | ~21:15 | HD 8130 | 1,61 | 2,5 s · 2 s | Extinción (punto alto) |
+| 2 | ~23:30 | HD 220881 | 1,00 | 3 s · 1,5 s | ZP a mitad de la noche y término de color |
+| 3 | ~01:00 | HD 8130 | 1,01 | 2,5 s · 2 s | Extinción (punto bajo) y ZP |
+
+- **HD 220881** (A9V, V = 7,44, B = 7,72) es la más roja de la lista (B−V = 0,28), con 4
+  observaciones en Mermilliod que coinciden a 0,01 mag con Hipparcos. Queda a ~8° de NGC 7793 y
+  a 76° de la Luna.
+- **Rango de color:** con HD 8130 suman 0,24 mag en B−V. Alcanza para comprobar que el término de
+  color es pequeño (la pendiente sale con ±0,06), no para medirlo bien; y las galaxias igual
+  quedan fuera de ese rango.
+- **No reemplaza a HD 8130:** su masa de aire cambia solo de 1,16 a 1,00 en la ventana, así que no
+  mide la extinción. Si el grupo puede proponer una sola estrella, sigue siendo HD 8130.
+
+En cada visita: 5 exposiciones por filtro con el t_exp de la tabla. Revisar la primera con
+`python revisar_prueba.py <archivo> --estandar "HD 8130"` (o `"HD 220881"`).
 
 ### Visitas: dos masas de aire para medir la extinción
 
@@ -211,7 +227,7 @@ Basta con dos estrellas, cada una al comienzo y al final:
 | Visita | Hora 15/10 | Hora 22/10 | Estrellas | X el 15/10 | X el 22/10 |
 |---|---|---|---|---|---|
 | 1 | 21:15–21:35 | 21:25–21:45 | HD 202941 · HD 8130 | 1,00 · 1,61 | 1,01 · 1,37 |
-| 2 | ~23:30 | ~23:00 | HD 220881 (o HD 562) | 1,00 | 1,00 |
+| 2 | ~23:30 | ~23:00 | HD 220881 | 1,00 | 1,00 |
 | 3 | ~00:45–01:00 | ~00:45 | HD 8130 · HD 202941 | 1,01 · 1,46 | 1,01 · 1,54 |
 
 - HD 8130 pasa de X ≈ 1,4–1,6 a 1,0 y HD 202941 de 1,0 a ~1,5: ΔX entre 0,4 y 0,6.
