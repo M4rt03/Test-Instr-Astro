@@ -50,6 +50,33 @@ para esta noche.
   distintos (por ejemplo HD 8130, B−V = 0,05, y una gigante K con B−V ≈ 1) en la misma noche y
   preguntar en el observatorio qué filtro B tiene la rueda.
 
+### Catálogo calibrado y diagrama color-magnitud
+
+`calibrar_catalogos.py` calibra el catálogo "agresiva" del pipeline (B y V cruzados por
+posición, S/N > 5) y dibuja el diagrama color-magnitud:
+
+```
+python calibrar_catalogos.py ..\..\pipeline\resultados\noche_15oct
+```
+
+- El ZP se ajusta sobre las magnitudes instrumentales del propio catálogo, con las mismas 13
+  estrellas de APASS (el catálogo usa otra apertura y otra corrección de apertura que
+  `calibrar_campo.py`): V = 21,544 ± 0,028 (sin término de color, rms 0,075) y B = 19,316 ±
+  0,114 con c_B = +2,03 ± 0,15 (rms 0,10).
+- Color: `B−V = [(b − v) + ZP_B − ZP_V] / (1 − c_B)`. Con c_B ≈ 2 el denominador es ≈ −1: el
+  color instrumental b − v **disminuye** cuando la estrella es más roja, por la fuga al rojo.
+- Comprobación con las 13 estrellas de APASS: ΔV = −0,01 (rms 0,14) y Δ(B−V) = −0,02 (rms 0,10).
+- 97 fuentes con B y V: 83 del campo y 14 dentro del disco de NGC 7793 (elipse de 10′ × 6′, AP
+  84°). A la distancia de NGC 7793 (~3,9 Mpc) las fuentes del disco son cúmulos, regiones HII o
+  mezclas de estrellas, no estrellas individuales.
+- **Validez:** el color solo está calibrado para B−V ≈ 0,45–1,12 (rango de las estrellas de
+  APASS; franja gris del diagrama). Los colores fuera de ese rango, y en particular los muy rojos
+  (B−V > 1,5) de las fuentes débiles, son extrapolaciones de un término de color anómalo y no
+  deben interpretarse como colores físicos hasta confirmar el filtro B.
+
+Salidas: `resultados/catalogo_calibrado_noche_15oct.csv` y
+`resultados/cmd_ngc7793_noche_15oct.png`.
+
 ### Astrometría: astrometry.net frente al ajuste con Gaia
 
 `comparar_astrometria.py` compara la solución de astrometry.net (que el pipeline guardó en el
