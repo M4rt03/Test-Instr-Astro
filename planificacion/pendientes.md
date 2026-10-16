@@ -117,6 +117,17 @@ que no necesitan imágenes de ciencia):
   quedaron *bajo* el bias, así que escalar bias + corriente oscura no es confiable en este
   sensor CMOS.
 - [x] **8/10 nublado:** no se pudo observar. Quedan el 15/10 y el jueves 22/10.
+- [x] **15/10 observado, con nubes y viento:** NGC 7793 en B (120 s × 5) y V (60 s × 2 + 120 s × 4);
+  NGC 1291 quedó con una sola imagen casi sin señal (se nubló y cerraron el domo). Sin bias (se usa
+  el dark de 120 s como nivel cero) y sin estándares (quedan para la próxima semana).
+  - Se excluyen tres imágenes: 722 (nube) y 724 y 730 (estrellas dobles por el viento).
+  - Seeing medido en las imágenes: ~3,7–4,1″ (el observatorio reportó 1,9–2,1″ en el sitio).
+  - `OBJCTRA`/`OBJCTDEC` del header quedaron ~40′ corridos: hay que resolver la astrometría con
+    astrometry.net o con las estrellas del campo.
+- [ ] **Posible fuga al rojo del filtro B.** La calibración con estrellas del campo
+  (`extra/calibracion_estrellas_campo`) da un término de color de +2 en B, igual con APASS y
+  con Gaia. En las estándares de la próxima semana hay que incluir una azul y una roja (por
+  ejemplo HD 8130 y una gigante K de B−V ≈ 1) y preguntar qué filtro B tiene la rueda.
 - [ ] **Noche de respaldo (22/10).** La Luna está al 88 %, en AR 23h18m, y sobre 38° toda la
   ventana ([`cielo_luna.py`](cielo_luna.py)).
   - Queda a ~31° de NGC 7793 y a ~66° de NGC 1291.
