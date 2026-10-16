@@ -50,6 +50,20 @@ para esta noche.
   distintos (por ejemplo HD 8130, B−V = 0,05, y una gigante K con B−V ≈ 1) en la misma noche y
   preguntar en el observatorio qué filtro B tiene la rueda.
 
+### Astrometría: astrometry.net frente al ajuste con Gaia
+
+`comparar_astrometria.py` compara la solución de astrometry.net (que el pipeline guardó en el
+header del apilado) con la que se ajusta aquí contra Gaia DR3:
+
+| | Escala (″/px) | Rotación | Centro de la imagen | Residuo contra Gaia (41 estrellas) |
+|---|---|---|---|---|
+| astrometry.net | 0,31616 | −1,50° | 23h57m45,43s −32°34′59,7″ | 0,75″ rms |
+| Ajuste con Gaia | 0,31631 | −1,52° | 23h57m45,43s −32°34′59,8″ | 0,31″ rms |
+
+Las dos soluciones coinciden: 0,3″ de diferencia mediana en la imagen (3,4″ como máximo en las
+esquinas, donde astrometry.net agrega distorsión SIP). La escala coincide con la medida en 2023 y
+2025 (0,3168 y 0,3163″/px). El centro de NGC 7793 queda en el píxel (2223, 1964).
+
 Las tablas por estrella (`estrellas_campo_*.csv`) traen `dm_B` y `dm_V` (catálogo −
 instrumental) para cada estrella usada. El ZP sale a la masa de aire del apilado; para pasarlo a
 fuera de la atmósfera se usa un k supuesto (B 0,25, V 0,15), porque sin estándares a dos masas
