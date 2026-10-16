@@ -14,6 +14,13 @@ La noche del 8/10 se nubló: quedan el 15/10 y, como respaldo, el 22/10. Los fla
 | Flats de cielo | 10–15 por filtro, primero B y luego V        | 1–30 s, para 20 000–30 000 ADU | **Los toma el ayudante.** En el crepúsculo serían 20:05–20:40 (15/10) y 20:10–20:45 (22/10) | ~35 min                                          |
 | Estándares     | 5 por filtro en cada visita, 5 visitas       | 1–3 s (tabla abajo)            | Comienzo, mitad y final de la noche (tabla de visitas)                                      | ~25 min en total                                 |
 
+| Visita | Hora (15/10) | Estrella  | X    | t_exp B · V | Para qué                                  |
+| ------ | ------------ | --------- | ---- | ----------- | ----------------------------------------- |
+| 1      | ~21:15       | HD 8130   | 1,61 | 2,5 s · 2 s | Extinción (punto alto)                    |
+| 2      | ~23:30       | HD 220881 | 1,00 | 3 s · 1,5 s | ZP a mitad de la noche y término de color |
+| 3      | ~01:00       | HD 8130   | 1,01 | 2,5 s · 2 s | Extinción (punto bajo) y ZP               |
+
+
 Las calibraciones sirven a todos los grupos de la misma noche. Conviene repartirlas: bias y flats
 una sola vez, y los darks con los t_exp de todos los grupos.
 
@@ -197,11 +204,11 @@ Cada grupo propone una estándar; la nuestra es **HD 8130** (A0V, V = 7,448, B =
 
 **Combinación con HD 220881 (segunda estándar, a mitad de la noche):**
 
-| Visita | Hora (15/10) | Estrella | X | t_exp B · V | Para qué |
-|---|---|---|---|---|---|
-| 1 | ~21:15 | HD 8130 | 1,61 | 2,5 s · 2 s | Extinción (punto alto) |
-| 2 | ~23:30 | HD 220881 | 1,00 | 3 s · 1,5 s | ZP a mitad de la noche y término de color |
-| 3 | ~01:00 | HD 8130 | 1,01 | 2,5 s · 2 s | Extinción (punto bajo) y ZP |
+| Visita | Hora (15/10) | Estrella  | X    | t_exp B · V | Para qué                                  |
+| ------ | ------------ | --------- | ---- | ----------- | ----------------------------------------- |
+| 1      | ~21:15       | HD 8130   | 1,61 | 2,5 s · 2 s | Extinción (punto alto)                    |
+| 2      | ~23:30       | HD 220881 | 1,00 | 3 s · 1,5 s | ZP a mitad de la noche y término de color |
+| 3      | ~01:00       | HD 8130   | 1,01 | 2,5 s · 2 s | Extinción (punto bajo) y ZP               |
 
 - **HD 220881** (A9V, V = 7,44, B = 7,72) es la más roja de la lista (B−V = 0,28), con 4
   observaciones en Mermilliod que coinciden a 0,01 mag con Hipparcos. Queda a ~8° de NGC 7793 y
