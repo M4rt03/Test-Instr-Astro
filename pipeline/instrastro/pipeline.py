@@ -172,7 +172,7 @@ def paso_calibracion(ctx):
 def paso_ciencia(ctx, calib):
     """Reduce, alinea y apila las imágenes de ciencia de cada filtro en una grilla común."""
     def measure(red, sat):
-        psf = seeing.measure_psf(red, sat, ctx.fwhm_guess, max_stars=60)
+        psf = seeing.measure_psf(red, sat, ctx.fwhm_guess, max_stars=60, pixscale=ctx.pixscale)
         s = seeing.summarize(psf, ctx.pixscale)
         return {"seeing_arcsec": s["seeing_arcsec"], "n_estrellas_psf": s["n_estrellas"],
                 "elipticidad": s["elipticidad"]}
@@ -275,7 +275,7 @@ def paso_seeing(ctx, stacks):
     resumen, psfs = {}, {}
     fig, axes = plt.subplots(2, len(stacks), figsize=(5.5 * len(stacks), 9), squeeze=False)
     for col, (filt, (stack, sat, _)) in enumerate(stacks.items()):
-        psf = seeing.measure_psf(stack, sat, ctx.fwhm_guess)
+        psf = seeing.measure_psf(stack, sat, ctx.fwhm_guess, pixscale=ctx.pixscale)
         psfs[filt] = psf
         s = seeing.summarize(psf, ctx.pixscale)
         per_exp = np.asarray(info["seeing_arcsec"][info["filtro"] == filt], dtype=float)

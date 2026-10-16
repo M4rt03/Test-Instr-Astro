@@ -194,9 +194,9 @@ def revisar(path, args):
     fwhm_guess = args.seeing / ESCALA
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        tbl = seeing.measure_psf(data.astype(np.float32), sat, fwhm_guess, max_stars=60)
+        tbl = seeing.measure_psf(data.astype(np.float32), sat, fwhm_guess, max_stars=60, pixscale=ESCALA)
     res = seeing.summarize(tbl, ESCALA)
-    if res["n_estrellas"] >= 3:
+    if np.isfinite(res["seeing_arcsec"]):
         ok_e = res["elipticidad"] < 0.3      # en 2025, con 3–5 s, salió 0,16–0,25
         print(f"  [{aviso(res['seeing_arcsec'] < 4)}] Seeing {res['seeing_arcsec']:.2f}″ "
               f"({res['fwhm_px']:.1f} px, {res['n_estrellas']} estrellas)")
@@ -204,7 +204,7 @@ def revisar(path, args):
               + (" (en 2025, con 3–5 s: 0,16–0,25)" if ok_e
                  else " — estrellas alargadas: revisar guiado, seguimiento o viento"))
     else:
-        print("        Pocas estrellas aisladas para medir el seeing (normal en estándares de 1–3 s)")
+        print(f"        Pocas estrellas aisladas para medir el seeing ({res['n_estrellas']}; normal en estándares de 1–3 s)")
 
     # --- Estrella estándar
     est = buscar_estandar(args.estandar or h.get("OBJECT", ""))

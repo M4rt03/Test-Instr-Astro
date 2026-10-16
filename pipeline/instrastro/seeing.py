@@ -68,9 +68,18 @@ def fit_gaussian(cutout, sigma_guess):
     }
 
 
+MIN_FWHM_ARCSEC = 1.0   # bajo esto no es una estrella: píxel caliente o rayo cósmico
+MIN_STARS = 5           # mínimo de estrellas para dar un seeing
+
+
 def measure_psf(data, sat_mask=None, fwhm_guess_px=8.0, n_sigma=10.0, max_stars=150,
-                isolation_factor=4.0, box_size=64):
+                isolation_factor=4.0, box_size=64, pixscale=None, min_fwhm_arcsec=MIN_FWHM_ARCSEC):
     """Mide el FWHM de las estrellas aisladas y no saturadas de una imagen.
+
+    Si se entrega ``pixscale`` (arcsec/px), se descartan los ajustes con FWHM menor a
+    ``min_fwhm_arcsec``: el seeing en El Sauce nunca baja de ~1″, así que esas "estrellas" son
+    píxeles calientes o rayos cósmicos. Con pocas estrellas en el campo (por ejemplo, una
+    galaxia que lo llena) podían dominar la mediana y dar un seeing imposible de ~0,5″.
 
     Devuelve una tabla con una fila por estrella (``x``, ``y``, ``fwhm_px``,
     ``fwhm_major``, ``fwhm_minor``, ``ellipticity``, ``peak``).
@@ -115,7 +124,8 @@ def measure_psf(data, sat_mask=None, fwhm_guess_px=8.0, n_sigma=10.0, max_stars=
     if len(tbl) == 0:
         return tbl
     # Descarta ajustes absurdos (rayos cósmicos, galaxias, blends) y outliers
-    sane = (tbl["fwhm_px"] > 1.0) & (tbl["fwhm_px"] < 5 * fwhm_guess_px) & (tbl["ellipticity"] < 0.5)
+    min_px = max(1.0, min_fwhm_arcsec / pixscale) if pixscale else 1.0
+    sane = (tbl["fwhm_px"] > min_px) & (tbl["fwhm_px"] < 5 * fwhm_guess_px) & (tbl["ellipticity"] < 0.5)
     tbl = tbl[sane]
     if len(tbl) > 5:
         with warnings.catch_warnings():
@@ -127,8 +137,8 @@ def measure_psf(data, sat_mask=None, fwhm_guess_px=8.0, n_sigma=10.0, max_stars=
 
 def summarize(tbl, pixscale):
     """Resumen robusto del FWHM de una tabla de ``measure_psf``."""
-    if len(tbl) == 0:
-        return {"n_estrellas": 0, "fwhm_px": np.nan, "seeing_arcsec": np.nan,
+    if len(tbl) < MIN_STARS:   # con 1-4 estrellas la mediana no es confiable
+        return {"n_estrellas": len(tbl), "fwhm_px": np.nan, "seeing_arcsec": np.nan,
                 "dispersion_arcsec": np.nan, "elipticidad": np.nan}
     fwhm = np.asarray(tbl["fwhm_px"])
     return {
