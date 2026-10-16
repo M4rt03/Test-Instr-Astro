@@ -122,8 +122,10 @@ que no necesitan imágenes de ciencia):
   el dark de 120 s como nivel cero) y sin estándares (quedan para la próxima semana).
   - Se excluyen tres imágenes: 722 (nube) y 724 y 730 (estrellas dobles por el viento).
   - Seeing medido en las imágenes: ~3,7–4,1″ (el observatorio reportó 1,9–2,1″ en el sitio).
-  - `OBJCTRA`/`OBJCTDEC` del header quedaron ~40′ corridos: hay que resolver la astrometría con
-    astrometry.net o con las estrellas del campo.
+  - `OBJCTRA`/`OBJCTDEC` del header quedaron ~40′ corridos. Astrometría resuelta con
+    astrometry.net (API): 0,3162″/px y rotación −1,50°, igual a la ajustada contra Gaia (0,3″ de
+    diferencia). Se guardó en `pipeline/datos/2026/wcs_15oct.fits` y el pipeline la usa en modo
+    `archivo`.
 - [ ] **Posible fuga al rojo del filtro B.** La calibración con estrellas del campo
   (`extra/calibracion_estrellas_campo`) da un término de color de +2 en B, igual con APASS y
   con Gaia. En las estándares de la próxima semana hay que incluir una azul y una roja (por
