@@ -1,0 +1,71 @@
+# Configuración del pipeline para los datos de 2025 (noche del 2/10/2025, calibraciones y
+# estándares). Rehecha a partir de config.example.yaml y de los archivos de datos/2025-10-02.
+# Rutas relativas a la carpeta pipeline.
+#
+# Uso en el notebook: INSTRASTRO_CONFIG=config_2025.yaml, y correr solo paso_calibracion y
+# paso_estandares (en esta carpeta no están las imágenes de ciencia de M17).
+
+objeto:
+  nombre: "NGC 6618"            # M17, objeto de 2025
+  ra: "18:20:26"
+  dec: "-16:10:36"
+
+sitio:
+  nombre: "Observatorio El Sauce (OMA)"
+  latitud: -30.4597
+  longitud: -70.7503
+  altitud: 1600
+  utc_offset_h: -3
+
+instrumento:
+  telescopio: "MAS500 (Ritchey-Chrétien, 0.5 m)"
+  camara: "Moravian C4-16000EC (4096 x 4096)"
+  diametro_m: 0.5
+  escala_arcsec_px: 0.317       # medida con Gaia (planificacion/medir_escala.py)
+  ganancia_e_adu: 0.85
+  saturacion_adu: 60000
+  bpm: null
+  seeing_estimado_arcsec: 2.5   # mediana medida en las estándares de 2025
+
+filtros: [V, B]
+
+extincion:
+  B: 0.25
+  V: 0.15
+
+astrometria:
+  modo: header
+  api_key: null
+
+salida: resultados
+
+noches:
+  - nombre: calib2025
+    fecha: "2025-10-02"
+    bias: "datos/2025-10-02/Bias_1x1_*.fit"           # 10 bias (26/09/2025)
+    darks: "datos/2025-10-02/Dark_100.000secs_*.fit"  # 10 darks de 100 s (25-26/09/2025)
+    flats:
+      B: "datos/2025-10-02/FLAT_B_*.fit"              # 10 por filtro
+      V: "datos/2025-10-02/FLAT_V_*.fit"
+    ciencia:                                          # M17, 30 s x 10 por filtro (archivos 510-530);
+      B: "datos/2025-10-02/V462_B_30.000secs_*.fit"   # no están en esta carpeta: copiarlos aquí
+      V: "datos/2025-10-02/V462_V_30.000secs_*.fit"   # para correr el pipeline completo
+    excluir: ["*00000529*"]                           # B con un satélite
+    wcs: {}
+    estandares:
+      # Coordenadas J2000 de SIMBAD. Magnitudes Tycho (BT, VT) de Hipparcos, como en 2025: el
+      # pipeline las convierte a Johnson. Ninguna de las dos está en Mermilliod.
+      - nombre: "HIP 116375"                          # HD 221750, K1III
+        ra: "23:34:54.35"
+        dec: "-35:05:06.1"
+        magnitudes: {BT: 8.453, VT: 7.191}
+        archivos:
+          B: "datos/2025-10-02/HIP 116375/V462_B_5.000secs_*.fit"
+          V: "datos/2025-10-02/HIP 116375/V462_V_3.000secs_*.fit"
+      - nombre: "HIP 117678"                          # HD 223700, K0III
+        ra: "23:51:55.11"
+        dec: "-33:07:19.3"
+        magnitudes: {BT: 8.290, VT: 7.160}
+        archivos:
+          B: "datos/2025-10-02/HIP 117678/V462_B_5.000secs_*.fit"
+          V: "datos/2025-10-02/HIP 117678/V462_V_3.000secs_*.fit"
