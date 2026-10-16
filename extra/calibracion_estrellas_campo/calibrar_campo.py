@@ -54,8 +54,9 @@ def leer_stack(carpeta, filt):
 
 def detectar(data, fwhm_px, n_sigma=8.0):
     _, med, std = sigma_clipped_stats(data[::2, ::2], sigma=3)
+    # sin filtro de redondez: con viento las estrellas salen alargadas (redondez ~ -0,8)
     t = DAOStarFinder(fwhm=fwhm_px, threshold=n_sigma * std, sharplo=0.2, sharphi=0.9,
-                      roundlo=-0.6, roundhi=0.6)(np.nan_to_num(data - med))
+                      roundlo=-1.0, roundhi=1.0)(np.nan_to_num(data - med))
     t.sort("flux", reverse=True)
     return t
 
@@ -102,17 +103,20 @@ def catalogo_gaia(centro, radio_arcmin):
     return out[np.isfinite(out["B"]) & np.isfinite(out["V"])]
 
 
-def resolver_astrometria(wcs0, x, y, cat, n_det=60, n_cat=80):
+def resolver_astrometria(wcs0, x, y, cat, c0, n_det=60, n_cat=80):
     """Resuelve la astrometría contra el catálogo: escala fija, se buscan la rotación, la
     orientación (paridad) y la traslación por votación; luego se ajusta un WCS con las coincidencias."""
     ny, nx = int(wcs0.pixel_shape[1]), int(wcs0.pixel_shape[0])
-    c0 = wcs0.pixel_to_world(nx / 2, ny / 2)
     cc = SkyCoord(cat["ra"], cat["dec"], unit="deg")
     plano = c0.skyoffset_frame()
     off = cc.transform_to(plano)
     xi, eta = off.lon.arcsec, off.lat.arcsec                       # arcsec, este y norte
     bc = np.argsort(cat["V"])[:n_cat]
-    dx, dy = (x[:n_det] - nx / 2) * ESCALA, (y[:n_det] - ny / 2) * ESCALA
+    # para la búsqueda se usan estrellas lejos del centro: ahí está el objeto, y sus nudos
+    # (regiones HII de una galaxia) se detectan como "estrellas" que no están en el catálogo
+    lejos = np.hypot(x - nx / 2, y - ny / 2) > 700
+    xs, ys = x[lejos][:n_det], y[lejos][:n_det]
+    dx, dy = (xs - nx / 2) * ESCALA, (ys - ny / 2) * ESCALA
     mejor = (0, None)
     for par in (1, -1):
         for th in np.radians(np.arange(0, 360, 0.5)):
@@ -120,7 +124,7 @@ def resolver_astrometria(wcs0, x, y, cat, n_det=60, n_cat=80):
             px, py = np.cos(th) * u_ - np.sin(th) * dy, np.sin(th) * u_ + np.cos(th) * dy
             difx = (xi[bc][None, :] - px[:, None]).ravel()
             dify = (eta[bc][None, :] - py[:, None]).ravel()
-            h, xe, ye = np.histogram2d(difx, dify, bins=150, range=[[-600, 600], [-600, 600]])
+            h, xe, ye = np.histogram2d(difx, dify, bins=200, range=[[-800, 800], [-800, 800]])
             i, j = np.unravel_index(np.argmax(h), h.shape)
             if h[i, j] > mejor[0]:
                 mejor = (h[i, j], (par, th, (xe[i] + xe[i + 1]) / 2, (ye[j] + ye[j + 1]) / 2))
@@ -146,14 +150,18 @@ def resolver_astrometria(wcs0, x, y, cat, n_det=60, n_cat=80):
           f"escala {escala:.4f}\"/px")
     return wcs, idx, ok
 
-def ajustar(dm, color, err, n_iter=5):
-    """dm = ZP + c·color, con recorte a 3 sigma. Devuelve (ZP, c, error ZP, error c, rms, máscara)."""
+def ajustar(dm, color, err, n_iter=5, con_color=True):
+    """dm = ZP + c·color (o solo ZP si ``con_color`` es False), con recorte a 3 sigma.
+    Devuelve (ZP, c, error ZP, error c, rms, máscara)."""
     ok = np.isfinite(dm) & np.isfinite(color)
+    if not con_color:
+        color = np.zeros_like(color)
     for _ in range(n_iter):
-        A = np.column_stack([np.ones(ok.sum()), color[ok]])
+        A = np.column_stack([np.ones(ok.sum()), color[ok]]) if con_color else np.ones((ok.sum(), 1))
         w = 1 / np.maximum(err[ok], 0.01) ** 2
         cov = np.linalg.inv(A.T @ (A * w[:, None]))
         p = cov @ (A.T @ (w * dm[ok]))
+        p = np.append(p, 0.0) if not con_color else p
         res = dm - (p[0] + p[1] * color)
         rms = 1.4826 * np.nanmedian(np.abs(res[ok] - np.nanmedian(res[ok])))
         nuevo = np.isfinite(res) & (np.abs(res) < 3 * max(rms, 0.01))
@@ -161,7 +169,8 @@ def ajustar(dm, color, err, n_iter=5):
             break
         ok = nuevo
     escala = max(1.0, np.sqrt(np.sum((res[ok] / np.maximum(err[ok], 0.01)) ** 2) / max(ok.sum() - 2, 1)))
-    return p[0], p[1], np.sqrt(cov[0, 0]) * escala, np.sqrt(cov[1, 1]) * escala, rms, ok
+    ec = np.sqrt(cov[1, 1]) * escala if con_color else 0.0
+    return p[0], p[1], np.sqrt(cov[0, 0]) * escala, ec, rms, ok
 
 
 def main():
@@ -171,14 +180,24 @@ def main():
     ap.add_argument("--vmin", type=float, default=11.0, help="V mínima del catálogo (evita saturadas)")
     ap.add_argument("--vmax", type=float, default=16.0, help="V máxima del catálogo")
     ap.add_argument("--salida", default="resultados", help="carpeta donde guardar la tabla")
+    ap.add_argument("--ra", help="AR del objeto (hh:mm:ss); si no, se busca por el nombre de OBJECT")
+    ap.add_argument("--dec", help="Dec del objeto (dd:mm:ss)")
+    ap.add_argument("--sin-color", action="store_true",
+                    help="ajustar solo el ZP (término de color = 0); más robusto con pocas estrellas o poco rango de color")
     args = ap.parse_args()
 
     stacks = {f: leer_stack(args.carpeta, f) for f in ("B", "V")}
     dataV, satV, hdrV = stacks["V"]
     wcs0 = WCS(hdrV)
     ny, nx = dataV.shape
-    centro = wcs0.pixel_to_world(nx / 2, ny / 2)
-    obj = SkyCoord(hdrV["OBJCTRA"], hdrV["OBJCTDEC"], unit=(u.hourangle, u.deg)) if "OBJCTRA" in hdrV else centro
+    # El centro de la imagen es el objeto (se apuntó a él). No se usa OBJCTRA/OBJCTDEC del header:
+    # el 15/10/2026 quedaron ~40′ corridos respecto de NGC 7793.
+    if args.ra and args.dec:
+        obj = SkyCoord(args.ra, args.dec, unit=(u.hourangle, u.deg))
+    else:
+        obj = SkyCoord.from_name(str(hdrV.get("OBJECT", "")).strip())
+    centro = obj
+    print(f"Centro de búsqueda: {hdrV.get('OBJECT')} en {obj.to_string('hmsdms', precision=1)}")
 
     det = detectar(dataV, fwhm_px=12.0)
     det = det[:400]
@@ -188,7 +207,7 @@ def main():
     radio = ESCALA * max(nx, ny) / 60 / np.sqrt(2) + 2
     cat = catalogo_apass(centro, radio) if args.catalogo == "apass" else catalogo_gaia(centro, radio)
     print(f"Catálogo {args.catalogo.upper()}: {len(cat)} estrellas con B y V en {radio:.0f}′")
-    wcs, idx, ok = resolver_astrometria(wcs0, x, y, cat)
+    wcs, idx, ok = resolver_astrometria(wcs0, x, y, cat, centro)
 
     # Fotometría de apertura en ambos apilados (están en la misma grilla)
     fwhm = 12.0
@@ -216,7 +235,7 @@ def main():
         minst, einst, _, x_air = m[f]
         dm = np.where(sel, np.asarray(c[f]) - minst, np.nan)
         e = np.sqrt(einst ** 2 + np.nan_to_num(np.asarray(c["e" + f]), nan=0.05) ** 2)
-        zp, cc, ezp, ecc, rms, usados = ajustar(dm, color, e)
+        zp, cc, ezp, ecc, rms, usados = ajustar(dm, color, e, con_color=not args.sin_color)
         zp_fuera = zp + K[f] * x_air
         filas.append((f, zp, ezp, cc, ecc, rms, int(usados.sum()), x_air, zp_fuera, zp_fuera - ZP_2025[f]))
         print(f"\n{f}: ZP = {zp:.3f} ± {ezp:.3f} ADU/s a X = {x_air:.3f}  |  término de color c = {cc:+.3f} ± {ecc:.3f}"
@@ -229,11 +248,18 @@ def main():
     noche = Path(args.carpeta).name
     res = Table(rows=filas, names=("filtro", "zp", "zp_err", "termino_color", "termino_color_err", "rms",
                                    "n_estrellas", "airmass", "zp_fuera_atmosfera", "dif_vs_2025"))
-    res.write(salida / f"zp_campo_{noche}_{args.catalogo}.csv", overwrite=True)
+    sufijo = f"{args.catalogo}_sin_color" if args.sin_color else args.catalogo
+    res.write(salida / f"zp_campo_{noche}_{sufijo}.csv", overwrite=True)
     est = Table({"x": x[sel], "y": y[sel], "ra": pos.ra.deg[sel], "dec": pos.dec.deg[sel],
                  "B_cat": c["B"][sel], "V_cat": c["V"][sel],
                  "b_inst": m["B"][0][sel], "v_inst": m["V"][0][sel]})
-    est.write(salida / f"estrellas_campo_{noche}_{args.catalogo}.csv", overwrite=True)
+    est["B_V_cat"] = est["B_cat"] - est["V_cat"]
+    est["dm_B"] = est["B_cat"] - est["b_inst"]
+    est["dm_V"] = est["V_cat"] - est["v_inst"]
+    est.write(salida / f"estrellas_campo_{noche}_{sufijo}.csv", overwrite=True)
+    print("\nPor estrella (catálogo − instrumental):")
+    for r in est:
+        print(f"  V={r['V_cat']:6.2f}  B-V={r['B_V_cat']:5.2f}  dm_B={r['dm_B']:6.2f}  dm_V={r['dm_V']:6.2f}")
     print(f"\nTablas en {salida.resolve()}")
 
 
