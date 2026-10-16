@@ -130,12 +130,12 @@ def source_properties(data_sub, segm, conv, error=None, kron=False):
         tbl["y"] = compat.cat_value(cat, "y_centroid", "ycentroid")
         tbl["area"] = compat.cat_value(cat, "area")
         tbl["flux"] = compat.cat_value(cat, "segment_flux")
-        tbl["flux_err"] = compat.cat_value(cat, "segment_flux_err") if error is not None else np.nan
+        tbl["flux_err"] = compat.cat_value(cat, "segment_flux_err", "segment_fluxerr") if error is not None else np.nan
         tbl["peak"] = compat.cat_value(cat, "max_value")
         tbl["elongation"] = compat.cat_value(cat, "elongation")
         if kron:
             tbl["kron_flux"] = compat.cat_value(cat, "kron_flux")
-            tbl["kron_flux_err"] = compat.cat_value(cat, "kron_flux_err") if error is not None else np.nan
+            tbl["kron_flux_err"] = compat.cat_value(cat, "kron_flux_err", "kron_fluxerr") if error is not None else np.nan
     return tbl
 
 
