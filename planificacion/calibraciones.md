@@ -222,6 +222,22 @@ Cada grupo propone una estándar; la nuestra es **HD 8130** (A0V, V = 7,448, B =
 En cada visita: 5 exposiciones por filtro con el t_exp de la tabla. Revisar la primera con
 `python revisar_prueba.py <archivo> --estandar "HD 8130"` (o `"HD 220881"`).
 
+### Próxima noche: estándares para resolver el filtro B
+
+La calibración con estrellas del campo del 15/10 dio un término de color de +2 en B, igual con
+APASS y con Gaia ([`extra/calibracion_estrellas_campo`](../extra/calibracion_estrellas_campo/README.md)):
+posible fuga al rojo del filtro B. Para confirmarlo o descartarlo hacen falta estrellas de colores
+muy distintos, en B y V, la misma noche:
+
+- **Una azul y una roja**, a horas cercanas y con masa de aire parecida: HD 8130 (A0V,
+  B−V = 0,05) y una gigante K con B−V ≈ 1 y fotometría Johnson medida (Mermilliod).
+- **Mejor aún, un campo de estándares de Landolt** (VizieR II/183A), por ejemplo SA 113 (AR
+  ~21h41m, Dec ~+0,5°; confirmar coordenadas y estrellas en el catálogo antes de la noche). En un
+  campo de 21′ caben decenas de estrellas calibradas con B−V entre 0 y 1,5: una sola exposición
+  por filtro da el término de color con mucha más precisión que dos estrellas sueltas.
+- **Preguntar en el observatorio** qué filtro B tiene la rueda (marca o vidrio) y si se le
+  conoce una fuga al infrarrojo.
+
 ### Visitas: dos masas de aire para medir la extinción
 
 El pipeline usa un k fijo (`extincion` en `config.yaml`: 0,25 en B y 0,15 en V). Si se observa la

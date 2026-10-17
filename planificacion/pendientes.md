@@ -129,7 +129,9 @@ que no necesitan imágenes de ciencia):
 - [ ] **Posible fuga al rojo del filtro B.** La calibración con estrellas del campo
   (`extra/calibracion_estrellas_campo`) da un término de color de +2 en B, igual con APASS y
   con Gaia. En las estándares de la próxima semana hay que incluir una azul y una roja (por
-  ejemplo HD 8130 y una gigante K de B−V ≈ 1) y preguntar qué filtro B tiene la rueda.
+  ejemplo HD 8130 y una gigante K de B−V ≈ 1), o mejor un campo de Landolt con muchas estrellas
+  de colores distintos, y preguntar qué filtro B tiene la rueda. Plan en
+  [`calibraciones.md`](calibraciones.md) ("Próxima noche: estándares para resolver el filtro B").
 - [ ] **Noche de respaldo (22/10).** La Luna está al 88 %, en AR 23h18m, y sobre 38° toda la
   ventana ([`cielo_luna.py`](cielo_luna.py)).
   - Queda a ~31° de NGC 7793 y a ~66° de NGC 1291.
@@ -154,6 +156,12 @@ que no necesitan imágenes de ciencia):
   `OBSGEO-B/L`) sean los de El Sauce (−30,46°, −70,75°). En 2023 TheSkyX tenía configurado
   Santiago (−33,43°, −70,57°), así que el `AIRMASS` y la altura de esos headers están mal. El
   pipeline calcula la masa de aire con el sitio de `config.yaml`, pero hay que saberlo.
+- [ ] **Si hay viento** (el 15/10 se perdieron 2 de 11 imágenes por estrellas dobles y el FWHM
+  medido fue 3,7–4,1″, contra 1,9–2,1″ del sitio):
+  - bajar a exposiciones de 60 s y tomar el doble: con este cielo partir el tiempo casi no cuesta S/N;
+  - pedir que orienten la cúpula para proteger el telescopio del viento;
+  - revisar cada imagen con `revisar_prueba.py` y repetir en el momento las que tengan
+    elipticidad > ~0,3 o estrellas dobles.
 - [ ] **Exposición de prueba** al comienzo de cada bloque, primero en V y luego en B. Revisarla
   con `python revisar_prueba.py <archivo>` (carpeta `pipeline`), que muestra todo lo de abajo.
   Para que mida bien el cielo, darle un dark del mismo t_exp (`--dark`): el bias de 0 s queda
