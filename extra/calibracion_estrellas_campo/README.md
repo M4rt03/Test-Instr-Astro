@@ -46,9 +46,11 @@ para esta noche.
     también estaba, pero no se notó porque las dos estándares eran rojas.
   - Para una estrella A0 (B−V ≈ 0) el ZP en B es ~19,4: unas 2,4 mag menos de luz que lo supuesto
     al planificar.
-- **Hay que confirmarlo con las estándares de la próxima semana**: observar estándares de colores
-  distintos (por ejemplo HD 8130, B−V = 0,05, y una gigante K con B−V ≈ 1) en la misma noche y
-  preguntar en el observatorio qué filtro B tiene la rueda.
+- **Confirmado con las estándares del 26/10** (HD 220881, B−V = 0,28, y HD 8130, B−V = 0,05):
+  c_B = +2,29 ± 0,1 y ZP(B−V = 0) = 19,43 fuera de la atmósfera, de acuerdo con este ajuste
+  (19,42–19,50). En V, el ZP de las estándares es 21,75: el 15/10 perdió ~0,13 mag por nubes, no
+  0,3 como sugería la comparación con 2025. El pipeline de la tarea ya aplica el término de color
+  (`termino_color` en `config.yaml`). Falta preguntar en el observatorio qué filtro B tiene la rueda.
 
 ### Catálogo calibrado y diagrama color-magnitud
 

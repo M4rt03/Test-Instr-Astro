@@ -72,7 +72,7 @@ En `resultados/<noche>/`:
 | `figuras/reduccion_{B,V}.png` | Imagen cruda, reducida y apilado final |
 | `stack_{B,V}.fits` | Apilados en ADU/s con WCS y máscara de saturación (extensión `SATMASK`) |
 | `astrometria.json` | Escala de placa, rotación y matriz CD |
-| `estandares.tex`, `zeropoints.tex` | Fotometría de cada exposición de las estándares y ZP ± error por filtro |
+| `estandares.tex`, `zeropoints.tex` | Fotometría de cada exposición de las estándares y ZP ± error por filtro (con `termino_color`, ZP en B−V = 0 y término de color `c`) |
 | `seeing.json`, `figuras/seeing.png`, `psf_{B,V}.ecsv` | Seeing, comparación con la difracción y FWHM por zona del detector |
 | `catalogo_{agresiva,extendida}_{B,V}.ecsv`, `catalogos.json`, `figuras/segmentacion.png` | Catálogos de las dos configuraciones y su comparación |
 | `catalogo_BV.ecsv`, `figuras/color_magnitud.png` | Catálogo B y V cruzado y diagrama color-magnitud |
@@ -108,6 +108,7 @@ iluminación y distancia de la Luna. Es la base para la discusión
 - **Coordenadas del sitio**: verifícalas con el manual del MAS500. Solo se usan si el header no trae `AIRMASS` y para las curvas de visibilidad.
 - **`DATE-OBS`** se asume en UTC, que es el estándar FITS.
 - **Extinción**: los valores `k` por defecto son típicos de Cerro Tololo. Si observas estándares a distintas masas de aire, puedes ajustar `k` con las tablas de `estandares.ecsv`.
+- **Término de color** (`termino_color: [B]`): con estándares de colores distintos (≥ 0,1 mag en B−V) el pipeline ajusta `m_std − m_inst = ZP + c (B−V)`. El catálogo B por separado (`catalogo_*_B.ecsv`) queda calibrado con el ZP de B−V = 0; la corrección por color se aplica en `catalogo_BV.ecsv` (columna `B0` = sin corregir), en el diagrama color-magnitud y en el mapa de color. En 2026 el filtro B tiene c ≈ +2,3 (fuga al rojo).
 - **Astrometría**: el modo `header` solo da un WCS aproximado. Para el informe usa astrometry.net (modo `archivo` o `astrometry_net`).
 - **Imágenes con satélites**: revisa las exposiciones individuales (`exposiciones.ecsv` muestra el fondo y el seeing de cada una). El sigma-clipping elimina la mayoría de las trazas, pero puedes excluir una imagen con `excluir`.
 - **Estrellas débiles sobre la parte brillante de la nebulosa**: tienen errores sistemáticos mayores (el fondo tiene estructura a la escala de la PSF). El error reportado incluye un término por esa estructura, pero conviene mencionarlo en la discusión.

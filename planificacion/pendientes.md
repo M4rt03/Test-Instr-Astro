@@ -126,12 +126,17 @@ que no necesitan imágenes de ciencia):
     astrometry.net (API): 0,3162″/px y rotación −1,50°, igual a la ajustada contra Gaia (0,3″ de
     diferencia). Se guardó en `pipeline/datos/2026/wcs_15oct.fits` y el pipeline la usa en modo
     `archivo`.
-- [ ] **Posible fuga al rojo del filtro B.** La calibración con estrellas del campo
-  (`extra/calibracion_estrellas_campo`) da un término de color de +2 en B, igual con APASS y
-  con Gaia. En las estándares de la próxima semana hay que incluir una azul y una roja (por
-  ejemplo HD 8130 y una gigante K de B−V ≈ 1), o mejor un campo de Landolt con muchas estrellas
-  de colores distintos, y preguntar qué filtro B tiene la rueda. Plan en
-  [`calibraciones.md`](calibraciones.md) ("Próxima noche: estándares para resolver el filtro B").
+- [x] **Fuga al rojo del filtro B: confirmada con las estándares del 26/10.** Se observaron
+  HD 220881 (HIP 115796, B−V = 0,28) y HD 8130 (HIP 6257, B−V = 0,05), sin saturar
+  (B 40–70 s, V 5–8 s). Resultados en `pipeline/resultados/estandares_26oct/`:
+  - V: ZP = 21,750 ± 0,012 (las dos estrellas coinciden a 0,02 mag). El 15/10 perdió ~0,13 mag
+    por nubes.
+  - B: ZP(B−V = 0) = 19,43 y término de color c = +2,29 ± 0,1, igual a lo que dieron las estrellas
+    del campo (+2,0 ± 0,1). Explica también los 0,29 mag de diferencia entre las estándares de
+    2025, que eran rojas.
+  - El pipeline ajusta y aplica el término de color (`termino_color: [B]` en `config.yaml`).
+  - Cada estrella se observó una sola vez: no se pudo medir la extinción (se usan k típicos).
+  - [ ] Preguntar qué filtro hay en la posición B de la rueda.
 - [ ] **Noche de respaldo (22/10).** La Luna está al 88 %, en AR 23h18m, y sobre 38° toda la
   ventana ([`cielo_luna.py`](cielo_luna.py)).
   - Queda a ~31° de NGC 7793 y a ~66° de NGC 1291.

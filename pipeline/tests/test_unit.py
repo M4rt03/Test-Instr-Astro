@@ -103,3 +103,29 @@ def test_crossmatch_one_to_one():
 
 def test_limiting_magnitude_monotonic():
     assert detection.limiting_magnitude(0.5, 8, 21) < detection.limiting_magnitude(0.25, 8, 21)
+
+
+def test_color_term_fit_and_correction():
+    """Con c = 2,3 el ZP depende del color; el catálogo B corregido debe recuperar B y B−V."""
+    from astropy.table import Table
+    zp0, c = 19.43, 2.3
+    rows = []
+    for name, bv in (("azul", 0.05), ("roja", 0.28)):
+        for i in range(5):
+            rows.append((name, "B", 1.0, False, bv, zp0 + c * bv + 0.002 * (i - 2)))
+            rows.append((name, "V", 1.0, False, bv, 21.75))
+    tbl = Table(rows=rows, names=("estrella", "filtro", "airmass", "saturada", "B_V", "zp"))
+    res = photometry.summarize_zeropoints(tbl, color_terms=["B"])
+    b, v = res[res["filtro"] == "B"][0], res[res["filtro"] == "V"][0]
+    assert b["zp"] == pytest.approx(zp0, abs=1e-3) and b["c"] == pytest.approx(c, abs=1e-2)
+    assert 0 < b["c_err"] < 0.2
+    assert v["c"] == 0 and v["zp"] == pytest.approx(21.75)
+    # Sin término de color, B queda como un solo ZP promedio
+    assert photometry.summarize_zeropoints(tbl)["c"][0] == 0
+
+    # Estrella con B−V = 0,8: el catálogo B calibrado con ZP0 da B0 = B − c (B−V)
+    true_b, true_v = 15.8, 15.0
+    cmd = Table({"B": [true_b - c * 0.8], "B_err": [0.02], "V": [true_v], "V_err": [0.02]})
+    detection.apply_color_term(cmd, c, 0.1)
+    assert cmd["B_V"][0] == pytest.approx(0.8) and cmd["B"][0] == pytest.approx(true_b)
+    assert cmd["B0"][0] == pytest.approx(true_b - c * 0.8)
