@@ -48,6 +48,7 @@ class Context:
         obj = cfg["objeto"]
         self.target = astrometry.target_coord(ra=obj.get("ra"), dec=obj.get("dec"))
         self.exclude = night.get("excluir", []) or []
+        self.color_terms = list(cfg.get("termino_color") or [])
 
     def files(self, pattern):
         return find_files(self.cfg, pattern, self.exclude)
@@ -253,15 +254,19 @@ def paso_estandares(ctx, calib):
                 x_air = photometry.airmass(hdr, ctx.location, coord or astrometry.target_coord(hdr))
                 zp = photometry.zeropoint(m["flux"], mags[filt], ctx.k(filt), x_air) if m["flux"] > 0 else np.nan
                 rows.append((std["nombre"], filt, f.name, x_air, m["flux"], m["fwhm_px"] * ctx.pixscale,
-                             m["r_ap"], m["saturated"], mags[filt], zp))
+                             m["r_ap"], m["saturated"], mags[filt], mags["B"] - mags["V"], zp))
     if not rows:
         return None, None
     tbl = Table(rows=rows, names=("estrella", "filtro", "archivo", "airmass", "flujo_adu_s", "fwhm_arcsec",
-                                  "r_apertura_px", "saturada", "m_std", "zp"))
+                                  "r_apertura_px", "saturada", "m_std", "B_V", "zp"))
     if np.any(tbl["saturada"]):
         log.warning("[%s] %d mediciones de estándares saturadas: se excluyen del ZP",
                     ctx.name, int(np.sum(tbl["saturada"])))
-    resumen = photometry.summarize_zeropoints(tbl)
+    resumen = photometry.summarize_zeropoints(tbl, ctx.color_terms)
+    for row in resumen:
+        if row["c"]:
+            log.info("[%s] %s: ZP(B−V=0) = %.3f ± %.3f, término de color c = %.2f ± %.2f (%d estrellas)",
+                     ctx.name, row["filtro"], row["zp"], row["zp_err"], row["c"], row["c_err"], row["n_estrellas"])
     _save_table(tbl, ctx.out / "estandares", latex=True)
     _save_table(resumen, ctx.out / "zeropoints", latex=True)
     return tbl, resumen
@@ -378,6 +383,10 @@ def paso_catalogos(ctx, stacks, wcs, zps, psfs):
     if ("agresiva", "B") in catalogs and ("agresiva", "V") in catalogs and "mag" in catalogs[("agresiva", "V")].colnames:
         tol = max(2.0, 0.7 * np.mean(list(seeing_px.values())))
         cmd = detection.crossmatch(catalogs[("agresiva", "B")], catalogs[("agresiva", "V")], tol)
+        # Término de color de B: el catálogo B está calibrado con el ZP de B−V = 0; aquí se corrige
+        cb = zps.get("B") or {}
+        detection.apply_color_term(cmd, cb.get("c", 0.0), cb.get("c_err", 0.0))
+        resumen["termino_color_B"] = cb.get("c", 0.0)
         _save_table(cmd, ctx.out / "catalogo_BV")
         good = ~cmd["saturated"] & np.isfinite(cmd["B_V"]) & (cmd["B_V_err"] < 0.2)
         fig, ax = plt.subplots(figsize=(6, 7))
@@ -405,7 +414,7 @@ def paso_color(ctx, stacks, zps):
     if zps.get("B") is not None and zps.get("V") is not None:
         zp_b = zps["B"]["zp"] - ctx.k("B") * float(stacks["B"][2].get("AIRMASS", 1.0))
         zp_v = zps["V"]["zp"] - ctx.k("V") * float(stacks["V"][2].get("AIRMASS", 1.0))
-        bv = color.color_map(img_b, img_v, zp_b, zp_v)
+        bv = color.color_map(img_b, img_v, zp_b, zp_v, c_b=zps["B"].get("c", 0.0))
         fig, ax = plt.subplots(figsize=(7, 6))
         lo, hi = np.nanpercentile(bv, [5, 95]) if np.isfinite(bv).any() else (0, 1)
         im = ax.imshow(bv, origin="lower", cmap="RdYlBu_r", vmin=lo, vmax=hi)
@@ -453,8 +462,10 @@ def paso_resumen_noche(ctx, stacks, zps, seeing_res):
 def _zp_dict(resumen):
     if resumen is None:
         return {}
-    return {row["filtro"]: {"zp": float(row["zp"]), "zp_err": float(row["zp_err"])} for row in resumen
-            if np.isfinite(row["zp"])}
+    return {row["filtro"]: {"zp": float(row["zp"]), "zp_err": float(row["zp_err"]),
+                            "c": float(row["c"]) if "c" in row.colnames else 0.0,
+                            "c_err": float(row["c_err"]) if "c_err" in row.colnames else 0.0}
+            for row in resumen if np.isfinite(row["zp"])}
 
 
 def run(config_path, noches=None):
@@ -477,12 +488,17 @@ def run(config_path, noches=None):
     for filt in {f for z in all_zp for f in z}:
         vals = [z[filt]["zp"] for z in all_zp if filt in z]
         errs = [z[filt]["zp_err"] for z in all_zp if filt in z]
+        cs = [z[filt]["c"] for z in all_zp if filt in z]
+        c_errs = [z[filt]["c_err"] for z in all_zp if filt in z]
         global_zp[filt] = {"zp": float(np.mean(vals)),
-                           "zp_err": float(np.nanmax(errs + [np.std(vals) if len(vals) > 1 else 0.0]))}
+                           "zp_err": float(np.nanmax(errs + [np.std(vals) if len(vals) > 1 else 0.0])),
+                           "c": float(np.mean(cs)), "c_err": float(np.max(c_errs))}
 
     # 2) Ciencia, astrometría, seeing, catálogos y color por noche
     comparison = []
     for ctx in contexts:
+        if not ctx.night.get("ciencia"):
+            continue        # noche solo de estándares: su ZP ya entró en global_zp
         night_zp = zps[ctx.name] or global_zp
         if not zps[ctx.name]:
             log.warning("[%s] sin estándares propias: se usa el ZP promedio de las otras noches", ctx.name)

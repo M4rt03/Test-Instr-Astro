@@ -242,6 +242,31 @@ def crossmatch(tbl_b, tbl_v, tol_px):
     return out
 
 
+def apply_color_term(cmd, c, c_err=0.0):
+    """Corrige B y B−V de un catálogo cruzado por el término de color de B.
+
+    En el catálogo B calibrado con el ZP de B−V = 0, ``B0 = b + ZP0``, y la magnitud real es
+    ``B = B0 + c (B−V)``. Con V sin término de color:
+
+        B − V = (B0 − V) / (1 − c),     B = (B0 − c V) / (1 − c)
+
+    Los errores se propagan desde B0, V y c. Se guarda ``B0`` para poder rehacer el cálculo.
+    """
+    if not c:
+        return cmd
+    b0, v = np.asarray(cmd["B"], float), np.asarray(cmd["V"], float)
+    eb, ev = np.asarray(cmd["B_err"], float), np.asarray(cmd["V_err"], float)
+    d = 1.0 - c
+    bv = (b0 - v) / d
+    cmd["B0"], cmd["B0_err"] = b0, eb
+    cmd["B_V"] = bv
+    cmd["B_V_err"] = np.hypot(np.hypot(eb, ev) / abs(d), bv / d * c_err)
+    cmd["B"] = v + bv
+    cmd["B_err"] = np.hypot(np.hypot(eb, c * ev) / abs(d), bv / d * c_err)
+    cmd.meta["termino_color_B"] = {"c": float(c), "c_err": float(c_err)}
+    return cmd
+
+
 def limiting_magnitude(rms, fwhm_px, zp_eff, n_sigma=5.0):
     """Magnitud límite para una fuente puntual detectada a ``n_sigma``.
 

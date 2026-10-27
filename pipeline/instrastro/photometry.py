@@ -235,19 +235,60 @@ def zeropoint(flux, m_std, k, x_airmass):
     return m_std + 2.5 * np.log10(flux) + k * x_airmass
 
 
-def summarize_zeropoints(tbl):
+# Incertidumbre de las magnitudes de catálogo de cada estándar (Mermilliod: ~0,01 mag). Entra en el
+# error del término de color, que con pocas estrellas está dominado por esto y no por la fotometría.
+CATALOG_ERR = 0.01
+# Rango mínimo de B−V entre estándares para ajustar un término de color
+MIN_COLOR_RANGE = 0.1
+
+
+def fit_color_term(colors, zps, errs):
+    """Ajuste ponderado ZP_i = ZP0 + c (B−V)_i, con una fila por estrella.
+
+    Devuelve ``(zp0, zp0_err, c, c_err)``. Con dos estrellas el ajuste es exacto y los errores salen
+    de propagar los de cada estrella; con más, se escalan por el χ² reducido si es > 1.
+    """
+    x, y, w = np.asarray(colors, float), np.asarray(zps, float), 1.0 / np.asarray(errs, float) ** 2
+    A = np.column_stack([np.ones_like(x), x])
+    cov = np.linalg.inv(A.T @ (A * w[:, None]))
+    zp0, c = cov @ (A.T @ (w * y))
+    if len(x) > 2:
+        chi2 = np.sum(w * (y - zp0 - c * x) ** 2) / (len(x) - 2)
+        cov = cov * max(chi2, 1.0)
+    return float(zp0), float(np.sqrt(cov[0, 0])), float(c), float(np.sqrt(cov[1, 1]))
+
+
+def summarize_zeropoints(tbl, color_terms=()):
     """ZP por filtro: media clipeada, desviación estándar y error de la media (σ/√N).
 
     Se excluyen las mediciones de estrellas saturadas.
+
+    En los filtros de ``color_terms`` se ajusta además un término de color,
+    ``m_std − m_inst = ZP + c (B−V)``, con el ZP promedio de cada estrella (así una estrella con más
+    exposiciones no pesa más). Entonces ``zp`` es el ZP para B−V = 0 y ``c`` la pendiente. Hace falta
+    la columna ``B_V`` (color de catálogo) y estándares que cubran al menos 0,1 mag en B−V.
+    En los demás filtros, c = 0.
     """
     rows = []
     for filt in sorted(set(tbl["filtro"])):
         sel = (tbl["filtro"] == filt) & ~np.asarray(tbl["saturada"], dtype=bool) & np.isfinite(tbl["zp"])
         zps = np.asarray(tbl["zp"][sel])
-        if len(zps) == 0:
-            rows.append((filt, np.nan, np.nan, np.nan, 0))
+        n = len(zps)
+        if n == 0:
+            rows.append((filt, np.nan, np.nan, np.nan, 0, 0.0, 0.0, 0))
             continue
         mean, _, std = sigma_clipped_stats(zps, sigma=3.0)
-        n = len(zps)
-        rows.append((filt, float(mean), float(std), float(std / np.sqrt(n)) if n > 1 else np.nan, n))
-    return Table(rows=rows, names=("filtro", "zp", "zp_std", "zp_err", "n"))
+        zp, zp_err, c, c_err = float(mean), float(std / np.sqrt(n)) if n > 1 else np.nan, 0.0, 0.0
+        stars = sorted(set(tbl["estrella"][sel]))
+        if filt in color_terms and "B_V" in tbl.colnames and len(stars) >= 2:
+            colors, means, errs = [], [], []
+            for s in stars:
+                z = np.asarray(tbl["zp"][sel & (tbl["estrella"] == s)])
+                colors.append(float(tbl["B_V"][sel & (tbl["estrella"] == s)][0]))
+                means.append(float(np.mean(z)))
+                errs.append(float(np.hypot(np.std(z) / np.sqrt(len(z)) if len(z) > 1 else 0.02, CATALOG_ERR)))
+            if np.ptp(colors) >= MIN_COLOR_RANGE:
+                zp, zp_err, c, c_err = fit_color_term(colors, means, errs)
+                std = float(np.std(zps - zp - c * np.asarray(tbl["B_V"][sel], float)))
+        rows.append((filt, zp, float(std), zp_err, n, c, c_err, len(stars)))
+    return Table(rows=rows, names=("filtro", "zp", "zp_std", "zp_err", "n", "c", "c_err", "n_estrellas"))

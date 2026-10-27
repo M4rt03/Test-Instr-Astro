@@ -29,11 +29,12 @@ def rgb_image(img_b, img_v, percentile=99.5, stretch=0.5, q=8.0, filename=None):
     return make_lupton_rgb(v, g, b, minimum=0.0, stretch=stretch, Q=q, filename=filename)
 
 
-def color_map(img_b, img_v, zp_eff_b, zp_eff_v, smooth_px=5.0, min_snr=3.0):
+def color_map(img_b, img_v, zp_eff_b, zp_eff_v, smooth_px=5.0, min_snr=3.0, c_b=0.0):
     """Mapa de color superficial B - V (mag) suavizado.
 
-    ``zp_eff`` = ZP - k X de cada filtro. Los píxeles con poca señal quedan
-    en NaN para no mostrar ruido.
+    ``zp_eff`` = ZP - k X de cada filtro (en B, el ZP de B−V = 0 si hay término de color).
+    ``c_b`` es el término de color de B: B − V = (B0 − V) / (1 − c_b). Los píxeles con poca señal
+    quedan en NaN para no mostrar ruido.
     """
     b = ndimage.gaussian_filter(_sky_subtract(img_b), smooth_px)
     v = ndimage.gaussian_filter(_sky_subtract(img_v), smooth_px)
@@ -41,6 +42,6 @@ def color_map(img_b, img_v, zp_eff_b, zp_eff_v, smooth_px=5.0, min_snr=3.0):
     noise_v = np.nanstd(v[v < np.percentile(v, 50)])
     ok = (b > min_snr * noise_b) & (v > min_snr * noise_v)
     with np.errstate(invalid="ignore", divide="ignore"):
-        bv = (zp_eff_b - 2.5 * np.log10(b)) - (zp_eff_v - 2.5 * np.log10(v))
+        bv = ((zp_eff_b - 2.5 * np.log10(b)) - (zp_eff_v - 2.5 * np.log10(v))) / (1.0 - c_b)
     bv[~ok] = np.nan
     return bv
