@@ -101,3 +101,9 @@ noches:
     excluir: []
     wcs: {}
     estandares: []              # sin estándares: se usa el ZP promedio de las otras noches
+    # Opcional, si la noche tuvo nubes: corrige ese ZP con estrellas del campo de APASS
+    # transparencia:
+    #   archivo: "datos/noche2/apass.ecsv"   # se descarga de VizieR si no existe
+    #   radio_excluir_arcmin: 6              # alrededor del objeto
+    #   vmin: 11
+    #   vmax: 16

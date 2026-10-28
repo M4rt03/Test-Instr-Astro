@@ -1,0 +1,95 @@
+# Pipeline CON corrección de transparencia del 15/10 (estrellas del campo de APASS).
+# Copia de pipeline/config.yaml sin la API key (no hace falta en modo archivo).
+# Rutas relativas a esta carpeta (pipeline/con_correccion); los resultados quedan en
+# con_correccion/resultados, separados de pipeline/resultados.
+
+objeto:
+  nombre: "NGC 7793"
+  ra: "23:57:49.7"              # SIMBAD, J2000
+  dec: "-32:35:27.7"
+
+sitio:
+  nombre: "Observatorio El Sauce (OMA)"
+  latitud: -30.4597             # OBSGEO-B del header
+  longitud: -70.7503            # OBSGEO-L del header
+  altitud: 1600
+  utc_offset_h: -3
+
+instrumento:
+  telescopio: "MAS500 (Ritchey-Chrétien, 0.5 m)"
+  camara: "Moravian C4-16000EC (4096 x 4096)"
+  diametro_m: 0.5
+  escala_arcsec_px: 0.317       # medida con Gaia (planificacion/medir_escala.py)
+  ganancia_e_adu: 0.85
+  saturacion_adu: 60000
+  bpm: null
+  seeing_estimado_arcsec: 3.5   # medido en las imágenes: ~3,7-4,7" (el observatorio reportó 1,9-2,1")
+
+filtros: [V, B]                 # V es la referencia de alineamiento
+
+extincion:                      # cada estándar se observó una sola vez: valores típicos de Cerro Tololo
+  B: 0.25
+  V: 0.15
+
+# El "B" tiene un término de color de ~+2,3 (fuga al rojo), medido con HD 220881 y HD 8130 el 26/10
+termino_color: [B]
+
+astrometria:
+  modo: archivo                 # solución de astrometry.net (API) guardada en datos/2026/wcs_15oct.fits;
+                                # OBJCTRA/OBJCTDEC del 15/10 quedaron ~40′ corridos: el modo header no sirve
+
+salida: resultados
+
+noches:
+  - nombre: noche_15oct
+    fecha: "2026-10-15"
+    # Sin bias: el nivel cero es el master dark de 120 s, que ya incluye el bias
+    # (y su desfase de 3-5 ADU respecto del bias de 0 s). Darks = los mismos de 120 s, así la
+    # corriente oscura que calcula el pipeline es cero y se resta exactamente el dark de 120 s.
+    bias: "../datos/2026/darks/Dark_120.000secs_*.fit"
+    darks: "../datos/2026/darks/Dark_120.000secs_*.fit"
+    flats:
+      B: "../datos/2026/flats/FLAT_B_*.fit"
+      V: "../datos/2026/flats/FLAT_V_*.fit"
+    ciencia:
+      B: "../datos/2026/grupo4/octubre 15 2026/NGC_7793_B_*.fit"
+      V: "../datos/2026/grupo4/octubre 15 2026/NGC_7793_V_*.fit"
+    excluir:
+      - "*00000722*"            # V 60 s: 0,28 mag menos de transparencia (nube)
+      - "*00000724*"            # V 120 s: estrellas dobles (salto de 12 px durante la exposición, viento)
+      - "*00000730*"            # B 120 s: estrellas dobles (salto de 18 px) y 0,12 mag menos de transparencia
+    wcs: {V: "../datos/2026/wcs_15oct.fits"}
+    estandares: []              # sin estándares esta noche: usa el ZP de estandares_26oct
+    # Nubes: el ZP de estandares_26oct (noche despejada) se corrige con estrellas del campo de APASS
+    transparencia:
+      catalogo: apass
+      archivo: apass_ngc7793.ecsv  # APASS ya descargado (VizieR no respondía); si no existe, se consulta
+      radio_excluir_arcmin: 6   # alrededor de NGC 7793 (la galaxia contamina la fotometría)
+      vmin: 11                  # evita estrellas saturadas
+      vmax: 16                  # APASS deja de ser confiable más débil
+
+  # Solo estándares (sin ciencia): su ZP se usa para la noche del 15/10.
+  - nombre: estandares_26oct
+    fecha: "2026-10-26"
+    # Sin bias: el nivel cero es el dark de 5 s; la corriente oscura sale de los darks de 40 y 70 s
+    # (es despreciable: todos los darks tienen mediana 87 ADU).
+    bias: "../datos/2026/Estrellas_estandar_data/Dark_5.000secs_*.fit"
+    darks: "../datos/2026/Estrellas_estandar_data/Dark_[47]0.000secs_*.fit"
+    flats:                      # no hubo flats el 26/10: se usan los del 15/10
+      B: "../datos/2026/flats/FLAT_B_*.fit"
+      V: "../datos/2026/flats/FLAT_V_*.fit"
+    estandares:                 # magnitudes Johnson de Mermilliod (II/168)
+      - nombre: "HD 220881"     # HIP 115796, A9V
+        ra: "23:27:33.2"
+        dec: "-27:16:41"
+        magnitudes: {B: 7.720, V: 7.440}
+        archivos:
+          B: "../datos/2026/Estrellas_estandar_data/HIP_115796_B_*.fit"
+          V: "../datos/2026/Estrellas_estandar_data/HIP_115796_V_*.fit"
+      - nombre: "HD 8130"       # HIP 6257, A0V
+        ra: "01:20:15.8"
+        dec: "-36:14:34"
+        magnitudes: {B: 7.493, V: 7.448}
+        archivos:
+          B: "../datos/2026/Estrellas_estandar_data/HIP_6257_B_*.fit"
+          V: "../datos/2026/Estrellas_estandar_data/HIP_6257_V_*.fit"

@@ -15,7 +15,7 @@ from astropy.io import ascii
 from astropy.stats import mad_std
 from astropy.table import Table, vstack
 
-from . import astrometry, color, detection, photometry, planning, plots, reduction, seeing
+from . import astrometry, color, detection, photometry, planning, plots, reduction, seeing, transparency
 from .io import find_files, load_config, obs_time, read_fits, resolve, write_fits
 
 log = logging.getLogger("instrastro")
@@ -403,6 +403,54 @@ def paso_catalogos(ctx, stacks, wcs, zps, psfs):
     return catalogs, resumen
 
 
+def paso_transparencia(ctx, zps, shape):
+    """Corrige los ZP de una noche con nubes usando estrellas del campo de APASS.
+
+    Se activa con ``transparencia:`` en la noche. Compara las magnitudes de ``catalogo_BV`` (ya
+    calibradas con el ZP y el término de color) con APASS y devuelve los ZP corregidos.
+    """
+    from astropy.table import Table as _Table
+    opts = ctx.night.get("transparencia") or {}
+    if opts is True:
+        opts = {}
+    cmd_path = ctx.out / "catalogo_BV.ecsv"
+    if not cmd_path.exists() or not zps:
+        log.warning("[%s] sin catálogo B−V o sin ZP: no se corrige la transparencia", ctx.name)
+        return zps
+    cmd = _Table.read(cmd_path)
+
+    cache = resolve(ctx.cfg, opts["archivo"]) if opts.get("archivo") else ctx.out / "catalogo_apass.ecsv"
+    if cache.exists():
+        ref = _Table.read(cache)
+        log.info("[%s] APASS desde %s (%d estrellas)", ctx.name, cache, len(ref))
+    else:
+        radius = ctx.pixscale * max(shape) * np.sqrt(2) / 2 / 60 + 2.0
+        ref = transparency.query_apass(ctx.target, radius)
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        ref.write(cache, overwrite=True)
+
+    stars = transparency.match_field_stars(
+        cmd, ref, ctx.target, exclude_arcmin=float(opts.get("radio_excluir_arcmin", 6.0)),
+        vmin=float(opts.get("vmin", 11.0)), vmax=float(opts.get("vmax", 16.0)))
+    delta = transparency.offsets(stars)
+    _save_table(stars, ctx.out / "estrellas_transparencia")
+    if not np.isfinite(delta["V"]["delta"]):
+        log.warning("[%s] solo %d estrellas de APASS útiles: no se corrige la transparencia",
+                    ctx.name, len(stars))
+        return zps
+    new = transparency.corrected_zeropoints(zps, delta)
+    for f in ("V", "B"):
+        if f in delta:
+            log.info("[%s] transparencia %s: Δ = %+.3f ± %.3f mag (rms %.3f, %d estrellas) → ZP %.3f → %.3f",
+                     ctx.name, f, delta[f]["delta"], delta[f]["err"], delta[f]["rms"], delta[f]["n"],
+                     zps[f]["zp"], new[f]["zp"])
+    _save_json(ctx.out / "transparencia.json", {
+        "catalogo": "APASS DR9 (II/336)", "n_estrellas_cruzadas": len(stars),
+        "delta": delta, "zp_sin_correccion": zps, "zp_corregido": new,
+        "nota": "delta = catálogo − pipeline; en B el ZP de B−V = 0 se mueve en Δ_B (1 − c) + c Δ_V"})
+    return new
+
+
 def paso_color(ctx, stacks, zps):
     """Punto 16: imagen RGB (R=V, G=(B+V)/2, B=B) y mapa de color B-V."""
     import matplotlib.pyplot as plt
@@ -506,6 +554,12 @@ def run(config_path, noches=None):
         wcs = paso_astrometria(ctx, stacks)
         seeing_res, psfs = paso_seeing(ctx, stacks)
         paso_catalogos(ctx, stacks, wcs, night_zp, psfs)
+        if ctx.night.get("transparencia"):
+            # Nubes: se mide el desplazamiento con APASS y se recalibran los catálogos
+            corrected = paso_transparencia(ctx, night_zp, stacks[ctx.filters[0]][0].shape)
+            if corrected is not night_zp:
+                night_zp = corrected
+                paso_catalogos(ctx, stacks, wcs, night_zp, psfs)
         paso_color(ctx, stacks, night_zp)
         comparison.append(paso_resumen_noche(ctx, stacks, night_zp, seeing_res))
         del stacks
