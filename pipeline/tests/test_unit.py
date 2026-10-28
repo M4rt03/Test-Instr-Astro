@@ -129,3 +129,24 @@ def test_color_term_fit_and_correction():
     detection.apply_color_term(cmd, c, 0.1)
     assert cmd["B_V"][0] == pytest.approx(0.8) and cmd["B"][0] == pytest.approx(true_b)
     assert cmd["B0"][0] == pytest.approx(true_b - c * 0.8)
+
+
+def test_transparency_correction():
+    """Nube gris de 0,15 mag: los ZP corregidos deben devolver B y V a los del catálogo."""
+    from astropy.table import Table
+    from instrastro import transparency
+    rng = np.random.default_rng(3)
+    n, c = 20, 2.3
+    v_cat = rng.uniform(12, 15, n)
+    bv = rng.uniform(0.4, 1.1, n)
+    stars = Table({"dB": 0.15 + rng.normal(0, 0.02, n), "dV": 0.15 + rng.normal(0, 0.02, n),
+                   "V_cat": v_cat, "B_V_cat": bv})
+    delta = transparency.offsets(stars)
+    assert delta["V"]["delta"] == pytest.approx(0.15, abs=0.02) and delta["V"]["n"] >= 18
+    zps = {"B": {"zp": 19.43, "zp_err": 0.01, "c": c, "c_err": 0.1}, "V": {"zp": 21.75, "zp_err": 0.01, "c": 0.0}}
+    new = transparency.corrected_zeropoints(zps, delta)
+    assert new["V"]["zp"] - 21.75 == pytest.approx(delta["V"]["delta"])
+    # B final = (B0 − c V)/(1 − c): con los ZP nuevos se mueve en Δ_B
+    shift_b0, shift_v = new["B"]["zp"] - 19.43, new["V"]["zp"] - 21.75
+    assert (shift_b0 - c * shift_v) / (1 - c) == pytest.approx(delta["B"]["delta"])
+    assert zps["V"]["zp"] == 21.75     # no modifica el diccionario original

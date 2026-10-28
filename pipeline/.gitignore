@@ -6,6 +6,8 @@ demo/
 *.fits
 *.fts
 config.yaml
+# con_correccion/config.yaml no tiene API key: se sube
+!con_correccion/config.yaml
 
 __pycache__/
 .pytest_cache/
